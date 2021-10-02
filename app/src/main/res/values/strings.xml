@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Memore</string>
+    <string name="events">Events</string>
+    <string name="organizations">Organizations</string>
+    <string name="home">Home</string>
+    <string name="tab2">tab2</string>
+    <string name="align_scanner_in_frame">Align scanner in frame</string>
 </resources>
