@@ -25,7 +25,7 @@ import java.io.IOException;
 public class QRScannerHelper extends ContextWrapper {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
-    private OnQrCodeScanned callback;
+    private OnQrCodeScanned onQrCodeScanned;
     private SurfaceHolder holder;
     private boolean hasScannedACode = false;
     private boolean enableBarCodeDetection = true;
@@ -36,9 +36,10 @@ public class QRScannerHelper extends ContextWrapper {
         super(base);
     }
 
-    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity) {
+    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned) {
         try {
             this.activity = activity;
+            this.onQrCodeScanned = onQrCodeScanned;
             createBarCodeScanner();
 
             cameraSource = new CameraSource.Builder(context, barcodeDetector)
@@ -134,6 +135,7 @@ public class QRScannerHelper extends ContextWrapper {
             @Override
             public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
                 Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
+                ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
 
                 if (!enableBarCodeDetection) return;
 
@@ -141,21 +143,19 @@ public class QRScannerHelper extends ContextWrapper {
                 if (barcodeSparseArray.size() != 0) {
 
                     String scannedValue = barcodeSparseArray.valueAt(0).displayValue;
-                    Log.d(TAG, "receiveDetections: " + scannedValue);
                     ErrorLog.WriteDebugLog("receiveDetections: " + scannedValue);
 
                     barcodeDetector.release();
 
-
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (callback != null) {
+                            if (onQrCodeScanned != null) {
                                 ErrorLog.WriteDebugLog("Barcode Scanned, stopping camera");
                                 cameraSource.release();
                                 cameraSource.stop();
                                 if (!hasScannedACode) {
-                                    callback.barcodeScanned(scannedValue);
+                                    onQrCodeScanned.barcodeScanned(scannedValue);
                                     hasScannedACode = true;
                                     enableBarCodeDetection = true;
                                 }
@@ -190,6 +190,6 @@ public class QRScannerHelper extends ContextWrapper {
 
 
     public void setCallback(OnQrCodeScanned callback) {
-        this.callback = callback;
+        this.onQrCodeScanned = callback;
     }
 }
