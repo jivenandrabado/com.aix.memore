@@ -8,5 +8,19 @@
     <fragment
         android:id="@+id/QRScannerFragment"
         android:name="com.aix.memore.views.fragments.QRScannerFragment"
-        />
+        >
+        <action
+            android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
+            app:destination="@id/HighlightFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/HighlightFragment"
+        android:name="com.aix.memore.views.fragments.HighlightFragment"
+        >
+        <action
+            android:id="@+id/action_HighlightFragment_to_QRScannerFragment"
+            app:destination="@id/QRScannerFragment" />
+    </fragment>
+
 </navigation>
