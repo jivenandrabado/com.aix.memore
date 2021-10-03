@@ -131,6 +131,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="16dp"
         android:text="Manage"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/memore_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -141,6 +143,8 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:text="Lifecare"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/memore_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
