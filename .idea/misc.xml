@@ -3,15 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable-v24/border_qr_scanner.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_highlight.xml" value="0.14" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_home.xml" value="0.1" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_q_r_scanner.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.322463768115942" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/background_oval.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_medical_services_24.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/layout/dialog_progressbar.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.34739583333333335" />
       </map>
     </option>
   </component>
