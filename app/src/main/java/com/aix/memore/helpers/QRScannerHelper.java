@@ -181,13 +181,11 @@ public class QRScannerHelper extends ContextWrapper {
             if (AppPermissionHelper.cameraPermissionGranted(getApplicationContext())) {
                 cameraSource.start(holder);
                 hasScannedACode = false;
-
             }
         } catch (IOException e) {
             ErrorLog.WriteErrorLog(e);
         }
     }
-
 
     public void setCallback(OnQrCodeScanned callback) {
         this.onQrCodeScanned = callback;
