@@ -1,10 +1,14 @@
 package com.aix.memore.views.fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,17 +20,21 @@ import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentQrScannerBinding;
 import com.aix.memore.helpers.AppPermissionHelper;
 import com.aix.memore.helpers.QRScannerHelper;
+import com.aix.memore.interfaces.FragmentPermissionInterface;
 import com.aix.memore.interfaces.OnQrCodeScanned;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.HighlightViewModel;
 
+import java.util.Map;
 
-public class QRScannerFragment extends Fragment implements OnQrCodeScanned {
+
+public class QRScannerFragment extends Fragment implements OnQrCodeScanned, FragmentPermissionInterface {
 
     private FragmentQrScannerBinding binding;
     private QRScannerHelper qrScannerHelper;
     private NavController navController;
     private HighlightViewModel highlightViewModel;
+    private ActivityResultContracts.RequestPermission requestPermission;
 
     public QRScannerFragment() {
         // Required empty public constructor
@@ -49,35 +57,47 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        qrScannerHelper = new QRScannerHelper(requireContext());
-        navController = Navigation.findNavController(view);
-        highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
-        binding.buttonManage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment2);
-            }
-        });
+        try {
+            qrScannerHelper = new QRScannerHelper(requireContext());
+            navController = Navigation.findNavController(view);
+            highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
+            binding.bottomNav.getMenu().getItem(0).setCheckable(false);
+            binding.bottomNav.getMenu().getItem(1).setCheckable(false);
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+        AppPermissionHelper.requestMultiplePermissions(requireActivity(),this);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(AppPermissionHelper.cameraPermissionGranted(requireContext())) {
-            ErrorLog.WriteDebugLog("INIT PREVIEW");
-            qrScannerHelper.initQRScannerPreview(requireContext(), binding.surfaceViewQRscanner, getActivity(),this);
-        }else{
-            ErrorLog.WriteDebugLog("Request permission");
-            AppPermissionHelper.requestPermission(requireContext());
-            AppPermissionHelper.requestLocationPermission(requireContext());
-        }
-
     }
 
     @Override
     public void barcodeScanned(String value) {
-        highlightViewModel.getScannedValue().setValue(value);
-        navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment2);
+        try {
+            if(!value.contains("https")) {
+                highlightViewModel.getScannedValue().setValue(value);
+                navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment2);
+            }else{
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(value));
+                startActivity(i);
+            }
+        }catch(Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+
+    @Override
+    public void onGranted(Map<String, Boolean> isGranted) {
+        ErrorLog.WriteDebugLog("multiple permission granted");
+        qrScannerHelper.initQRScannerPreview(requireContext(), binding.surfaceViewQRscanner, getActivity(),this);
+
+
     }
 }
