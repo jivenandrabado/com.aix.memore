@@ -1,6 +1,7 @@
 package com.aix.memore.views.fragments;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.aix.memore.interfaces.HighlightInterface;
 import com.aix.memore.models.Highlight;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.HighlightViewModel;
+import com.aix.memore.views.dialogs.ProgressDialogFragment;
 
 public class HighlightFragment extends Fragment implements HighlightInterface {
 
@@ -29,6 +31,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private VideoView videoView;
     private MediaController mediaController;
     private HighlightInterface highlightInterface;
+    private ProgressDialogFragment progressDialogFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,8 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                 }
             });
 
+            initProgressDialog();
+
 
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -84,11 +89,50 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     }
 
     private void initVideoViewer(Highlight highlight){
+
         mediaController.setAnchorView(videoView);
         videoView = binding.videoView;
         videoView.setMediaController(mediaController);
         videoView.setVideoPath(highlight.getPath());
         videoView.requestFocus();
-        videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                progressDialogFragment.dismiss();
+                mediaPlayer.setLooping(true);
+                videoView.start();
+            }
+        });
+
+
+
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                progressDialogFragment.dismiss();
+                return false;
+            }
+        });
+    }
+
+    private void initProgressDialog(){
+        progressDialogFragment = new ProgressDialogFragment();
+        progressDialogFragment.show(getChildFragmentManager(),"highlight_progress_dialog");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(videoView != null) {
+            videoView.pause();
+        }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(videoView != null) {
+            videoView.resume();
+        }
     }
 }
