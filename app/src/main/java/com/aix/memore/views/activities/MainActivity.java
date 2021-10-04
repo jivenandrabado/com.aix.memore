@@ -28,4 +28,10 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 //        NavigationUI.setupActionBarWithNavController(this, navController);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        navController.navigateUp();
+        return super.onSupportNavigateUp();
+    }
 }
