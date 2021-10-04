@@ -4,5 +4,9 @@
     <string name="organizations">Organizations</string>
     <string name="home">Home</string>
     <string name="tab2">tab2</string>
-    <string name="align_scanner_in_frame">Align scanner in frame</string>
+    <string name="align_scanner_in_frame">Align the QR code within \n the frame to scan</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="manage">Manage</string>
+    <string name="lifecare">Lifecare</string>
 </resources>
