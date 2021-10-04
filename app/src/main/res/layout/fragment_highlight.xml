@@ -65,33 +65,45 @@
         android:focusableInTouchMode="false"
         android:paddingBottom="60dp" />
 
-    <Button
-        android:id="@+id/buttonShare"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="Share"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/memore_blue"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        >
 
-    <Button
-        android:id="@+id/buttonKnowMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="Know More"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/memore_blue"
-        />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:drawableStart="@drawable/ic_baseline_share_24"
+            android:text="Share"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonKnowMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:drawableStart="@drawable/ic_baseline_info_24"
+            android:text="Info"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </RelativeLayout>
