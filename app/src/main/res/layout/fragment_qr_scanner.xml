@@ -83,15 +83,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:lineSpacingExtra="6dp"
+        android:text="@string/align_scanner_in_frame"
+        android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintVertical_bias=".4"
-        android:text="@string/align_scanner_in_frame"
+        app:layout_constraintBottom_toBottomOf="@id/frameLayoutTop"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/frameLayoutTop"
-        />
+        app:layout_constraintVertical_bias=".4" />
 <!--    <LinearLayout-->
 <!--        android:gravity="center"-->
 <!--        android:layout_width="0dp"-->
@@ -124,24 +126,48 @@
 <!--            />-->
 <!--    </LinearLayout>-->
 
-    <Button
-        android:id="@+id/buttonManage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="16dp"
-        android:text="Manage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/buttonManage"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Manage"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:textColor="@color/memore_blue"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" -->
+<!--        android:textAllCaps="false"-->
+<!--        android:drawableStart="@drawable/ic_baseline_menu_24"-->
+<!--        />-->
 
-    <Button
-        android:id="@+id/buttonLifeCare"
+<!--    <Button-->
+<!--        android:id="@+id/buttonLifeCare"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Lifecare"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:textColor="@color/memore_blue"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:textAllCaps="false"-->
+<!--        />-->
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:text="Lifecare"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/home_bottom_nav_menu"
+        android:background="@drawable/background_oval"
+        />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
