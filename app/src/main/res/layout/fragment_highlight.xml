@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:drawableStart="@drawable/ic_baseline_info_24"
-            android:text="Info"
+            android:text="@string/know_more"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline" />
