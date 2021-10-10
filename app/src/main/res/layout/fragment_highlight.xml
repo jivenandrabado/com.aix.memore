@@ -1,77 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".690"
+        app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintWidth_percent=".800"
+        app:resize_mode="fill" />
 
 
-    <!--        <com.aix.memore.views.custom_views.AutoScrollViewPager-->
-    <!--            android:id="@+id/home_view_pager"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="0dp"-->
-    <!--            android:paddingBottom="5dp"-->
-    <!--            app:layout_constraintDimensionRatio="H,1:.80"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/textviewEvent"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginTop="16dp"-->
-    <!--            android:text="@string/events"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/home_view_pager" />-->
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:id="@+id/recyclerviewEvents"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="horizontal"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/textviewEvent"-->
-    <!--            tools:listitem="@layout/item_events_row"-->
-    <!--            tools:itemCount="4"-->
-    <!--            />-->
-    <!--        <TextView-->
-    <!--            android:id="@+id/textviewOrganization"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginTop="16dp"-->
-    <!--            android:text="@string/organizations"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/recyclerviewEvents" />-->
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:id="@+id/recyclerviewOrganization"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="horizontal"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/textviewOrganization"-->
-    <!--            />-->
-
-
-    <VideoView
-        android:id="@+id/video_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:paddingBottom="60dp" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        >
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -80,30 +28,87 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.50"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:drawableStart="@drawable/ic_baseline_share_24"
-            android:text="Share"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonShare"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_baseline_share_24"
+        android:text="Share"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/appCompatButton3"
+        app:layout_constraintStart_toEndOf="@+id/buttonKnowMore"
+        app:layout_constraintTop_toTopOf="@+id/buttonKnowMore" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonKnowMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:drawableStart="@drawable/ic_baseline_info_24"
-            android:text="@string/know_more"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <ImageButton
+        android:id="@+id/buttonKnowMore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_baseline_info_24"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/appCompatButton"
+        app:layout_constraintStart_toStartOf="@+id/appCompatButton"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatButton" />
 
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/imageViewHightlightBioProfilePic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_baseline_photo_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewHighlightName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="EDDIE GARCIA"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />
+
+    <TextView
+        android:id="@+id/textViewHighlightDeathDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="May 2, 1929 - June 20,2019"
+        app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/appCompatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Like"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/appCompatButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="heart"
+        app:layout_constraintEnd_toStartOf="@+id/appCompatButton3"
+        app:layout_constraintStart_toEndOf="@+id/appCompatButton"
+        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/appCompatButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sad"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
+        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
