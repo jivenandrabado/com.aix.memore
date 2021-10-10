@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_highlight.xml" value="0.2" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/dialog_progressbar.xml" value="0.18063063063063062" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_gallery.xml" value="0.22604166666666667" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_highlight.xml" value="0.18" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_know_more.xml" value="0.2" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.25" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_album.xml" value="0.17207207207207206" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_gallery.xml" value="0.2" />
         <entry key="app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/background_oval.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.36354166666666665" />
