@@ -8,10 +8,13 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 
+import com.aix.memore.databinding.FragmentQrScannerBinding;
 import com.aix.memore.interfaces.OnQrCodeScanned;
 import com.aix.memore.utilities.ErrorLog;
 import com.google.android.gms.vision.CameraSource;
@@ -36,7 +39,7 @@ public class QRScannerHelper extends ContextWrapper {
         super(base);
     }
 
-    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned) {
+    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned, boolean permissionGranted) {
         try {
             this.activity = activity;
             this.onQrCodeScanned = onQrCodeScanned;
@@ -58,23 +61,27 @@ public class QRScannerHelper extends ContextWrapper {
 
                 @Override
                 public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-                    ErrorLog.WriteDebugLog("Surface View Changed");
+                    ErrorLog.WriteDebugLog("Surface View Changed "+ AppPermissionHelper.cameraPermissionGranted(context));
 
-                    if (AppPermissionHelper.cameraPermissionGranted(context)) {
+                    if (permissionGranted) {
                         try {
                             cameraSource.start(surfaceHolder);
+                            ErrorLog.WriteDebugLog("Camera Start");
+
 
                         } catch (IOException e) {
                             ErrorLog.WriteErrorLog(e);
                         }
                     } else {
                         AppPermissionHelper.requestPermission(context);
+                        ErrorLog.WriteDebugLog("Camera permission not granted cannot start");
+
                     }
                 }
 
                 @Override
                 public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-                    if (AppPermissionHelper.cameraPermissionGranted(context)) {
+                    if (permissionGranted) {
                         try {
                             ErrorLog.WriteDebugLog("Surface View Destroyed");
                             cameraSource.release();
@@ -179,8 +186,18 @@ public class QRScannerHelper extends ContextWrapper {
     public void enableQrScanner() {
         try {
             if (AppPermissionHelper.cameraPermissionGranted(getApplicationContext())) {
-                cameraSource.start(holder);
-                hasScannedACode = false;
+                if(cameraSource != null) {
+                    cameraSource.start(holder);
+                    hasScannedACode = false;
+                    ErrorLog.WriteDebugLog("CAMERA ON RESUME START");
+                }
+                ErrorLog.WriteDebugLog("CAMERA PERMISSION NOT ENABLED");
+
+            }else{
+                if(cameraSource == null) return;
+                cameraSource.stop();
+                ErrorLog.WriteDebugLog("CAMERA ON RESUME STOP");
+
             }
         } catch (IOException e) {
             ErrorLog.WriteErrorLog(e);
@@ -189,5 +206,55 @@ public class QRScannerHelper extends ContextWrapper {
 
     public void setCallback(OnQrCodeScanned callback) {
         this.onQrCodeScanned = callback;
+    }
+
+
+    public void initialiseDetectorsAndSources(FragmentQrScannerBinding binding) {
+
+        Toast.makeText(getApplicationContext(), "Barcode scanner started", Toast.LENGTH_SHORT).show();
+        barcodeDetector = new BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.ALL_FORMATS)
+                .build();
+
+        cameraSource = new CameraSource.Builder(this, barcodeDetector)
+                .setRequestedPreviewSize(1920, 1080)
+                .setAutoFocusEnabled(true) //you should add this feature
+                .build();
+
+        binding.surfaceViewQRscanner.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                try {
+                    cameraSource.start(binding.surfaceViewQRscanner.getHolder());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                cameraSource.stop();
+            }
+        });
+
+
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+                Toast.makeText(getApplicationContext(), "To prevent memory leaks barcode scanner has been stopped", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+                if (barcodes.size() != 0) {
+                    ErrorLog.WriteDebugLog("BARCODE "+barcodes.toString());
+                }
+            }
+        });
     }
 }
