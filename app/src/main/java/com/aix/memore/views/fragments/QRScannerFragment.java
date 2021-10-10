@@ -12,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -34,16 +36,11 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
     private QRScannerHelper qrScannerHelper;
     private NavController navController;
     private HighlightViewModel highlightViewModel;
-    private ActivityResultContracts.RequestPermission requestPermission;
-
-    public QRScannerFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppPermissionHelper.requestMultiplePermissions(requireActivity(),this);
 
     }
 
@@ -52,6 +49,8 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
                              Bundle savedInstanceState) {
         binding = FragmentQrScannerBinding.inflate(inflater,container,false);
         return binding.getRoot();
+
+
     }
 
     @Override
@@ -61,19 +60,25 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
             qrScannerHelper = new QRScannerHelper(requireContext());
             navController = Navigation.findNavController(view);
             highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
-            binding.bottomNav.getMenu().getItem(0).setCheckable(false);
-            binding.bottomNav.getMenu().getItem(1).setCheckable(false);
+//            binding.bottomNav.getMenu().getItem(0).setCheckable(false);
+//            binding.bottomNav.getMenu().getItem(1).setCheckable(false);
+
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
 
-        AppPermissionHelper.requestMultiplePermissions(requireActivity(),this);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        ErrorLog.WriteDebugLog("init qr Scanner on resume");
+        if(AppPermissionHelper.cameraPermissionGranted(requireContext())) {
+            qrScannerHelper.initQRScannerPreview(requireContext(), binding.surfaceViewQRscanner, getActivity(),
+                    this, AppPermissionHelper.cameraPermissionGranted(requireContext()));
+        }
+
     }
 
     @Override
@@ -95,9 +100,9 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
 
     @Override
     public void onGranted(Map<String, Boolean> isGranted) {
-        ErrorLog.WriteDebugLog("multiple permission granted");
-        qrScannerHelper.initQRScannerPreview(requireContext(), binding.surfaceViewQRscanner, getActivity(),this);
-
+        ErrorLog.WriteDebugLog("init qr Scanner on permission granted "+ AppPermissionHelper.cameraPermissionGranted(requireContext()));
+//        qrScannerHelper.initQRScannerPreview(requireContext(), binding.surfaceViewQRscanner, getActivity(), this);
+//        qrScannerHelper.initialiseDetectorsAndSources(binding);
 
     }
 }
