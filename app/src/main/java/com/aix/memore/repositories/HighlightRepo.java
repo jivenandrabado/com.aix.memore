@@ -23,7 +23,7 @@ public class HighlightRepo {
     public void getHighlight(HighlightInterface highlightInterface, String id){
         try{
 
-            db.collection(FirebaseConstants.MEMORE_HIGHLIGHT)
+            db.collection(FirebaseConstants.MEMORE_OWNER)
                     .document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -32,6 +32,7 @@ public class HighlightRepo {
                         ErrorLog.WriteDebugLog(highlight.getOwner_id());
                         ErrorLog.WriteDebugLog(highlight.getPath());
                         highlightInterface.onHighlightFound(highlight);
+
 
                     }
                 }
