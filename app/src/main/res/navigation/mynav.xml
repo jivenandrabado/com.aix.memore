@@ -22,6 +22,18 @@
         <action
             android:id="@+id/action_HighlightFragment_to_QRScannerFragment"
             app:destination="@id/QRScannerFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.aix.memore.views.fragments.KnowMoreFragment"
+        android:label="fragment_gallery"
+        tools:layout="@layout/fragment_know_more" >
+        <action
+            android:id="@+id/action_galleryFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment" />
     </fragment>
 
 </navigation>
