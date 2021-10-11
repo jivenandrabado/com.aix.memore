@@ -25,8 +25,12 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.Document;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +42,7 @@ public class GalleryRepo {
     private ListenerRegistration mediaSnapshotListener;
     private ListenerRegistration bioSnapshotListener;
     private MutableLiveData<Bio> bioMutableLiveData = new MutableLiveData<Bio>();
+    private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
 
 
     public GalleryRepo() {
@@ -46,7 +51,7 @@ public class GalleryRepo {
     }
 
     public FirestoreRecyclerOptions<Album> recyclerOptions(String owner_id) {
-        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).whereEqualTo("is_default",false);
+        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).orderBy("date_created");
         return new FirestoreRecyclerOptions.Builder<Album>()
                 .setQuery(query, Album.class)
                 .build();
@@ -107,7 +112,9 @@ public class GalleryRepo {
                             }
                         }
 
-                        mediaListLiveData.setValue(mediaList);
+                        if (mediaListLiveData != null) {
+                            mediaListLiveData.postValue(mediaList);
+                        }
                     }
                 }
             });
@@ -142,7 +149,7 @@ public class GalleryRepo {
                     }
 
                     if (value != null && value.exists()) {
-                        bioMutableLiveData.setValue(value.toObject(Bio.class));
+                        bioMutableLiveData.postValue(value.toObject(Bio.class));
                     }else{
                         ErrorLog.WriteDebugLog("NO VALUE");
                     }
@@ -165,4 +172,31 @@ public class GalleryRepo {
         return bioMutableLiveData;
     }
 
+    public void createNewAlbum(String doc_id, Album album) {
+        try{
+            DocumentReference document = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document();
+
+            album.setId(document.getId());
+            db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document(document.getId()).set(album)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                isAlbumCreated.postValue(true);
+                            }else{
+                                isAlbumCreated.postValue(false);
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public MutableLiveData<Boolean> isAlbumCreated() {
+        return isAlbumCreated;
+    }
 }
