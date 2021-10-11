@@ -24,16 +24,28 @@
             app:destination="@id/QRScannerFragment" />
         <action
             android:id="@+id/action_HighlightFragment_to_galleryFragment"
-            app:destination="@id/galleryFragment" />
+            app:destination="@id/knowMoreFragment" />
     </fragment>
     <fragment
-        android:id="@+id/galleryFragment"
+        android:id="@+id/knowMoreFragment"
         android:name="com.aix.memore.views.fragments.KnowMoreFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_know_more" >
         <action
             android:id="@+id/action_galleryFragment_to_HighlightFragment"
             app:destination="@id/HighlightFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_newAlbumDialog"
+            app:destination="@id/newAlbumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAlbumFragment"
+        android:name="com.aix.memore.views.fragments.NewAlbumFragment"
+        android:label="fragment_new_album_dialog"
+        tools:layout="@layout/fragment_new_album_dialog" >
+        <action
+            android:id="@+id/action_newAlbumDialog_to_galleryFragment"
+            app:destination="@id/knowMoreFragment" />
     </fragment>
 
 </navigation>
