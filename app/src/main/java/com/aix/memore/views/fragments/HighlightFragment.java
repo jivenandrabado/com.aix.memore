@@ -1,6 +1,7 @@
 package com.aix.memore.views.fragments;
 
 import android.content.Intent;
+import android.graphics.Outline;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -26,6 +28,7 @@ import com.aix.memore.databinding.FragmentHighlightBinding;
 import com.aix.memore.interfaces.HighlightInterface;
 import com.aix.memore.models.Bio;
 import com.aix.memore.models.Highlight;
+import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
@@ -53,6 +56,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
     }
@@ -82,11 +86,12 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                 @Override
                 public void onChanged(Bio bio) {
                     String full_name = bio.bio_first_name+ " "+bio.bio_middle_name+ " "+bio.bio_last_name;
-                    String death_date = bio.bio_birth_date+ " - "+ bio.bio_death_date.toDate();
+                    String death_date = DateHelper.formatDate(bio.bio_birth_date.toDate())+ " - "+ DateHelper.formatDate(bio.bio_death_date.toDate());
                     Glide.with(requireContext()).load(Uri.parse(bio.bio_profile_pic))
                             .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHightlightBioProfilePic));
                     binding.textViewHighlightName.setText(full_name);
                     binding.textViewHighlightDeathDate.setText(death_date);
+                    binding.buttonKnowMore.setText(bio.bio_first_name+"'s Life");
                 }
             });
 
@@ -137,6 +142,14 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 
 
     private void initExoPlayer(String URL){
+        binding.playerView.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 70);
+            }
+        });
+        binding.playerView.setClipToOutline(true);
+
         playVideo(simpleExoPlayer,URL);
     }
 
@@ -156,7 +169,10 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 //            }
 //        });
         player.setRepeatMode(player.REPEAT_MODE_ONE);
+
         player.prepare();
+
+
     }
 
     private void initProgressDialog(){
