@@ -42,4 +42,12 @@ public class GalleryViewModel extends ViewModel {
     public void addSnapshotListenerForBio(String doc_id){
         galleryRepo.addSnapshotListenerForBio(doc_id);
     }
+
+    public void createNewAlbum(String doc_id, Album album){
+        galleryRepo.createNewAlbum(doc_id, album);
+    }
+
+    public MutableLiveData<Boolean> isAlbumCreated(){
+        return galleryRepo.isAlbumCreated();
+    }
 }
