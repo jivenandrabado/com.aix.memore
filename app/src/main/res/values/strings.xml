@@ -11,4 +11,7 @@
     <string name="lifecare">Lifecare</string>
     <string name="explore">Explore</string>
     <string name="know_more">Know More</string>
+    <string name="remembering">Remembering</string>
+    <string name="new_album">New Album</string>
+    <string name="enter_a_name_for_this_album">Enter a name for this Album</string>
 </resources>
