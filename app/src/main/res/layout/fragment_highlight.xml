@@ -10,10 +10,10 @@
         android:id="@+id/playerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".690"
+        app:layout_constraintHeight_percent=".650"
         app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintWidth_percent=".800"
@@ -28,49 +28,57 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.50"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ImageButton
         android:id="@+id/buttonShare"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:drawableStart="@drawable/ic_baseline_share_24"
-        android:text="Share"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:background="@drawable/background_circle"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@+id/appCompatButton3"
-        app:layout_constraintStart_toEndOf="@+id/buttonKnowMore"
+        android:elevation="10dp"
+        android:drawableStart="@drawable/ic_baseline_share_24"
+        android:src="@drawable/ic_baseline_share_24"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonKnowMore"
+        app:layout_constraintEnd_toEndOf="@+id/appCompatButton"
+        app:layout_constraintStart_toStartOf="@+id/appCompatButton"
         app:layout_constraintTop_toTopOf="@+id/buttonKnowMore" />
 
-    <ImageButton
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonKnowMore"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/ic_baseline_info_24"
+        android:background="@drawable/background_rectangle_rounded"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@+id/appCompatButton"
-        app:layout_constraintStart_toStartOf="@+id/appCompatButton"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatButton" />
+        android:textStyle="bold"
+        android:textColor="@color/memore_blue"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/appCompatButton3"
+        app:layout_constraintStart_toEndOf="@+id/buttonShare"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatButton2" />
 
-
-    <ImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/imageViewHightlightBioProfilePic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:src="@drawable/ic_baseline_photo_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_width="8dp"
+        />
 
     <TextView
         android:id="@+id/textViewHighlightName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="EDDIE GARCIA"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewHightlightBioProfilePic"
+        android:layout_marginTop="16dp"
+        android:text="Name"
+        android:textColor="@color/memore_blue"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />
 
@@ -78,7 +86,7 @@
         android:id="@+id/textViewHighlightDeathDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="May 2, 1929 - June 20,2019"
+        android:text="Birth-Death Date"
         app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
         app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
 
@@ -86,6 +94,7 @@
         android:id="@+id/appCompatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Like"
         app:layout_constraintStart_toStartOf="@+id/playerView"
         app:layout_constraintTop_toBottomOf="@+id/playerView" />
@@ -97,7 +106,7 @@
         android:text="heart"
         app:layout_constraintEnd_toStartOf="@+id/appCompatButton3"
         app:layout_constraintStart_toEndOf="@+id/appCompatButton"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintTop_toTopOf="@+id/appCompatButton" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/appCompatButton3"
@@ -105,7 +114,7 @@
         android:layout_height="wrap_content"
         android:text="Sad"
         app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintTop_toTopOf="@+id/appCompatButton2" />
 
 
 
