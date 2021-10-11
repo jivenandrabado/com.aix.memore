@@ -3,22 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/dialog_progressbar.xml" value="0.18063063063063062" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_gallery.xml" value="0.22604166666666667" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_highlight.xml" value="0.18" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_know_more.xml" value="0.2" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.25" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_album.xml" value="0.17207207207207206" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_gallery.xml" value="0.2" />
         <entry key="app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/background_circle.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/background_oval.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/background_rectangle_rounded.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/drawable/background_rectangle_rounded_solid.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/drawable/background_rounded_corners.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_folder_24.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_medical_services_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/dialog_progressbar.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.34739583333333335" />
-        <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_know_more.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/fragment_new_album_dialog.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_password_dialog.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_album.xml" value="0.5" />
         <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.34739583333333335" />
       </map>
     </option>
@@ -28,5 +31,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.33" />
+      </ProjectState>
+    </option>
   </component>
 </project>
