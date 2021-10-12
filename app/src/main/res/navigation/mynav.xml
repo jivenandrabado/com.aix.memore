@@ -35,8 +35,8 @@
             android:id="@+id/action_galleryFragment_to_HighlightFragment"
             app:destination="@id/HighlightFragment" />
         <action
-            android:id="@+id/action_galleryFragment_to_newAlbumDialog"
-            app:destination="@id/newAlbumFragment" />
+            android:id="@+id/action_knowMoreFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
     </fragment>
     <fragment
         android:id="@+id/newAlbumFragment"
@@ -44,8 +44,43 @@
         android:label="fragment_new_album_dialog"
         tools:layout="@layout/fragment_new_album_dialog" >
         <action
-            android:id="@+id/action_newAlbumDialog_to_galleryFragment"
+            android:id="@+id/action_newAlbumFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.aix.memore.views.fragments.GalleryFragment"
+        android:label="GalleryFragment" >
+        <action
+            android:id="@+id/action_galleryFragment_to_knowMoreFragment"
             app:destination="@id/knowMoreFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_newAlbumFragment"
+            app:destination="@id/newAlbumFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_galleryViewFragment"
+            app:destination="@id/galleryViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryViewFragment"
+        android:name="com.aix.memore.views.fragments.GalleryViewFragment"
+        android:label="fragment_gallery_view"
+        tools:layout="@layout/fragment_gallery_view" >
+        <action
+            android:id="@+id/action_galleryViewFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+        <action
+            android:id="@+id/action_galleryViewFragment_to_galleryMediaFullViewFragment"
+            app:destination="@id/galleryMediaFullViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryMediaFullViewFragment"
+        android:name="com.aix.memore.views.fragments.GalleryMediaFullViewFragment"
+        android:label="fragment_gallery_media_full_view"
+        tools:layout="@layout/fragment_gallery_media_full_view" >
+        <action
+            android:id="@+id/action_galleryMediaFullViewFragment_to_galleryViewFragment"
+            app:destination="@id/galleryViewFragment" />
     </fragment>
 
 </navigation>
