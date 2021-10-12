@@ -19,7 +19,7 @@
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/memore_logo</item>
+        <item name="android:windowBackground">@drawable/memore_logo_final</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
     </style>
 
