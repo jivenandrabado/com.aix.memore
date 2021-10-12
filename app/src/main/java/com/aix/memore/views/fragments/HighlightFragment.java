@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.MediaController;
+import android.widget.PopupMenu;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -149,6 +151,31 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             }
         });
         binding.playerView.setClipToOutline(true);
+
+        binding.playerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(requireContext(), binding.playerView);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        switch (menuItem.getItemId()){
+//                            case R.id.newAlbumFragment:
+//                                break;
+//
+//                            case R.id.upload:
+//                                break;
+//
+//                            default:
+//                                return false;
+//                        }
+                        return false;
+                    }
+                });
+                popup.inflate(R.menu.react_menu);
+                popup.show();
+            }
+        });
 
         playVideo(simpleExoPlayer,URL);
     }
