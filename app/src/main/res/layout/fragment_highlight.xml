@@ -13,13 +13,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".650"
+        app:layout_constraintHeight_percent=".730"
         app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintWidth_percent=".800"
         app:resize_mode="fill" />
-
-
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -33,13 +31,12 @@
         android:layout_width="60dp"
         android:layout_height="50dp"
         android:background="@drawable/background_circle"
-        android:textAllCaps="false"
-        android:elevation="10dp"
         android:drawableStart="@drawable/ic_baseline_share_24"
+        android:elevation="10dp"
         android:src="@drawable/ic_baseline_share_24"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@+id/buttonKnowMore"
-        app:layout_constraintEnd_toEndOf="@+id/appCompatButton"
-        app:layout_constraintStart_toStartOf="@+id/appCompatButton"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
         app:layout_constraintTop_toTopOf="@+id/buttonKnowMore" />
 
 
@@ -48,15 +45,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/background_rectangle_rounded"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:textColor="@color/memore_blue"
         android:elevation="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/appCompatButton3"
+        android:textAllCaps="false"
+        android:textColor="@color/memore_blue"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
         app:layout_constraintStart_toEndOf="@+id/buttonShare"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatButton2" />
+        app:layout_constraintTop_toBottomOf="@+id/playerView" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/imageViewHightlightBioProfilePic"
@@ -90,31 +87,34 @@
         app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
         app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Like"
-        app:layout_constraintStart_toStartOf="@+id/playerView"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/appCompatButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:text="Like"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/playerView"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/playerView"-->
+<!--        android:visibility="gone"/>-->
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="heart"
-        app:layout_constraintEnd_toStartOf="@+id/appCompatButton3"
-        app:layout_constraintStart_toEndOf="@+id/appCompatButton"
-        app:layout_constraintTop_toTopOf="@+id/appCompatButton" />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/appCompatButton2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="heart"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/appCompatButton3"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/appCompatButton"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/appCompatButton"-->
+<!--        android:visibility="gone"/>-->
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sad"
-        app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintTop_toTopOf="@+id/appCompatButton2" />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/appCompatButton3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Sad"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/playerView"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/appCompatButton2"-->
+<!--        android:visibility="gone"/>-->
 
 
 
