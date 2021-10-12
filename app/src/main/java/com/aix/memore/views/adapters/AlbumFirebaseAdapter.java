@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aix.memore.databinding.ItemAlbumBinding;
+import com.aix.memore.interfaces.GalleryInterface;
 import com.aix.memore.models.Album;
 import com.aix.memore.utilities.ErrorLog;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -14,15 +15,18 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class AlbumFirebaseAdapter extends FirestoreRecyclerAdapter<Album, AlbumFirebaseAdapter.ViewHolder> {
 
+    private GalleryInterface galleryInterface;
 
-    public AlbumFirebaseAdapter(@NonNull FirestoreRecyclerOptions<Album> options) {
+    public AlbumFirebaseAdapter(@NonNull FirestoreRecyclerOptions<Album> options, GalleryInterface galleryInterface) {
         super(options);
+        this.galleryInterface = galleryInterface;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull AlbumFirebaseAdapter.ViewHolder holder, int position, @NonNull Album model) {
         Album album = getItem(position);
         holder.binding.setAlbum(album);
+        holder.binding.setGalleryInterface(galleryInterface);
     }
 
     @NonNull
