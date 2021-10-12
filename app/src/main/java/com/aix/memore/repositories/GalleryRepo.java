@@ -1,19 +1,23 @@
 package com.aix.memore.repositories;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.aix.memore.models.Album;
 import com.aix.memore.models.Bio;
-import com.aix.memore.models.Highlight;
+import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.utilities.FirebaseConstants;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,12 +29,12 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.model.Document;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +47,10 @@ public class GalleryRepo {
     private ListenerRegistration bioSnapshotListener;
     private MutableLiveData<Bio> bioMutableLiveData = new MutableLiveData<Bio>();
     private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
+    private MutableLiveData<Boolean> isUploaded = new MutableLiveData<>();
+    public String public_wall_id = "";
 
 
     public GalleryRepo() {
@@ -172,18 +180,23 @@ public class GalleryRepo {
         return bioMutableLiveData;
     }
 
-    public void createNewAlbum(String doc_id, Album album) {
+    public void createNewAlbum(String doc_id, Album album, List<Uri> imageUriList) {
         try{
             DocumentReference document = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document();
 
-            album.setId(document.getId());
+            album.setAlbum_id(document.getId());
             db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(document.getId()).set(album)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
+                                //public wall
+                                for(int i = 0; i < imageUriList.size() ; i++) {
+                                    uploadToFirebaseStorage(doc_id, imageUriList.get(i),document.getId());
+                                }
+
                                 isAlbumCreated.postValue(true);
                             }else{
                                 isAlbumCreated.postValue(false);
@@ -198,5 +211,152 @@ public class GalleryRepo {
 
     public MutableLiveData<Boolean> isAlbumCreated() {
         return isAlbumCreated;
+    }
+
+    public FirestoreRecyclerOptions galleryViewRecyclerOptions(String owner_id, String album_id) {
+        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id).collection(FirebaseConstants.MEMORE_MEDIA)
+                .orderBy("upload_date");
+        return new FirestoreRecyclerOptions.Builder<Gallery>()
+                .setQuery(query, Gallery.class)
+                .build();
+    }
+
+    public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());
+//            InputStream stream = new FileInputStream(new File(path));
+
+            UploadTask uploadTask = mediaRef.putFile(path);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
+                            addNewMedia(owner_id, String.valueOf(uri), album_id);
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
+    public void addNewMedia(String owner_id, String path, String album_id){
+        try{
+            Gallery gallery = new Gallery();
+            gallery.setType(1);
+            gallery.setUpload_date(new Timestamp(new Date()));
+            gallery.setPath(path);
+
+            String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document(album_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
+
+
+            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
+                    .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        ErrorLog.WriteDebugLog("UPLOAD SUCCESS");
+                        isUploaded.postValue(true);
+                    }else{
+                        ErrorLog.WriteErrorLog(task.getException());
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public void uploadToFirebaseStoragePublicWall(String owner_id, Uri path) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());
+//            InputStream stream = new FileInputStream(new File(path));
+
+            UploadTask uploadTask = mediaRef.putFile(path);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
+                            addNewMediaToPublicWall(owner_id, String.valueOf(uri));
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
+    public void addNewMediaToPublicWall(String owner_id, String path){
+        try{
+
+            Gallery gallery = new Gallery();
+            gallery.setType(1);
+            gallery.setUpload_date(new Timestamp(new Date()));
+            gallery.setPath(path);
+
+            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .whereEqualTo("title","Public Wall").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            if (task.isSuccessful()) {
+                                if (!task.getResult().isEmpty()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        public_wall_id = document.getId();
+                                        ErrorLog.WriteDebugLog("Public wall id "+public_wall_id);
+                                    }
+
+                                    String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                                            .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
+
+                                    db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
+                                            .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                ErrorLog.WriteDebugLog("UPLOAD SUCCESS");
+                                                isUploaded.postValue(true);
+                                            }else{
+                                                ErrorLog.WriteErrorLog(task.getException());
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+
+
+
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsUploaded(){
+        return isUploaded;
     }
 }
