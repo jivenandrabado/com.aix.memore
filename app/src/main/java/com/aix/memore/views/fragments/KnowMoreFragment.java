@@ -60,9 +60,6 @@ public class KnowMoreFragment extends Fragment {
             galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
             highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
             navController = Navigation.findNavController(view);
-            albumFirebaseAdapter = new AlbumFirebaseAdapter(galleryViewModel.getGalleryRecyclerOptions(highlightViewModel.getScannedValue().getValue()));
-//        albumFirebaseAdapter.updateOptions(galleryViewModel.getGalleryRecyclerOptions(highlightViewModel.getScannedValue().getValue()));
-            binding.recyclerviewGallery.setAdapter(albumFirebaseAdapter);
             galleryViewModel.getDefaultGallery(highlightViewModel.getScannedValue().getValue());
             galleryViewModel.addSnapshotListenerForBio(highlightViewModel.getScannedValue().getValue());
 
@@ -128,12 +125,13 @@ public class KnowMoreFragment extends Fragment {
 //                }
 //            });
 
-            binding.buttonAddNewAlbum.setOnClickListener(new View.OnClickListener() {
+            binding.buttonViewGallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    navController.navigate(R.id.action_galleryFragment_to_newAlbumDialog);
+                    navController.navigate(R.id.action_knowMoreFragment_to_galleryFragment);
                 }
             });
+
 
 //        initSwitchButton();
         }catch (Exception e){
