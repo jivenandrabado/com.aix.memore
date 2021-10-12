@@ -10,8 +10,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutTitle"
             android:layout_width="match_parent"
@@ -19,22 +19,21 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:hint="@string/title"
             app:boxStrokeWidth="0dp"
             app:hintTextColor="@color/gray"
-            android:hint="Title"
-            >
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_rounded_corners"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColorHint="@color/memore_blue"
-                android:background="@drawable/background_rounded_corners"/>
+                android:textColorHint="@color/memore_blue" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,23 +45,23 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:gravity="top"
+            android:hint="@string/description"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitle"
-            app:boxStrokeWidth="0dp"
-            android:hint="Title"
-            app:hintTextColor="@color/gray"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumDescription"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textMultiLine"
-                android:gravity="start|top"
-                android:textAlignment="viewStart"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/background_rounded_corners"/>
+                android:background="@drawable/background_rounded_corners"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:textAlignment="viewStart" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50"/>
+            app:layout_constraintGuide_percent="0.50" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
