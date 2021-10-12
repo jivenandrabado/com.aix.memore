@@ -9,11 +9,16 @@
             name="album"
             type="com.aix.memore.models.Album" />
 
+        <variable
+            name="galleryInterface"
+            type="com.aix.memore.interfaces.GalleryInterface" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> galleryInterface.onAlbumSelect(album)}"
         >
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -37,7 +42,8 @@
             app:layout_constraintEnd_toEndOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="@+id/imageView"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
