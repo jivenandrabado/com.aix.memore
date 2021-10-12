@@ -3,14 +3,11 @@ package com.aix.memore.models;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.google.type.DateTime;
-
 import java.util.Date;
-import java.util.Objects;
 
 public class Album {
 
-    public String id;
+    public String album_id;
     public String title;
     public String description;
     public Date date_created;
@@ -23,12 +20,12 @@ public class Album {
         this.title = title;
     }
 
-    public String getId() {
-        return id;
+    public String getAlbum_id() {
+        return album_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAlbum_id(String album_id) {
+        this.album_id = album_id;
     }
 
     public String getDescription() {
@@ -58,7 +55,7 @@ public class Album {
     public static DiffUtil.ItemCallback<Album> itemCallback = new DiffUtil.ItemCallback<Album>() {
         @Override
         public boolean areItemsTheSame(@NonNull Album oldItem, @NonNull Album newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return oldItem.getAlbum_id().equals(newItem.getAlbum_id());
         }
 
         @Override
