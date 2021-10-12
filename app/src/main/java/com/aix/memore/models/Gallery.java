@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.paging.DifferCallback;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.firebase.Timestamp;
+
 import java.util.Objects;
 
 public class Gallery {
 
     public String path;
-    public String type;
+    public int type;
+    public Timestamp upload_date;
 
     public String getPath() {
         return path;
@@ -19,31 +22,20 @@ public class Gallery {
         this.path = path;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Gallery gallery = (Gallery) o;
-        return getPath().equals(gallery.getPath()) && getType().equals(gallery.getType());
+    public Timestamp getUpload_date() {
+        return upload_date;
     }
 
-    public static DiffUtil.ItemCallback<Gallery> itemCallback = new DiffUtil.ItemCallback<Gallery>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Gallery oldItem, @NonNull Gallery newItem) {
-            return oldItem.getPath().equals(newItem.getPath());
-        }
+    public void setUpload_date(Timestamp upload_date) {
+        this.upload_date = upload_date;
+    }
 
-        @Override
-        public boolean areContentsTheSame(@NonNull Gallery oldItem, @NonNull Gallery newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }
