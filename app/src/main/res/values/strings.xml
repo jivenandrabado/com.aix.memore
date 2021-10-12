@@ -14,4 +14,8 @@
     <string name="remembering">Remembering</string>
     <string name="new_album">New Album</string>
     <string name="enter_a_name_for_this_album">Enter a name for this Album</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="uploading">Uploading...</string>
+    <string name="upload">Upload</string>
 </resources>
