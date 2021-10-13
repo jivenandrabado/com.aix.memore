@@ -8,11 +8,10 @@
     <fragment
         android:id="@+id/QRScannerFragment"
         android:name="com.aix.memore.views.fragments.QRScannerFragment"
-        >
+        android:label="Memore">
         <action
             android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
-            app:destination="@id/HighlightFragment"
-            />
+            app:destination="@id/HighlightFragment" />
     </fragment>
 
     <fragment
@@ -29,8 +28,8 @@
     <fragment
         android:id="@+id/knowMoreFragment"
         android:name="com.aix.memore.views.fragments.KnowMoreFragment"
-        android:label="fragment_gallery"
-        tools:layout="@layout/fragment_know_more" >
+        android:label="Know More"
+        tools:layout="@layout/fragment_know_more">
         <action
             android:id="@+id/action_galleryFragment_to_HighlightFragment"
             app:destination="@id/HighlightFragment" />
@@ -41,8 +40,8 @@
     <fragment
         android:id="@+id/newAlbumFragment"
         android:name="com.aix.memore.views.fragments.NewAlbumFragment"
-        android:label="fragment_new_album_dialog"
-        tools:layout="@layout/fragment_new_album_dialog" >
+        android:label="Add New Album"
+        tools:layout="@layout/fragment_new_album_dialog">
         <action
             android:id="@+id/action_newAlbumFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
@@ -50,7 +49,7 @@
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.aix.memore.views.fragments.GalleryFragment"
-        android:label="GalleryFragment" >
+        android:label="Gallery">
         <action
             android:id="@+id/action_galleryFragment_to_knowMoreFragment"
             app:destination="@id/knowMoreFragment" />
@@ -64,8 +63,8 @@
     <fragment
         android:id="@+id/galleryViewFragment"
         android:name="com.aix.memore.views.fragments.GalleryViewFragment"
-        android:label="fragment_gallery_view"
-        tools:layout="@layout/fragment_gallery_view" >
+        android:label="Gallery"
+        tools:layout="@layout/fragment_gallery_view">
         <action
             android:id="@+id/action_galleryViewFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
@@ -76,8 +75,8 @@
     <fragment
         android:id="@+id/galleryMediaFullViewFragment"
         android:name="com.aix.memore.views.fragments.GalleryMediaFullViewFragment"
-        android:label="fragment_gallery_media_full_view"
-        tools:layout="@layout/fragment_gallery_media_full_view" >
+        android:label="Gallery"
+        tools:layout="@layout/fragment_gallery_media_full_view">
         <action
             android:id="@+id/action_galleryMediaFullViewFragment_to_galleryViewFragment"
             app:destination="@id/galleryViewFragment" />
