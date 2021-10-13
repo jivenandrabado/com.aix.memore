@@ -21,6 +21,8 @@ import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,7 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
 
@@ -104,32 +107,32 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
             });
 
 
-            binding.buttonManage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(requireContext(), binding.buttonManage);
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()){
-                                case R.id.newAlbumFragment:
-                                    navController.navigate(R.id.action_galleryFragment_to_newAlbumFragment);
-                                    break;
-
-                                case R.id.upload:
-                                    chooseImage();
-                                    break;
-
-                                default:
-                                    return false;
-                            }
-                            return false;
-                        }
-                    });
-                    popup.inflate(R.menu.manage_menu);
-                    popup.show();
-                }
-            });
+//            binding.buttonManage.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    PopupMenu popup = new PopupMenu(requireContext(), binding.buttonManage);
+//                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                        @Override
+//                        public boolean onMenuItemClick(MenuItem menuItem) {
+//                            switch (menuItem.getItemId()){
+//                                case R.id.newAlbumFragment:
+//                                    navController.navigate(R.id.action_galleryFragment_to_newAlbumFragment);
+//                                    break;
+//
+//                                case R.id.upload:
+//                                    chooseImage();
+//                                    break;
+//
+//                                default:
+//                                    return false;
+//                            }
+//                            return false;
+//                        }
+//                    });
+//                    popup.inflate(R.menu.manage_menu);
+//                    popup.show();
+//                }
+//            });
 
             galleryViewModel.isUploaded().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                 @Override
@@ -145,6 +148,32 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
             ErrorLog.WriteErrorLog(e);
         }
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+        // Add the new menu items
+        inflater.inflate(R.menu.manage_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.newAlbumFragment:
+                navController.navigate(R.id.action_galleryFragment_to_newAlbumFragment);
+                break;
+
+            case R.id.upload:
+                chooseImage();
+                break;
+
+            default:
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
