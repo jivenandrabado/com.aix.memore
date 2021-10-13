@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.MediaController;
 import android.widget.PopupMenu;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +46,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 
     private FragmentHighlightBinding binding;
     private HighlightViewModel highlightViewModel;
-    private VideoView videoView;
     private MediaController mediaController;
     private HighlightInterface highlightInterface;
     private ProgressDialogFragment progressDialogFragment;
@@ -58,8 +56,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
     }
 
@@ -138,6 +134,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onHighlightFound(Highlight highlight) {
         initExoPlayer(highlight.getVideo_highlight());
+        ErrorLog.WriteDebugLog("On Highlight Found");
         progressDialogFragment.dismiss();
 
     }
@@ -181,6 +178,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     }
 
     private void playVideo(SimpleExoPlayer player,String linkToPlay){
+        ErrorLog.WriteDebugLog("INIT PLAY VIDEO");
         boolean playWhenReady = true;
         int currentWindow = 0;
         long playbackPosition = 0;
@@ -197,7 +195,10 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 //        });
         player.setRepeatMode(player.REPEAT_MODE_ONE);
 
-        player.prepare();
+        if(!player.isPlaying()) {
+            player.prepare();
+            player.play();
+        }
 
 
     }
@@ -210,16 +211,14 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onPause(){
         super.onPause();
-        if(videoView != null) {
-            videoView.pause();
+        if(simpleExoPlayer != null) {
+//            simpleExoPlayer.pause();
+            simpleExoPlayer.stop();
         }
     }
     @Override
     public void onResume(){
         super.onResume();
-        if(videoView != null) {
-            videoView.resume();
-        }
     }
 
     @Override
