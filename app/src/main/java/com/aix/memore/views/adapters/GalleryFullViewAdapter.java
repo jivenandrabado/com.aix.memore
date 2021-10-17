@@ -22,7 +22,6 @@ public class GalleryFullViewAdapter  extends BaseAdapter {
     public GalleryFullViewAdapter(Context c, List<Gallery> galleryList) {
         context = c;
         this.galleryList = galleryList;
-        ErrorLog.WriteDebugLog("GALLERY LIST IN ADAPTER "+galleryList.size());
     }
 
     // returns the number of images, in our example it is 10
