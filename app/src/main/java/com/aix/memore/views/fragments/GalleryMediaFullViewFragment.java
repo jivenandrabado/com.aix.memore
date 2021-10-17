@@ -51,7 +51,6 @@ public class GalleryMediaFullViewFragment extends Fragment {
         galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
         galleryList = galleryViewModel.getSelectedGalleryList().getValue();
         galleryFullViewAdapter = new GalleryFullViewAdapter(requireContext(), galleryList);
-        ErrorLog.WriteDebugLog("GALLERY LIST SIZE "+galleryList.size());
         binding.gallery.setAdapter(galleryFullViewAdapter);
 
         galleryViewModel.getSelectedMediaPosition().observe(requireActivity(), new Observer<Integer>() {
