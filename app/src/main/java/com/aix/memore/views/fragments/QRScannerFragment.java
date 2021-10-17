@@ -63,6 +63,13 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
 //            binding.bottomNav.getMenu().getItem(0).setCheckable(false);
 //            binding.bottomNav.getMenu().getItem(1).setCheckable(false);
 
+            binding.buttonLifecare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navController.navigate(R.id.action_QRScannerFragment_to_lifeCareFragment);
+                }
+            });
+
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
