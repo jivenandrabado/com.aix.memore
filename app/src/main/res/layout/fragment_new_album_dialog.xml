@@ -74,6 +74,8 @@
             android:drawableStart="@drawable/ic_baseline_photo_24"
             android:text="Add photos or videos"
             android:textAllCaps="false"
+            android:textColor="@color/gray"
+            android:drawablePadding="20dp"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
