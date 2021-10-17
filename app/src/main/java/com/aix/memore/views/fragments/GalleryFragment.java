@@ -107,33 +107,6 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
             });
 
 
-//            binding.buttonManage.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    PopupMenu popup = new PopupMenu(requireContext(), binding.buttonManage);
-//                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                        @Override
-//                        public boolean onMenuItemClick(MenuItem menuItem) {
-//                            switch (menuItem.getItemId()){
-//                                case R.id.newAlbumFragment:
-//                                    navController.navigate(R.id.action_galleryFragment_to_newAlbumFragment);
-//                                    break;
-//
-//                                case R.id.upload:
-//                                    chooseImage();
-//                                    break;
-//
-//                                default:
-//                                    return false;
-//                            }
-//                            return false;
-//                        }
-//                    });
-//                    popup.inflate(R.menu.manage_menu);
-//                    popup.show();
-//                }
-//            });
-
             galleryViewModel.isUploaded().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                 @Override
                 public void onChanged(Boolean aBoolean) {
@@ -142,6 +115,13 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
                             uploadDialog.dismiss();
                         }
                     }
+                }
+            });
+
+            binding.buttonUploadMedia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseImage();
                 }
             });
         }catch (Exception e){
@@ -166,8 +146,10 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
                 navController.navigate(R.id.action_galleryFragment_to_newAlbumFragment);
                 break;
 
-            case R.id.upload:
-                chooseImage();
+//            case R.id.upload:
+//                chooseImage();
+//                break;
+            case R.id.edit:
                 break;
 
             default:
@@ -254,4 +236,6 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
                 }
             }
     );
+
+
 }
