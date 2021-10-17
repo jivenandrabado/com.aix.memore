@@ -16,21 +16,33 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="@{() -> galleryInterface.onAlbumSelect(album)}"
+        android:clickable="true"
         >
 
-        <com.mikhaellopez.circularimageview.CircularImageView
+<!--        <com.mikhaellopez.circularimageview.CircularImageView-->
+<!--            android:id="@+id/imageView"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:civ_border_width="2dp"-->
+<!--            android:src="@drawable/ic_baseline_folder_24"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            />-->
+
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="200dp"
             android:layout_height="150dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:civ_border_width="2dp"
             android:src="@drawable/ic_baseline_folder_24"
-            android:adjustViewBounds="true"
             />
 
         <TextView
