@@ -11,6 +11,7 @@ public class Album {
     public String title;
     public String description;
     public Date date_created;
+    public Boolean is_public;
 
     public String getTitle() {
         return title;
@@ -42,6 +43,14 @@ public class Album {
 
     public void setDate_created(Date date_created) {
         this.date_created = date_created;
+    }
+
+    public Boolean getIs_public() {
+        return is_public;
+    }
+
+    public void setIs_public(Boolean is_public) {
+        this.is_public = is_public;
     }
 
     @Override
