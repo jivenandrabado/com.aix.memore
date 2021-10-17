@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
             app:destination="@id/HighlightFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_lifeCareFragment"
+            app:destination="@id/lifeCareFragment" />
     </fragment>
 
     <fragment
@@ -81,5 +84,10 @@
             android:id="@+id/action_galleryMediaFullViewFragment_to_galleryViewFragment"
             app:destination="@id/galleryViewFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/lifeCareFragment"
+        android:name="com.aix.memore.views.fragments.LifeCareFragment"
+        android:label="LifeCare"
+        tools:layout="@layout/fragment_life_care" />
 
 </navigation>
