@@ -77,6 +77,11 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                             galleryViewModel.getSelectedAlbum().getValue().getAlbum_id()), requireContext(),this);
             binding.recyclerviewGalleryView.setAdapter(galleryFirebaseAdapter);
             binding.textViewAlbumTitle.setText(galleryViewModel.getSelectedAlbum().getValue().getTitle());
+            if(galleryViewModel.getSelectedAlbum().getValue().getIs_public()) {
+                binding.buttonUpload.setVisibility(View.VISIBLE);
+            }else{
+                binding.buttonUpload.setVisibility(View.GONE);
+            }
             uploadDialog = new UploadDialog();
             navController = Navigation.findNavController(view);
 
