@@ -109,6 +109,7 @@ public class NewAlbumFragment extends Fragment {
                     album.setTitle( String.valueOf(binding.editTextTitle.getText()).trim());
                     album.setDescription( String.valueOf(binding.editTextAlbumDescription.getText()).trim());
                     album.setDate_created(new Date());
+                    album.setIs_public(false);
                     galleryViewModel.createNewAlbum(doc_id, album, imageUriList);
 
                 }
