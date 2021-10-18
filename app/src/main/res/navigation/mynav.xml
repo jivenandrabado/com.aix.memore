@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mynav"
+    app:startDestination="@id/QRScannerFragment">
+
+    <fragment
+        android:id="@+id/QRScannerFragment"
+        android:name="com.aix.memore.views.fragments.QRScannerFragment"
+        android:label="Memore">
+        <action
+            android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
+            app:destination="@id/HighlightFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_lifeCareFragment"
+            app:destination="@id/lifeCareFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/HighlightFragment"
+        android:name="com.aix.memore.views.fragments.HighlightFragment"
+        android:label="Highlight">
+        <action
+            android:id="@+id/action_HighlightFragment_to_QRScannerFragment"
+            app:destination="@id/QRScannerFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_galleryFragment"
+            app:destination="@id/knowMoreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/knowMoreFragment"
+        android:name="com.aix.memore.views.fragments.KnowMoreFragment"
+        android:label="Know More"
+        tools:layout="@layout/fragment_know_more">
+        <action
+            android:id="@+id/action_galleryFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment" />
+        <action
+            android:id="@+id/action_knowMoreFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAlbumFragment"
+        android:name="com.aix.memore.views.fragments.NewAlbumFragment"
+        android:label="Add New Album"
+        tools:layout="@layout/fragment_new_album_dialog">
+        <action
+            android:id="@+id/action_newAlbumFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.aix.memore.views.fragments.GalleryFragment"
+        android:label="Gallery">
+        <action
+            android:id="@+id/action_galleryFragment_to_knowMoreFragment"
+            app:destination="@id/knowMoreFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_newAlbumFragment"
+            app:destination="@id/newAlbumFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_galleryViewFragment"
+            app:destination="@id/galleryViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryViewFragment"
+        android:name="com.aix.memore.views.fragments.GalleryViewFragment"
+        android:label="Gallery"
+        tools:layout="@layout/fragment_gallery_view">
+        <action
+            android:id="@+id/action_galleryViewFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+        <action
+            android:id="@+id/action_galleryViewFragment_to_galleryMediaFullViewFragment"
+            app:destination="@id/galleryMediaFullViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryMediaFullViewFragment"
+        android:name="com.aix.memore.views.fragments.GalleryMediaFullViewFragment"
+        android:label="Gallery"
+        tools:layout="@layout/fragment_gallery_media_full_view">
+        <action
+            android:id="@+id/action_galleryMediaFullViewFragment_to_galleryViewFragment"
+            app:destination="@id/galleryViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lifeCareFragment"
+        android:name="com.aix.memore.views.fragments.LifeCareFragment"
+        android:label="LifeCare"
+        tools:layout="@layout/fragment_life_care" />
+
+</navigation>

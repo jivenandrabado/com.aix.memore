@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "283820489303",
+    "project_id": "memore-ca204",
+    "storage_bucket": "memore-ca204.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283820489303:android:b8c9255e337cb22cbc8112",
+        "android_client_info": {
+          "package_name": "com.aix.memore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "283820489303-r0tj9eeq6roa2jegjbaev7mcqhmmujua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoD6tzVY9HcxhOZScrZflL_DOZR9S1nss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "283820489303-r0tj9eeq6roa2jegjbaev7mcqhmmujua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

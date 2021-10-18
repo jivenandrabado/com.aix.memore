@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.fragments.KnowMoreFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/remembering"
+                app:layout_constraintEnd_toEndOf="@+id/imageViewBioProfilePic"
+                app:layout_constraintStart_toStartOf="@+id/imageViewBioProfilePic"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/memore_blue"
+                android:textSize="14sp"/>
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/imageViewBioProfilePic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_baseline_photo_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:civ_border_width="8dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Name"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/memore_blue"
+                app:layout_constraintEnd_toEndOf="@+id/imageViewBioProfilePic"
+                app:layout_constraintStart_toStartOf="@+id/imageViewBioProfilePic"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewBioProfilePic" />
+
+            <TextView
+                android:id="@+id/textViewDeathDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Birth-Death date"
+                app:layout_constraintEnd_toEndOf="@+id/textViewName"
+                app:layout_constraintStart_toStartOf="@+id/textViewName"
+                app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerviewGallery"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:nestedScrollingEnabled="false"-->
+<!--            android:orientation="vertical"-->
+<!--            android:paddingStart="24dp"-->
+<!--            android:paddingEnd="0dp"-->
+<!--            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/buttonAddNewAlbum"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:spanCount="2"-->
+<!--            tools:listitem="@layout/item_album"-->
+<!--            android:minHeight="300dp"-->
+<!--            />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonAddNewAlbum"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:text="Add new album"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/constraintLayout1" />-->
+
+        <Button
+            android:id="@+id/buttonViewGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:text="View Gallery"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout1"
+            android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
