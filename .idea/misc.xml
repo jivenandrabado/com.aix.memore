@@ -23,6 +23,9 @@
         <entry key="app/src/main/res/layout/fragment_password_dialog.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_album.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_gallery.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/item_organization_row.xml" value="0.1921875" />
+        <entry key="app/src/main/res/menu/delete_menu.xml" value="0.1921875" />
         <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/menu/manage_menu.xml" value="0.165625" />
       </map>
