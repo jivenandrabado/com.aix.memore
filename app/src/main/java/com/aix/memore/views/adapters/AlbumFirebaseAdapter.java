@@ -1,6 +1,7 @@
 package com.aix.memore.views.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 public class AlbumFirebaseAdapter extends FirestoreRecyclerAdapter<Album, AlbumFirebaseAdapter.ViewHolder> {
 
     private GalleryInterface galleryInterface;
-
+    private static Boolean isEdit = false;
     public AlbumFirebaseAdapter(@NonNull FirestoreRecyclerOptions<Album> options, GalleryInterface galleryInterface) {
         super(options);
         this.galleryInterface = galleryInterface;
@@ -27,6 +28,26 @@ public class AlbumFirebaseAdapter extends FirestoreRecyclerAdapter<Album, AlbumF
         Album album = getItem(position);
         holder.binding.setAlbum(album);
         holder.binding.setGalleryInterface(galleryInterface);
+
+        if(isEdit){
+            holder.binding.checkboxSelector.setVisibility(View.VISIBLE);
+            holder.binding.constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.binding.checkboxSelector.setChecked(true);
+                }
+            });
+
+
+        }else{
+            holder.binding.checkboxSelector.setVisibility(View.INVISIBLE);
+            holder.binding.constraintLayoutParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    galleryInterface.onAlbumSelect(album);
+                }
+            });
+        }
     }
 
     @NonNull
@@ -43,5 +64,10 @@ public class AlbumFirebaseAdapter extends FirestoreRecyclerAdapter<Album, AlbumF
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public void setEdit(Boolean isEdit){
+        AlbumFirebaseAdapter.isEdit = isEdit;
+        notifyDataSetChanged();
     }
 }
