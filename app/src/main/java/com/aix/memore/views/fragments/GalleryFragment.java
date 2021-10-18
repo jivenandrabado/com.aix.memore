@@ -51,12 +51,10 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     private FragmentGalleryBinding binding;
     private GalleryViewModel galleryViewModel;
     private AlbumFirebaseAdapter albumFirebaseAdapter;
-    private List<Media> mediaList;
-    private int position = 0;
-    private MutableLiveData<Integer> positionLiveData = new MutableLiveData<>();
     private HighlightViewModel highlightViewModel;
     private NavController navController;
     private UploadDialog uploadDialog;
+    private Boolean isEdit = false;
     public GalleryFragment() {
         // Required empty public constructor
     }
@@ -124,6 +122,7 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
                     chooseImage();
                 }
             });
+
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
@@ -134,9 +133,14 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         // Add the new menu items
-        inflater.inflate(R.menu.manage_menu, menu);
-
+        if(!isEdit) {
+            inflater.inflate(R.menu.manage_menu, menu);
+        }else{
+            ErrorLog.WriteDebugLog("EDIT MENU");
+            inflater.inflate(R.menu.delete_menu,menu);
+        }
         super.onCreateOptionsMenu(menu, inflater);
+
     }
 
     @Override
@@ -150,7 +154,15 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
 //                chooseImage();
 //                break;
             case R.id.edit:
+                isEdit = true;
+                albumFirebaseAdapter.setEdit(isEdit);
+                requireActivity().invalidateOptionsMenu();
                 break;
+
+            case R.id.cancel:
+                isEdit = false;
+                albumFirebaseAdapter.setEdit(isEdit);
+                requireActivity().invalidateOptionsMenu();
 
             default:
                 return false;
