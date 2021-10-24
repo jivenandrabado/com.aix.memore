@@ -67,14 +67,6 @@ public class PasswordDialog extends DialogFragment {
             }
         });
 
-        userViewModel.isAuthorized().observe(requireActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    dismiss();
-                }
-            }
-        });
 
         userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

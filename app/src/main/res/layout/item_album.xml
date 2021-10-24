@@ -19,7 +19,6 @@
         android:id="@+id/constraintLayoutParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> galleryInterface.onAlbumSelect(album)}"
         android:clickable="true"
         >
 
@@ -56,6 +55,14 @@
             app:layout_constraintTop_toTopOf="@+id/imageView"
             android:textColor="@color/white"
             />
+
+        <CheckBox
+            android:id="@+id/checkboxSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

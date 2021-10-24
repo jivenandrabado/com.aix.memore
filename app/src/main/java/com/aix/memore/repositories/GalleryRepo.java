@@ -29,13 +29,16 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class GalleryRepo {
@@ -51,6 +54,9 @@ public class GalleryRepo {
     private StorageReference storageRef = storage.getReference();
     private MutableLiveData<Boolean> isUploaded = new MutableLiveData<>();
     public String public_wall_id = "";
+    public MutableLiveData<Boolean> isDeleted = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isImageDeleted = new MutableLiveData<>();
+
 
 
     public GalleryRepo() {
@@ -215,6 +221,7 @@ public class GalleryRepo {
 
     public FirestoreRecyclerOptions galleryViewRecyclerOptions(String owner_id, String album_id) {
         Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id).collection(FirebaseConstants.MEMORE_MEDIA)
+                .whereEqualTo("is_deleted", false)
                 .orderBy("upload_date");
         return new FirestoreRecyclerOptions.Builder<Gallery>()
                 .setQuery(query, Gallery.class)
@@ -256,10 +263,12 @@ public class GalleryRepo {
             gallery.setType(1);
             gallery.setUpload_date(new Timestamp(new Date()));
             gallery.setPath(path);
+            gallery.setIs_deleted(false);
 
             String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(album_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
 
+            gallery.setMedia_id(doc_id);
 
             db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
                     .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -315,6 +324,7 @@ public class GalleryRepo {
             gallery.setType(1);
             gallery.setUpload_date(new Timestamp(new Date()));
             gallery.setPath(path);
+            gallery.setIs_deleted(false);
 
             db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .whereEqualTo("title","Public Wall").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -330,6 +340,8 @@ public class GalleryRepo {
 
                                     String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                                             .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
+
+                                    gallery.setMedia_id(doc_id);
 
                                     db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
                                             .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -358,5 +370,82 @@ public class GalleryRepo {
 
     public MutableLiveData<Boolean> getIsUploaded(){
         return isUploaded;
+    }
+
+    public void deleteAlbums(List<Album> albumList, String owner_id) {
+        try{
+
+
+            WriteBatch writeBatch = db.batch();
+
+            for (int i=0;i<albumList.size();i++){
+                DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+                        .collection(FirebaseConstants.MEMORE_ALBUM).document(albumList.get(i).getAlbum_id());
+                writeBatch.delete(documentReference);
+            }
+
+            writeBatch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // Do anything here
+                    isDeleted.postValue(true);
+                }
+            });
+
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsDeleted(){
+        return isDeleted;
+    }
+
+    public MutableLiveData<Boolean> getIsImageDeleted(){
+        return isImageDeleted;
+    }
+
+
+    public void deleteImage(List<Gallery> galleryList, String owner_id, String album_id){
+        WriteBatch writeBatch = db.batch();
+
+        Map<String, Object> gallery = new HashMap<>();
+        gallery.put("is_deleted", true);
+
+        for (int i=0;i<galleryList.size();i++){
+            DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+                    .collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
+                    .collection(FirebaseConstants.MEMORE_MEDIA)
+                    .document(galleryList.get(i).getMedia_id());
+//            writeBatch.delete(documentReference);
+            writeBatch.update(documentReference, gallery);
+        }
+
+        writeBatch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Do anything here
+                isImageDeleted.postValue(true);
+            }
+        });
+
+
+    }
+    public void deleteImageStorage(Gallery gallery) {
+        StorageReference storageReference = storage.getReferenceFromUrl(gallery.getPath());
+
+        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                ErrorLog.WriteDebugLog("DELETED IMAGE");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                ErrorLog.WriteErrorLog(e);
+            }
+        });
+
     }
 }
