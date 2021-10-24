@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -26,24 +25,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentGalleryBinding;
-import com.aix.memore.databinding.FragmentKnowMoreBinding;
 import com.aix.memore.interfaces.GalleryInterface;
 import com.aix.memore.models.Album;
 import com.aix.memore.models.Bio;
-import com.aix.memore.models.Gallery;
-import com.aix.memore.models.Media;
 import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
+import com.aix.memore.view_models.UserViewModel;
 import com.aix.memore.views.adapters.AlbumFirebaseAdapter;
+import com.aix.memore.views.dialogs.PasswordDialog;
+import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.aix.memore.views.dialogs.UploadDialog;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryFragment extends Fragment implements GalleryInterface {
@@ -54,7 +53,12 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     private HighlightViewModel highlightViewModel;
     private NavController navController;
     private UploadDialog uploadDialog;
-    private Boolean isEdit = false;
+    private Boolean isDeleteAlbum = false;
+    private List<Album> albumList;
+    private UserViewModel userViewModel;
+    ProgressDialogFragment progressDialogFragment;
+    private String owner_id;
+    private PasswordDialog passwordDialog;
     public GalleryFragment() {
         // Required empty public constructor
     }
@@ -82,46 +86,17 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
         try {
             galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
             highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
+            userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
             navController = Navigation.findNavController(view);
-            albumFirebaseAdapter = new AlbumFirebaseAdapter(galleryViewModel.getGalleryRecyclerOptions(highlightViewModel.getScannedValue().getValue()),this);
-            binding.recyclerviewGallery.setAdapter(albumFirebaseAdapter);
-            galleryViewModel.getDefaultGallery(highlightViewModel.getScannedValue().getValue());
-            galleryViewModel.addSnapshotListenerForBio(highlightViewModel.getScannedValue().getValue());
             uploadDialog = new UploadDialog();
-
-            //temporary fix for recyclerview
-            binding.recyclerviewGallery.setItemAnimator(null);
-
-            galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Bio>() {
-                @Override
-                public void onChanged(Bio bio) {
-                    String full_name = bio.bio_first_name + " " + bio.bio_middle_name + " " + bio.bio_last_name;
-                    String death_date = DateHelper.formatDate(bio.bio_birth_date.toDate()) + " - " + DateHelper.formatDate(bio.bio_death_date.toDate());
-                    Glide.with(requireContext()).load(Uri.parse(bio.bio_profile_pic))
-                            .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewBioProfilePic));
-                    binding.textViewName.setText(full_name);
-                    binding.textViewDeathDate.setText(death_date);
-                }
-            });
-
-
-            galleryViewModel.isUploaded().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    if(aBoolean){
-                        if (uploadDialog.isVisible()){
-                            uploadDialog.dismiss();
-                        }
-                    }
-                }
-            });
-
-            binding.buttonUploadMedia.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chooseImage();
-                }
-            });
+            albumList = new ArrayList<>();
+            passwordDialog = new PasswordDialog();
+            owner_id = highlightViewModel.getScannedValue().getValue();
+            initAlbumRecyclerview();
+            getCurrentUser();
+            addListenerForUploadDialog();
+            initUpload();
+            initDelete();
 
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -133,14 +108,96 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         // Add the new menu items
-        if(!isEdit) {
-            inflater.inflate(R.menu.manage_menu, menu);
+        if(!isDeleteAlbum) {
+            inflater.inflate(R.menu.menu_album, menu);
         }else{
             ErrorLog.WriteDebugLog("EDIT MENU");
-            inflater.inflate(R.menu.delete_menu,menu);
+            inflater.inflate(R.menu.menu_delete,menu);
         }
         super.onCreateOptionsMenu(menu, inflater);
 
+    }
+
+    private void addListenerForUploadDialog(){
+        galleryViewModel.isUploaded().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    if (uploadDialog.isVisible()){
+                        uploadDialog.dismiss();
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void initUpload(){
+        binding.buttonUploadMedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImage();
+            }
+        });
+
+    }
+
+    private void getCurrentUser(){
+        galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Bio>() {
+            @Override
+            public void onChanged(Bio bio) {
+                String full_name = bio.bio_first_name + " " + bio.bio_middle_name + " " + bio.bio_last_name;
+                String death_date = DateHelper.formatDate(bio.bio_birth_date.toDate()) + " - " + DateHelper.formatDate(bio.bio_death_date.toDate());
+                Glide.with(requireContext()).load(Uri.parse(bio.bio_profile_pic))
+                        .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewBioProfilePic));
+                binding.textViewName.setText(full_name);
+                binding.textViewDeathDate.setText(death_date);
+            }
+        });
+    }
+
+    private void initAlbumRecyclerview(){
+        albumFirebaseAdapter = new AlbumFirebaseAdapter(galleryViewModel.getGalleryRecyclerOptions(highlightViewModel.getScannedValue().getValue()),this);
+        binding.recyclerviewGallery.setAdapter(albumFirebaseAdapter);
+        galleryViewModel.getDefaultGallery(highlightViewModel.getScannedValue().getValue());
+        galleryViewModel.addSnapshotListenerForBio(owner_id);
+        //temporary fix for recyclerview
+        binding.recyclerviewGallery.setItemAnimator(null);
+    }
+
+    private void initDelete(){
+        userViewModel.isAuthorized().setValue(false);
+        userViewModel.isAuthorized().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    passwordDialog.dismiss();
+                    progressDialogFragment = new ProgressDialogFragment();
+                    progressDialogFragment.show(getChildFragmentManager(),"PROGRESS DIALOG FOR DELETE");
+                    galleryViewModel.deleteAlbums(albumList,owner_id);
+                    ErrorLog.WriteDebugLog("DELETE ALBUMS");
+
+                }
+            }
+        });
+
+        galleryViewModel.isDeleted().observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean) {
+                    if (progressDialogFragment != null) {
+                        if (progressDialogFragment.isVisible()) {
+                            progressDialogFragment.dismiss();
+                            ErrorLog.WriteDebugLog("ALBUMS DELETED");
+                            //change options menu
+                            isDeleteAlbum = false;
+                            albumFirebaseAdapter.setEdit(isDeleteAlbum);
+                            requireActivity().invalidateOptionsMenu();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -153,16 +210,21 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
 //            case R.id.upload:
 //                chooseImage();
 //                break;
-            case R.id.edit:
-                isEdit = true;
-                albumFirebaseAdapter.setEdit(isEdit);
+            case R.id.deleteAlbum:
+                isDeleteAlbum = true;
+                albumFirebaseAdapter.setEdit(isDeleteAlbum);
                 requireActivity().invalidateOptionsMenu();
                 break;
 
             case R.id.cancel:
-                isEdit = false;
-                albumFirebaseAdapter.setEdit(isEdit);
+                isDeleteAlbum = false;
+                albumFirebaseAdapter.setEdit(isDeleteAlbum);
                 requireActivity().invalidateOptionsMenu();
+                break;
+
+            case R.id.delete:
+                passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FOR DELETE");
+                break;
 
             default:
                 return false;
@@ -173,7 +235,6 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     @Override
     public void onResume() {
         super.onResume();
-        ErrorLog.WriteDebugLog("ON RESUME GALLERY FRAGMENT");
         if(albumFirebaseAdapter!=null) {
             albumFirebaseAdapter.startListening();
         }
@@ -183,7 +244,6 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     @Override
     public void onPause() {
         super.onPause();
-        ErrorLog.WriteDebugLog("ON PAUSE GALLERY FRAGMENT");
         if(albumFirebaseAdapter!=null) {
             albumFirebaseAdapter.stopListening();
         }
@@ -200,6 +260,11 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
     public void onAlbumSelect(Album album) {
         navController.navigate(R.id.action_galleryFragment_to_galleryViewFragment);
         galleryViewModel.getSelectedAlbum().setValue(album);
+    }
+
+    @Override
+    public void onAlbumSelectDelete(List<Album> albumList) {
+        this.albumList = albumList;
     }
 
     private void chooseImage() {
