@@ -47,9 +47,19 @@ public class GalleryMediaFullViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        try {
+            galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
+            galleryList = galleryViewModel.getSelectedGalleryList().getValue();
+            initGalleryView();
 
-        galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
-        galleryList = galleryViewModel.getSelectedGalleryList().getValue();
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
+    private void initGalleryView(){
         galleryFullViewAdapter = new GalleryFullViewAdapter(requireContext(), galleryList);
         binding.gallery.setAdapter(galleryFullViewAdapter);
 
@@ -74,6 +84,5 @@ public class GalleryMediaFullViewFragment extends Fragment {
                         .error(R.drawable.ic_baseline_photo_24).into((binding.imageView));
             }
         });
-
     }
 }

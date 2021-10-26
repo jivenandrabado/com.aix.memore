@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,8 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
     private Context context;
     private List<Gallery> galleryList = new ArrayList<>();
     private GalleryViewInterface galleryViewInterface;
+    private Boolean isDelete = false;
+    private List<Gallery> galleryListDelete = new ArrayList<>();
     public GalleryFirebaseAdapter(@NonNull FirestoreRecyclerOptions<Gallery> options, Context context, GalleryViewInterface galleryViewInterface) {
         super(options);
         this.context = context;
@@ -47,13 +50,51 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
 //                .fitCenter()
 //                .error(R.drawable.ic_baseline_photo_24).into((holder.binding.imageView));
 
-        galleryList.add(gallery);
-
         holder.binding.setGalleryViewInterface(galleryViewInterface);
         holder.binding.setList(galleryList);
         holder.binding.setPosition(position);
+        holder.gallery = gallery;
 
         initGlideWithImage(gallery.getPath(),holder.binding.imageView);
+
+        //filter for gallery view
+        if(!gallery.getIs_deleted()){
+            galleryList.add(gallery);
+        }
+
+        if(isDelete){
+            holder.binding.checkboxSelector.setVisibility(View.VISIBLE);
+            holder.binding.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.binding.checkboxSelector.toggle();
+                }
+            });
+
+
+        }else{
+            holder.binding.checkboxSelector.setVisibility(View.INVISIBLE);
+            holder.binding.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                        galleryViewInterface.onImageClick(galleryList,holder.getAbsoluteAdapterPosition());
+                }
+            });
+        }
+
+        holder.binding.checkboxSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if(b) {
+                    galleryListDelete.add(gallery);
+                    ErrorLog.WriteDebugLog("GALLERY LIST SIZE " + galleryListDelete.size());
+                }else{
+                    galleryListDelete.remove(gallery);
+                }
+                galleryViewInterface.onImageDelete(galleryListDelete);
+            }
+        });
     }
 
     @NonNull
@@ -64,11 +105,19 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
         return new GalleryFirebaseAdapter.ViewHolder(binding);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ItemGalleryBinding binding;
+        Gallery gallery;
         public ViewHolder(ItemGalleryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+
 
         }
     }
@@ -95,8 +144,13 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
 
         Glide.with(context).load(Uri.parse(gallery_path))
                 .apply(requestOptions)
-                .transition(DrawableTransitionOptions.withCrossFade())
+//                .transition(DrawableTransitionOptions.withCrossFade())
                 .fitCenter()
                 .error(R.drawable.ic_baseline_photo_24).into(imageView);
+    }
+
+    public void setDelete(Boolean isDelete){
+        this.isDelete = isDelete;
+        notifyDataSetChanged();
     }
 }

@@ -83,4 +83,20 @@ public class GalleryViewModel extends ViewModel {
     public MutableLiveData<Integer> getSelectedMediaPosition() {
         return selectedMediaPosition;
     }
+
+    public void deleteAlbums(List<Album> albumList,String owner_id){
+        galleryRepo.deleteAlbums(albumList, owner_id);
+    }
+
+    public MutableLiveData<Boolean> isDeleted(){
+        return galleryRepo.getIsDeleted();
+    }
+
+    public void deleteImage(List<Gallery> galleryList, String owner_id,String album_id) {
+        galleryRepo.deleteImage(galleryList, owner_id, album_id);
+    }
+
+    public MutableLiveData<Boolean> isImageDeleted(){
+        return galleryRepo.getIsImageDeleted();
+    }
 }
