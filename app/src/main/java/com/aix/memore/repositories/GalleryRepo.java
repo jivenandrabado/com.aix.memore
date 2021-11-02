@@ -230,7 +230,7 @@ public class GalleryRepo {
 
     public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id) {
         try {
-            StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
 //            InputStream stream = new FileInputStream(new File(path));
 
             UploadTask uploadTask = mediaRef.putFile(path);
