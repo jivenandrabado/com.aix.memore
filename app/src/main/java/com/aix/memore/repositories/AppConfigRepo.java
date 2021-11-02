@@ -33,14 +33,22 @@ public class AppConfigRepo {
 
             appConfigRegistratin = db.collection(FirebaseConstants.MEMORE_APP_CONFIG).document(FirebaseConstants.MEMORE_VERSION_CONTROL)
                     .addSnapshotListener((value, error) -> {
-                        AppConfig appConfig = value.toObject(AppConfig.class);
+                        AppConfig appConfig = null;
+//                        if (value != null) {
+                            appConfig = value.toObject(AppConfig.class);
                             if(appConfig.getForce_update()) {
                                 if (appConfig.getVersion_code() != getAppVersion(context)) {
                                     isForceUpdate.postValue(true);
                                 }else{
                                     isForceUpdate.postValue(false);
                                 }
+                            }else if(!appConfig.getForce_update()){
+                                isForceUpdate.postValue(false);
                             }
+//                        }else{
+//                            ErrorLog.WriteDebugLog("ERROR APP CONFIG");
+//                        }
+
                     });
 
         }catch (Exception e){
