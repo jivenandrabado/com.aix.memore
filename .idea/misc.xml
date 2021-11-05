@@ -7,10 +7,17 @@
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/background_oval.xml" value="0.3310810810810811" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/background_rectangle_rounded.xml" value="0.3310810810810811" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/background_rectangle_rounded_solid.xml" value="0.1945945945945946" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/custom_border_rounded_white.xml" value="0.3310810810810811" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.3310810810810811" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/drawable/rectangle_rounded_mshop.xml" value="0.18468468468468469" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_create_memore.xml" value="0.3128888888888889" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_gallery.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_gallery_view.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_highlight.xml" value="0.33" />
-        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.3171171171171171" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_life_care.xml" value="0.2" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_q_r_generator.xml" value="0.22" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.2" />
+        <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/fragment_registration.xml" value="0.25" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_album.xml" value="0.16216216216216217" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_gallery.xml" value="0.16216216216216217" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/layout/item_organization_row.xml" value="0.16216216216216217" />
@@ -31,7 +38,6 @@
         <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/dialog_progressbar.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_app_update_dialog.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_gallery_view.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.33" />
@@ -45,8 +51,6 @@
         <entry key="app/src/main/res/menu/delete_menu.xml" value="0.1921875" />
         <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/menu/manage_menu.xml" value="0.165625" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.12604166666666666" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.12604166666666666" />
       </map>
     </option>
   </component>

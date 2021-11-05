@@ -2,18 +2,16 @@ package com.aix.memore.view_models;
 
 import android.net.Uri;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.aix.memore.models.Album;
-import com.aix.memore.models.Bio;
+import com.aix.memore.models.Memore;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.repositories.GalleryRepo;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.net.URI;
 import java.util.List;
 
 public class GalleryViewModel extends ViewModel {
@@ -42,7 +40,7 @@ public class GalleryViewModel extends ViewModel {
         return galleryRepo.getDefaultGalleryMedia();
     }
 
-    public MutableLiveData<Bio> getBio(){
+    public MutableLiveData<Memore> getBio(){
         return galleryRepo.getBio();
     }
 

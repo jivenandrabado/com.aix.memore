@@ -70,6 +70,13 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
                 }
             });
 
+            binding.frameLayoutSquare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navController.navigate(R.id.action_QRScannerFragment_to_createMemoreFragment);
+                }
+            });
+
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }

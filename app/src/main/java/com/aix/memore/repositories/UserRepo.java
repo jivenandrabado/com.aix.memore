@@ -20,7 +20,7 @@ public class UserRepo {
     }
 
     public void verifyPassword(String doc_id,String password){
-        db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).get()
+        db.collection(FirebaseConstants.MEMORE).document(doc_id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {

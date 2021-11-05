@@ -2,22 +2,16 @@ package com.aix.memore.views.fragments;
 
 import android.content.Intent;
 import android.graphics.Outline;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.MediaController;
-import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,20 +21,15 @@ import androidx.navigation.Navigation;
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentHighlightBinding;
 import com.aix.memore.interfaces.HighlightInterface;
-import com.aix.memore.models.Bio;
-import com.aix.memore.models.Highlight;
+import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.bumptech.glide.Glide;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-
-import java.util.Objects;
 
 public class HighlightFragment extends Fragment implements HighlightInterface {
 
@@ -80,16 +69,29 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             binding.playerView.setPlayer(simpleExoPlayer);
             galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
 
-            galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Bio>() {
+            galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Memore>() {
                 @Override
-                public void onChanged(Bio bio) {
-                    String full_name = bio.bio_first_name+ " "+bio.bio_middle_name+ " "+bio.bio_last_name;
-                    String death_date = DateHelper.formatDate(bio.bio_birth_date.toDate())+ " - "+ DateHelper.formatDate(bio.bio_death_date.toDate());
-                    Glide.with(requireContext()).load(Uri.parse(bio.bio_profile_pic))
-                            .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHightlightBioProfilePic));
+                public void onChanged(Memore memore) {
+                    String date = null;
+                    String full_name = memore.bio_first_name+ " "+ memore.bio_middle_name+ " "+ memore.bio_last_name;
+                    ErrorLog.WriteDebugLog("FULL NAME "+ full_name);
+                    if(memore.bio_death_date!=null) {
+                        if (!memore.bio_death_date.toString().isEmpty()) {
+                            date = DateHelper.formatDate(memore.bio_birth_date) + " - " + DateHelper.formatDate(memore.bio_death_date);
+                        }
+                    } else {
+                        date = DateHelper.formatDate(memore.bio_birth_date);
+                    }
+
+                    if(memore.getBio_profile_pic()!=null) {
+                        if (!memore.bio_profile_pic.isEmpty()) {
+                            Glide.with(requireContext()).load(Uri.parse(memore.bio_profile_pic))
+                                    .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHightlightBioProfilePic));
+                        }
+                    }
                     binding.textViewHighlightName.setText(full_name);
-                    binding.textViewHighlightDeathDate.setText(death_date);
-                    binding.buttonKnowMore.setText(bio.bio_first_name+"'s Life");
+                    binding.textViewHighlightDeathDate.setText(date);
+                    binding.buttonKnowMore.setText(memore.bio_first_name+"'s Life");
                 }
             });
 
@@ -125,6 +127,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private Observer<String> onHighlightFoundObserver = new Observer<String>() {
         @Override
         public void onChanged(String o) {
+
             highlightViewModel.getHighlight(highlightInterface,o);
             galleryViewModel.addSnapshotListenerForBio(o);
         }
@@ -132,8 +135,8 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 
 
     @Override
-    public void onHighlightFound(Highlight highlight) {
-        initExoPlayer(highlight.getVideo_highlight());
+    public void onHighlightFound(Memore memore) {
+        initExoPlayer(memore.getVideo_highlight());
         ErrorLog.WriteDebugLog("On Highlight Found");
         progressDialogFragment.dismiss();
 

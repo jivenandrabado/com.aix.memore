@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.aix.memore.models.Album;
-import com.aix.memore.models.Bio;
+import com.aix.memore.models.Memore;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.utilities.ErrorLog;
@@ -48,7 +48,7 @@ public class GalleryRepo {
     private MutableLiveData<List<Media>> mediaListLiveData = new MutableLiveData<>();
     private ListenerRegistration mediaSnapshotListener;
     private ListenerRegistration bioSnapshotListener;
-    private MutableLiveData<Bio> bioMutableLiveData = new MutableLiveData<Bio>();
+    private MutableLiveData<Memore> bioMutableLiveData = new MutableLiveData<Memore>();
     private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
@@ -61,11 +61,12 @@ public class GalleryRepo {
 
     public GalleryRepo() {
         this.db = FirebaseFirestore.getInstance();
-        this.collectionReference = db.collection(FirebaseConstants.MEMORE_OWNER);
+        this.collectionReference = db.collection(FirebaseConstants.MEMORE);
     }
 
     public FirestoreRecyclerOptions<Album> recyclerOptions(String owner_id) {
-        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).orderBy("date_created");
+        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                .orderBy("date_created");
         return new FirestoreRecyclerOptions.Builder<Album>()
                 .setQuery(query, Album.class)
                 .build();
@@ -154,7 +155,7 @@ public class GalleryRepo {
 
         try{
 
-            bioSnapshotListener = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            bioSnapshotListener = db.collection(FirebaseConstants.MEMORE).document(doc_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
@@ -163,7 +164,7 @@ public class GalleryRepo {
                     }
 
                     if (value != null && value.exists()) {
-                        bioMutableLiveData.postValue(value.toObject(Bio.class));
+                        bioMutableLiveData.postValue(value.toObject(Memore.class));
                     }else{
                         ErrorLog.WriteDebugLog("NO VALUE");
                     }
@@ -182,25 +183,27 @@ public class GalleryRepo {
         }
     }
 
-    public MutableLiveData<Bio> getBio(){
+    public MutableLiveData<Memore> getBio(){
         return bioMutableLiveData;
     }
 
     public void createNewAlbum(String doc_id, Album album, List<Uri> imageUriList) {
         try{
-            DocumentReference document = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            DocumentReference document = db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document();
 
             album.setAlbum_id(document.getId());
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(document.getId()).set(album)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 //public wall
-                                for(int i = 0; i < imageUriList.size() ; i++) {
-                                    uploadToFirebaseStorage(doc_id, imageUriList.get(i),document.getId());
+                                if(imageUriList != null) {
+                                    for (int i = 0; i < imageUriList.size(); i++) {
+                                        uploadToFirebaseStorage(doc_id, imageUriList.get(i), document.getId());
+                                    }
                                 }
 
                                 isAlbumCreated.postValue(true);
@@ -265,12 +268,12 @@ public class GalleryRepo {
             gallery.setPath(path);
             gallery.setIs_deleted(false);
 
-            String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(album_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
 
             gallery.setMedia_id(doc_id);
 
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
                     .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -326,7 +329,7 @@ public class GalleryRepo {
             gallery.setPath(path);
             gallery.setIs_deleted(false);
 
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .whereEqualTo("title","Public Wall").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -338,12 +341,12 @@ public class GalleryRepo {
                                         ErrorLog.WriteDebugLog("Public wall id "+public_wall_id);
                                     }
 
-                                    String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                                    String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                                             .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
 
                                     gallery.setMedia_id(doc_id);
 
-                                    db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
+                                    db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
                                             .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -379,7 +382,7 @@ public class GalleryRepo {
             WriteBatch writeBatch = db.batch();
 
             for (int i=0;i<albumList.size();i++){
-                DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+                DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE).document(owner_id)
                         .collection(FirebaseConstants.MEMORE_ALBUM).document(albumList.get(i).getAlbum_id());
                 writeBatch.delete(documentReference);
             }
@@ -414,7 +417,7 @@ public class GalleryRepo {
         gallery.put("is_deleted", true);
 
         for (int i=0;i<galleryList.size();i++){
-            DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+            DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE).document(owner_id)
                     .collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
                     .collection(FirebaseConstants.MEMORE_MEDIA)
                     .document(galleryList.get(i).getMedia_id());

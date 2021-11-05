@@ -1,10 +1,9 @@
 package com.aix.memore.repositories;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 
 import com.aix.memore.interfaces.HighlightInterface;
-import com.aix.memore.models.Highlight;
+import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.utilities.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,17 +22,13 @@ public class HighlightRepo {
     public void getHighlight(HighlightInterface highlightInterface, String id){
         try{
 
-            db.collection(FirebaseConstants.MEMORE_OWNER)
+            db.collection(FirebaseConstants.MEMORE)
                     .document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Highlight highlight = task.getResult().toObject(Highlight.class);
-                    if (highlight != null) {
-                        ErrorLog.WriteDebugLog(highlight.getOwner_id());
-                        ErrorLog.WriteDebugLog(highlight.getPath());
-                        highlightInterface.onHighlightFound(highlight);
-
-
+                    Memore memore = task.getResult().toObject(Memore.class);
+                    if (memore != null) {
+                        highlightInterface.onHighlightFound(memore);
                     }
                 }
             });
