@@ -28,7 +28,6 @@ import java.util.Objects;
 public class MemoreRepo {
 
     private FirebaseFirestore db;
-    private String user_id;
     private MutableLiveData<String> highlightId = new MutableLiveData<>();
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -36,7 +35,6 @@ public class MemoreRepo {
 
     public MemoreRepo() {
         db = FirebaseFirestore.getInstance();
-        user_id = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         galleryRepo = new GalleryRepo();
