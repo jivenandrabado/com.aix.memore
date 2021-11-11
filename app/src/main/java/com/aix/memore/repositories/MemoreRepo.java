@@ -1,5 +1,7 @@
 package com.aix.memore.repositories;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -25,22 +27,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MemoreRepo {
+public class MemoreRepo extends GalleryRepo {
 
     private FirebaseFirestore db;
     private MutableLiveData<String> highlightId = new MutableLiveData<>();
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
-    private GalleryRepo galleryRepo;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference().child("Memore");;
 
     public MemoreRepo() {
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-        galleryRepo = new GalleryRepo();
     }
 
-    public void createMemore(Memore memore,String owner_id){
+    public void createMemore(Memore memore, String owner_id, Bitmap qrBitmap, Context context){
         try{
 
             memore.setOwner_id(owner_id);
@@ -56,7 +54,8 @@ public class MemoreRepo {
                         album.setDate_created(new Date());
                         album.setIs_public(true);
                         album.setIs_default(true);
-                        galleryRepo.createNewAlbum(memore.getMemore_id(),album,null);
+
+                        createNewAlbum(memore.getMemore_id(),album,null);
 
                         //upload hightlight
                         uploadHighlightToFirebaseStorage(memore.getMemore_id(), Uri.parse(memore.getVideo_highlight()));
@@ -67,6 +66,18 @@ public class MemoreRepo {
                                 uploadBioProfilePicToFirebaseStorage(memore.getMemore_id(), Uri.parse(memore.getBio_profile_pic()));
                             }
                         }
+
+                        //create vault
+                        //create public wall
+                        Album album1 = new Album();
+                        album1.setTitle("Vault");
+                        album1.setDescription("");
+                        album1.setDate_created(new Date());
+                        album1.setIs_public(true);
+                        album1.setIs_default(true);
+                        createVault(memore.getMemore_id(),album1,qrBitmap,context);
+
+
                     }else{
                         ErrorLog.WriteErrorLog(task.getException());
                     }
@@ -187,5 +198,9 @@ public class MemoreRepo {
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
+    }
+
+    public MutableLiveData<String> isQrCodeUploaded(){
+       return isQRCodeUploaded;
     }
 }

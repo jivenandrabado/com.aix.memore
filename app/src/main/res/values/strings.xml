@@ -32,4 +32,6 @@
     <string name="email">Email</string>
     <string name="next">Next</string>
 
+    <string name="places_api_key">AIzaSyAwpadNKq1dNkmRcS9oHxfXwX_xhnBQSKk</string>
+
 </resources>

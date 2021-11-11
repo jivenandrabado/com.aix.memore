@@ -1,5 +1,8 @@
 package com.aix.memore.views.fragments;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ClipData;
@@ -35,8 +38,21 @@ import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.MemoreViewModel;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 public class CreateMemoreFragment extends Fragment {
@@ -47,6 +63,8 @@ public class CreateMemoreFragment extends Fragment {
     private Memore memore;
     private String first_name, middle_name, last_name, video_highlight, birth_date, death_date, profile_pic;
     private DatePickerDialog datePickerDialog;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+
 
 
 
@@ -68,7 +86,6 @@ public class CreateMemoreFragment extends Fragment {
         memoreViewModel = new ViewModelProvider(requireActivity()).get(MemoreViewModel.class);
         navController = Navigation.findNavController(view);
         memore = new Memore();
-
 
         binding.buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +121,13 @@ public class CreateMemoreFragment extends Fragment {
             }
         });
 
+        binding.editTextAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initPlacesApiIntent();
+            }
+        });
+
     }
 
     private void initDatePicker(EditText editText) {
@@ -129,13 +153,14 @@ public class CreateMemoreFragment extends Fragment {
         birth_date = String.valueOf(binding.editTextBday.getText());
         death_date = String.valueOf(binding.editTextDeathDate.getText());
 
-        if(!isEmptyFields(first_name, last_name,video_highlight, birth_date,death_date)){
+        if(!isEmptyFields(first_name, last_name,video_highlight, birth_date,death_date,memore.getAddress())){
             memore.setBio_first_name(first_name);
             memore.setBio_middle_name(middle_name);
             memore.setBio_last_name(last_name);
             memore.setVideo_highlight(video_highlight);
             memore.setBio_birth_date(DateHelper.stringToDate(birth_date));
             memore.setBio_profile_pic(profile_pic);
+            memore.setDate_created(new Date());
 
             memoreViewModel.getMemoreMutableLiveData().setValue(memore);
             return true;
@@ -151,6 +176,7 @@ public class CreateMemoreFragment extends Fragment {
         binding.buttonAddHighlight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 chooseVideo();
             }
         });
@@ -166,12 +192,25 @@ public class CreateMemoreFragment extends Fragment {
 
     }
 
+    private void initPlacesApiIntent(){
+        if (!Places.isInitialized()) {
+            Places.initialize(requireContext(), getString(R.string.places_api_key), Locale.US);
+        }
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .setCountry("PH")
+                .build(requireContext());
+        placesApiLauncher.launch(intent);
+
+    }
+
     private ActivityResultLauncher<Intent> chooseVideoActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
+                    if(result.getResultCode() == RESULT_OK){
                         Intent data = result.getData();
 
                         ClipData clipData = data.getClipData();
@@ -204,7 +243,38 @@ public class CreateMemoreFragment extends Fragment {
             }
     );
 
-    private boolean isEmptyFields(String firstName,String lastName,String video_highlight, String birth_date, String death_date){
+    private ActivityResultLauncher<Intent> placesApiLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    int resultCode = result.getResultCode();
+
+                        if (resultCode == RESULT_OK) {
+                            Place place = Autocomplete.getPlaceFromIntent(result.getData());
+                            if(place.getLatLng() != null){
+                                GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude,place.getLatLng().longitude);
+                                memore.setLatLng(geoPoint);
+                            }
+                            memore.setAddress(place.getAddress());
+                            memore.setAddress_name(place.getName());
+                            binding.editTextAddress.setText(place.getName());
+                            ErrorLog.WriteDebugLog("PLACE "+ place.getName() + place.getAddress() + " ," +place.getLatLng());
+                        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                            // TODO: Handle the error.
+                            Status status = Autocomplete.getStatusFromIntent(result.getData());
+                            ErrorLog.WriteDebugLog("Error "+status);
+                        } else if (resultCode == RESULT_CANCELED) {
+                            // The user canceled the operation.
+                        }
+
+                        return;
+                    }
+
+            }
+    );
+
+    private boolean isEmptyFields(String firstName,String lastName,String video_highlight, String birth_date, String death_date, String address){
 
         if (TextUtils.isEmpty(firstName)) {
             Toast.makeText(requireContext(), "Empty first name", Toast.LENGTH_LONG).show();
@@ -221,6 +291,10 @@ public class CreateMemoreFragment extends Fragment {
         }if (TextUtils.isEmpty(birth_date)) {
             Toast.makeText(requireContext(), "Empty Birth Date", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
+            return true;
+        }if (TextUtils.isEmpty(address)) {
+            Toast.makeText(requireContext(), "Empty Address", Toast.LENGTH_LONG).show();
+            ErrorLog.WriteDebugLog("empty address");
             return true;
         }else{
             return false;
@@ -273,4 +347,5 @@ public class CreateMemoreFragment extends Fragment {
                 }
             }
     );
+
 }

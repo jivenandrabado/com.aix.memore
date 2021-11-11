@@ -29,6 +29,8 @@ public class HighlightRepo {
                     Memore memore = task.getResult().toObject(Memore.class);
                     if (memore != null) {
                         highlightInterface.onHighlightFound(memore);
+                    }else{
+                        highlightInterface.onHighlightFound(null);
                     }
                 }
             });

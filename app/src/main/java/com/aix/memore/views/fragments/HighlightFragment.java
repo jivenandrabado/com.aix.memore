@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.MediaController;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -118,7 +119,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 
             initProgressDialog();
 
-
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
@@ -127,7 +127,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private Observer<String> onHighlightFoundObserver = new Observer<String>() {
         @Override
         public void onChanged(String o) {
-
             highlightViewModel.getHighlight(highlightInterface,o);
             galleryViewModel.addSnapshotListenerForBio(o);
         }
@@ -136,9 +135,15 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
 
     @Override
     public void onHighlightFound(Memore memore) {
-        initExoPlayer(memore.getVideo_highlight());
-        ErrorLog.WriteDebugLog("On Highlight Found");
-        progressDialogFragment.dismiss();
+
+        if(memore!=null) {
+            initExoPlayer(memore.getVideo_highlight());
+            ErrorLog.WriteDebugLog("On Highlight Found");
+            progressDialogFragment.dismiss();
+        }else{
+            progressDialogFragment.dismiss();
+            Toast.makeText(requireContext(),"Please try again",Toast.LENGTH_SHORT).show();
+        }
 
     }
 

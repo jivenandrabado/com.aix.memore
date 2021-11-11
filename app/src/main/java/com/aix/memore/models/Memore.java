@@ -1,6 +1,7 @@
 package com.aix.memore.models;
 
-import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.type.LatLng;
 
 import java.util.Date;
 
@@ -16,6 +17,10 @@ public class Memore {
     public String video_highlight;
     public String owner_id;
     public String password;
+    public Date date_created;
+    public String address;
+    public String address_name;
+    public GeoPoint latLng;
 
     public String getMemore_id() {
         return memore_id;
@@ -98,6 +103,38 @@ public class Memore {
         this.password = password;
     }
 
+    public Date getDate_created() {
+        return date_created;
+    }
+
+    public void setDate_created(Date date_created) {
+        this.date_created = date_created;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public GeoPoint getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(GeoPoint latLng) {
+        this.latLng = latLng;
+    }
+
+    public String getAddress_name() {
+        return address_name;
+    }
+
+    public void setAddress_name(String address_name) {
+        this.address_name = address_name;
+    }
+
     @Override
     public String toString() {
         return "Memore{" +
@@ -110,6 +147,10 @@ public class Memore {
                 ", memore_id='" + memore_id + '\'' +
                 ", video_highlight='" + video_highlight + '\'' +
                 ", owner_id='" + owner_id + '\'' +
+                ", password='" + password + '\'' +
+                ", date_created=" + date_created +
+                ", address='" + address + '\'' +
+                ", latLng=" + latLng +
                 '}';
     }
 }

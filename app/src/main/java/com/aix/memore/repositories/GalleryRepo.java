@@ -1,6 +1,11 @@
 package com.aix.memore.repositories;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +39,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,11 +58,12 @@ public class GalleryRepo {
     private MutableLiveData<Memore> bioMutableLiveData = new MutableLiveData<Memore>();
     private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference storageRef = storage.getReference();
+    private StorageReference storageRef = storage.getReference().child("Memore");
     private MutableLiveData<Boolean> isUploaded = new MutableLiveData<>();
     public String public_wall_id = "";
     public MutableLiveData<Boolean> isDeleted = new MutableLiveData<>();
     public MutableLiveData<Boolean> isImageDeleted = new MutableLiveData<>();
+    public MutableLiveData<String> isQRCodeUploaded = new MutableLiveData<String>();
 
 
 
@@ -218,6 +226,36 @@ public class GalleryRepo {
         }
     }
 
+    public void createVault(String doc_id, Album album, Bitmap qrBitmap, Context context) {
+        try{
+            DocumentReference document = db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document();
+
+            album.setAlbum_id(document.getId());
+            db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document(document.getId()).set(album)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                //public wall
+                                if(qrBitmap != null) {
+                                    //upload qr code bitmap
+                                    uploadBitmapToFirebaseStorage(doc_id,qrBitmap, document.getId(), context);
+                                }
+
+                                isAlbumCreated.postValue(true);
+                            }else{
+                                isAlbumCreated.postValue(false);
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
     public MutableLiveData<Boolean> isAlbumCreated() {
         return isAlbumCreated;
     }
@@ -260,6 +298,40 @@ public class GalleryRepo {
 
     }
 
+    public void uploadBitmapToFirebaseStorage(String owner_id, Bitmap qrBitmap, String album_id, Context context) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            qrBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = mediaRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
+
+                            downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
+                            addNewMedia(owner_id, String.valueOf(uri), album_id);
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
     public void addNewMedia(String owner_id, String path, String album_id){
         try{
             Gallery gallery = new Gallery();
@@ -280,6 +352,7 @@ public class GalleryRepo {
                     if (task.isSuccessful()){
                         ErrorLog.WriteDebugLog("UPLOAD SUCCESS");
                         isUploaded.postValue(true);
+
                     }else{
                         ErrorLog.WriteErrorLog(task.getException());
                     }
@@ -451,4 +524,25 @@ public class GalleryRepo {
         });
 
     }
+
+    private void downloadImageNew(String filename, String downloadUrlOfImage,Context context){
+        try{
+            DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            Uri downloadUri = Uri.parse(downloadUrlOfImage);
+            DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(filename)
+                    .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + filename + ".jpg");
+            dm.enqueue(request);
+            Toast.makeText(context, "Image download started.", Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Toast.makeText(context, "Image download failed.", Toast.LENGTH_SHORT).show();
+            ErrorLog.WriteDebugLog("DOWNLOAD ERROR "+e);
+        }
+    }
+
+
 }

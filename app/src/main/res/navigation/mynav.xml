@@ -95,7 +95,13 @@
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.aix.memore.views.fragments.RegistrationFragment"
-        android:label="Registration" />
+        android:label="Registration" >
+
+        <action
+            android:id="@+id/action_registrationFragment_to_HighlightFragment2"
+            app:destination="@id/HighlightFragment"
+            app:popUpTo="@id/QRScannerFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/createMemoreFragment"
         android:name="com.aix.memore.views.fragments.CreateMemoreFragment"
