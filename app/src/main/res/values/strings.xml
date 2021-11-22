@@ -34,4 +34,12 @@
 
     <string name="places_api_key">AIzaSyAwpadNKq1dNkmRcS9oHxfXwX_xhnBQSKk</string>
 
+    <!--    Login-->
+    <string name="forgotPassword">Forgot password?</string>
+    <string name="orWith">or with</string>
+    <string name="login">Login</string>
+    <string name="loginAsGuest">Login as Guest</string>
+    <string name="createAnAccount">New user? Create an account</string>
+    <string name="signUp">Sign Up</string>
+
 </resources>

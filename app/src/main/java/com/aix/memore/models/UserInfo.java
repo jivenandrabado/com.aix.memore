@@ -1,13 +1,17 @@
 package com.aix.memore.models;
 
+import java.util.Date;
+
 public class UserInfo {
 
     public String user_id;
-    public String first_name;
-    public String middle_name;
-    public String last_name;
-    public String mobile_no;
-    public String email;
+    public String first_name = "";
+    public String middle_name = "";
+    public String last_name = "";
+    public String mobile_no = "";
+    public String email = "";
+    public Date date_created;
+
 
     public String getUser_id() {
         return user_id;
@@ -55,5 +59,13 @@ public class UserInfo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getDate_created() {
+        return date_created;
+    }
+
+    public void setDate_created(Date date_created) {
+        this.date_created = date_created;
     }
 }

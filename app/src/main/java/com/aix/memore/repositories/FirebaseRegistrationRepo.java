@@ -75,7 +75,7 @@ public class FirebaseRegistrationRepo {
                     if (task.isSuccessful()) {
                         switch (signinENUM){
                             case NONE:
-                                ErrorLog.WriteDebugLog("Logging in to heylo");
+                                ErrorLog.WriteDebugLog("Logging in to memore");
 //                                firebaseLoginRepo.loginUserUsernamePassword(userInfo.getEmail(), password);
                                 break;
                             case GOOGLE:

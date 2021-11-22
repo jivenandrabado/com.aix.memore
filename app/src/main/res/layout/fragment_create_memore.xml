@@ -179,7 +179,7 @@
             android:id="@+id/editTextAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address"
+            android:hint="Memorial Address"
             android:textSize="16sp"
             android:focusable="false"
             android:theme="@style/HelperTextAppearance"

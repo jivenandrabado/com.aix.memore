@@ -27,6 +27,10 @@
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.18468468468468469" />
         <entry key="..\:/Users/Jiven/AndroidStudioProjects/Memore/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.18468468468468469" />
         <entry key="app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/drawable-v24/custom_border_black.xml" value="0.18854166666666666" />
+        <entry key="app/src/main/res/drawable-v24/custom_border_primary_no_solid.xml" value="0.2015625" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_email_24.xml" value="0.18854166666666666" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_person_outline_24.xml" value="0.18854166666666666" />
         <entry key="app/src/main/res/drawable/background_circle.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/background_oval.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/background_rectangle_rounded.xml" value="0.20833333333333334" />
@@ -38,10 +42,14 @@
         <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/dialog_progressbar.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_create_memore.xml" value="0.17239583333333333" />
+        <entry key="app/src/main/res/layout/fragment_credentials_dialog.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_gallery_view.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_know_more.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/fragment_life_care.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_new_album_dialog.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_password_dialog.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.33" />
