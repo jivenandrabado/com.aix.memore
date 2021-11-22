@@ -1,13 +1,22 @@
 package com.aix.memore.views.fragments;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +35,15 @@ import com.aix.memore.interfaces.FragmentPermissionInterface;
 import com.aix.memore.interfaces.OnQrCodeScanned;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.HighlightViewModel;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Map;
 
 
@@ -70,6 +87,20 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
                 }
             });
 
+            binding.frameLayoutSquare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navController.navigate(R.id.action_QRScannerFragment_to_createMemoreFragment);
+                }
+            });
+
+            binding.buttonExplore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseImage();
+                }
+            });
+
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
@@ -95,9 +126,9 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
                 highlightViewModel.getScannedValue().setValue(value);
                 navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment2);
             }else{
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(value));
-                startActivity(i);
+//                Intent i = new Intent(Intent.ACTION_VIEW);
+//                i.setData(Uri.parse(value));
+//                startActivity(i);
             }
         }catch(Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -112,4 +143,69 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
 //        qrScannerHelper.initialiseDetectorsAndSources(binding);
 
     }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        chooseImageActivityResult.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> chooseImageActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        Intent data = result.getData();
+
+                        ClipData clipData = data.getClipData();
+                        if (clipData != null) {
+                            for (int i = 0; i < clipData.getItemCount(); i++) {
+                                Uri imageUri = clipData.getItemAt(i).getUri();
+                                // your code for multiple image selection
+                                ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri);
+                            }
+                        } else {
+                            Uri uri = data.getData();
+                            // your codefor single image selection
+                            ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
+
+                            InputStream inputStream = null;
+                            try {
+                                inputStream = requireContext().getContentResolver().openInputStream(uri);
+                                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                                if (bitmap == null) {
+                                    Log.e("TAG", "uri is not a bitmap," + uri.toString());
+                                    return;
+                                }
+                                int width = bitmap.getWidth(), height = bitmap.getHeight();
+                                int[] pixels = new int[width * height];
+                                bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+                                bitmap.recycle();
+                                bitmap = null;
+                                RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+                                BinaryBitmap bBitmap = new BinaryBitmap(new HybridBinarizer(source));
+                                MultiFormatReader reader = new MultiFormatReader();
+                                try {
+                                    Result result1 = reader.decode(bBitmap);
+                                    ErrorLog.WriteDebugLog("QR CODE VALUE " + result1.getText());
+                                    highlightViewModel.getScannedValue().setValue(result1.getText());
+                                    navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment2);
+                                } catch (NotFoundException e) {
+                                    ErrorLog.WriteDebugLog("DECODER EXCEPTION " + e);
+                                }
+
+                            }catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+                        }
+                    }
+                }
+            }
+    );
 }

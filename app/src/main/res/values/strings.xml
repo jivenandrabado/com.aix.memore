@@ -22,4 +22,16 @@
     <string name="confirm">Confirm</string>
     <string name="life_care_services_coming_soon">Life Care Services \n Coming Soon!</string>
     <string name="edit">Edit</string>
+
+    //registration
+    <string name="last_name">Last Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="first_name">First Name</string>
+    <string name="sign_up">Sign up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="next">Next</string>
+
+    <string name="places_api_key">AIzaSyAwpadNKq1dNkmRcS9oHxfXwX_xhnBQSKk</string>
+
 </resources>

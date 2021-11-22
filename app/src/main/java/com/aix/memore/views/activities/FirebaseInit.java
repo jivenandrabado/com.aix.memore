@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.aix.memore.utilities.ErrorLog;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 

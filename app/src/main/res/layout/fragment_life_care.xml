@@ -30,17 +30,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-
-    <TextView
-        android:id="@+id/textView2"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonBuyNow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="We'll notify you when \n this service is available"
-        android:textAlignment="center"
-        android:textSize="16sp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rectangle_rounded_mshop"
+        android:text="Buy Now"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="We'll notify you when \n this service is available"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ public class Album {
     public String description;
     public Date date_created;
     public Boolean is_public;
+    public Boolean is_default;
 
     public String getTitle() {
         return title;
@@ -51,6 +52,14 @@ public class Album {
 
     public void setIs_public(Boolean is_public) {
         this.is_public = is_public;
+    }
+
+    public Boolean getIs_default() {
+        return is_default;
+    }
+
+    public void setIs_default(Boolean is_default) {
+        this.is_default = is_default;
     }
 
     @Override
