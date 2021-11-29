@@ -121,6 +121,13 @@ public class CreateMemoreFragment extends Fragment {
             }
         });
 
+        binding.imageButtonProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImage();
+            }
+        });
+
         binding.editTextAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,8 +193,7 @@ public class CreateMemoreFragment extends Fragment {
     private void chooseVideo() {
         Intent intent = new Intent();
         intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setData(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        intent.setAction(Intent.ACTION_PICK);
         chooseVideoActivityResult.launch(intent);
 
     }
@@ -305,8 +311,7 @@ public class CreateMemoreFragment extends Fragment {
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setAction(Intent.ACTION_PICK);
         chooseImageActivityResult.launch(intent);
     }
 

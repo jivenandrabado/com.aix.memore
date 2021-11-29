@@ -143,12 +143,10 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
 //        qrScannerHelper.initialiseDetectorsAndSources(binding);
 
     }
-
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setAction(Intent.ACTION_PICK);
         chooseImageActivityResult.launch(intent);
     }
 

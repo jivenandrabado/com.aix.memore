@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_HighlightFragment_to_galleryFragment"
             app:destination="@id/knowMoreFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_editMemoreFragment"
+            app:destination="@id/editMemoreFragment" />
     </fragment>
     <fragment
         android:id="@+id/knowMoreFragment"
@@ -120,5 +123,9 @@
             android:id="@+id/action_QRGeneratorFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/editMemoreFragment"
+        android:name="com.aix.memore.views.fragments.EditMemoreFragment"
+        android:label="Edit Memore" />
 
 </navigation>

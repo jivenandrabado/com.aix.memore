@@ -5,6 +5,9 @@ import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
@@ -27,7 +30,9 @@ import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
+import com.aix.memore.view_models.UserViewModel;
 import com.aix.memore.views.dialogs.LoginFragment;
+import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.MediaItem;
@@ -43,10 +48,13 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private NavController navController;
     private SimpleExoPlayer simpleExoPlayer;
     private GalleryViewModel galleryViewModel;
-    private LoginFragment loginFragment;
+    private PasswordDialog passwordDialog;
+    private UserViewModel userViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
 
@@ -70,7 +78,8 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             simpleExoPlayer = new SimpleExoPlayer.Builder(requireContext()).build();
             binding.playerView.setPlayer(simpleExoPlayer);
             galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
-
+            passwordDialog = new PasswordDialog();
+            userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
             galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Memore>() {
                 @Override
@@ -91,7 +100,11 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                             Glide.with(requireContext()).load(Uri.parse(memore.bio_profile_pic))
                                     .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHightlightBioProfilePic));
                         }
+                    }else{
+                        Glide.with(requireContext()).load(R.drawable.ic_baseline_photo_24)
+                                .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHightlightBioProfilePic));
                     }
+
                     binding.textViewHighlightName.setText(full_name);
                     binding.textViewHighlightDeathDate.setText(date);
                     binding.buttonKnowMore.setText(memore.bio_first_name+"'s Life");
@@ -115,16 +128,29 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             binding.buttonKnowMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    navController.navigate(R.id.action_HighlightFragment_to_galleryFragment);
-                    loginFragment.show(getChildFragmentManager(),"LOGIN FRAGMENT");
+                    navController.navigate(R.id.action_HighlightFragment_to_galleryFragment);
                 }
             });
 
             initProgressDialog();
+            initPasswordListener();
 
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
+    }
+
+    private void initPasswordListener() {
+        userViewModel.isAuthorized().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    passwordDialog.dismiss();
+                    navController.navigate(R.id.action_HighlightFragment_to_editMemoreFragment);
+                    userViewModel.isAuthorized().setValue(false);
+                }
+            }
+        });
     }
 
     private Observer<String> onHighlightFoundObserver = new Observer<String>() {
@@ -143,9 +169,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             initExoPlayer(memore.getVideo_highlight());
             ErrorLog.WriteDebugLog("On Highlight Found");
             progressDialogFragment.dismiss();
-            loginFragment = new LoginFragment(this, memore);
-
-
 
         }else{
             progressDialogFragment.dismiss();
@@ -169,30 +192,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         });
         binding.playerView.setClipToOutline(true);
 
-//        binding.playerView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                PopupMenu popup = new PopupMenu(requireContext(), binding.playerView);
-//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem menuItem) {
-////                        switch (menuItem.getItemId()){
-////                            case R.id.newAlbumFragment:
-////                                break;
-////
-////                            case R.id.upload:
-////                                break;
-////
-////                            default:
-////                                return false;
-////                        }
-//                        return false;
-//                    }
-//                });
-//                popup.inflate(R.menu.react_menu);
-//                popup.show();
-//            }
-//        });
 
         playVideo(simpleExoPlayer,URL);
     }
@@ -207,12 +206,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         player.setMediaItem(mediaItem);
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
-//        player.err(new Player.EventListener() {
-//            @Override
-//            public void onPlayerError(ExoPlaybackException error) {
-//                Log.d(TAG, "onPlayerError: " + error.getMessage());
-//            }
-//        });
         player.setRepeatMode(player.REPEAT_MODE_ONE);
 
         if(!player.isPlaying()) {
@@ -232,7 +225,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     public void onPause(){
         super.onPause();
         if(simpleExoPlayer != null) {
-//            simpleExoPlayer.pause();
             simpleExoPlayer.stop();
         }
 
@@ -248,4 +240,27 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         super.onDestroy();
         galleryViewModel.detachBioSnapshotListener();
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+        // Add the new menu items
+        ErrorLog.WriteDebugLog("EDIT MENU");
+        inflater.inflate(R.menu.menu_highlight,menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.editMemore:
+                passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FRAGMENT");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

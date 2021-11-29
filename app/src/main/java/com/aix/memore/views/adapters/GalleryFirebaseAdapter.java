@@ -1,14 +1,17 @@
 package com.aix.memore.views.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
@@ -22,8 +25,12 @@ import com.aix.memore.models.Album;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.utilities.ErrorLog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -55,7 +62,7 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
         holder.binding.setPosition(position);
         holder.gallery = gallery;
 
-        initGlideWithImage(gallery.getPath(),holder.binding.imageView);
+        initGlideWithImage(gallery.getPath(),holder.binding.imageView,holder.binding.progressBarGallery);
 
         //filter for gallery view
         if(!gallery.getIs_deleted()){
@@ -123,29 +130,30 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
     }
 
 
-    private void initGlideWithImage(String gallery_path, ImageView imageView){
+    private void initGlideWithImage(String gallery_path, ImageView imageView, ProgressBar progressBar){
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
         circularProgressDrawable.setStrokeWidth(5f);
         circularProgressDrawable.setCenterRadius(30f);
         circularProgressDrawable.start();
 
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(circularProgressDrawable);
-        requestOptions.error(R.drawable.ic_baseline_photo_24);
-        requestOptions.skipMemoryCache(true);
-        requestOptions.fitCenter();
-        requestOptions.override(500,400);
-
-//
-//        Glide.load(imagePath) //passing your url to load image.
-//                .load(imagePath)
-//                .apply(requestOptions) // here you have all options you need
-//                 // when image (url) will be loaded by glide then this face in animation help to replace url image in the place of placeHolder (default) image.
-
+        progressBar.setVisibility(View.VISIBLE);
         Glide.with(context).load(Uri.parse(gallery_path))
-                .apply(requestOptions)
-//                .transition(DrawableTransitionOptions.withCrossFade())
-                .fitCenter()
+//                .apply(new RequestOptions().override(500, 400))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .centerCrop()
+//                .placeholder(circularProgressDrawable)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .error(R.drawable.ic_baseline_photo_24).into(imageView);
     }
 

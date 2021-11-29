@@ -43,8 +43,8 @@ public class HighlightRepo {
 
     public void addHighlightView(Memore memore) {
 //        Viewer vi
-        db.collection(FirebaseConstants.MEMORE)
-                .document(memore.getMemore_id()).collection(FirebaseConstants.MEMORE_VIEWER)
-                .document().set()
+//        db.collection(FirebaseConstants.MEMORE)
+//                .document(memore.getMemore_id()).collection(FirebaseConstants.MEMORE_VIEWER)
+//                .document().set()
     }
 }

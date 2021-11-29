@@ -97,4 +97,8 @@ public class GalleryViewModel extends ViewModel {
     public MutableLiveData<Boolean> isImageDeleted(){
         return galleryRepo.getIsImageDeleted();
     }
+
+    public MutableLiveData<Double> uploadProgress(){
+        return galleryRepo.uploadProgress;
+    }
 }

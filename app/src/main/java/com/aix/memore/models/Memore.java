@@ -12,7 +12,7 @@ public class Memore {
     public String bio_last_name;
     public Date bio_birth_date;
     public Date bio_death_date;
-    public String bio_profile_pic;
+    public String bio_profile_pic ="";
     public String memore_id;
     public String video_highlight;
     public String owner_id;
@@ -21,6 +21,15 @@ public class Memore {
     public String address;
     public String address_name;
     public GeoPoint latLng;
+    public String owner_email;
+
+    public String getOwner_email() {
+        return owner_email;
+    }
+
+    public void setOwner_email(String owner_email) {
+        this.owner_email = owner_email;
+    }
 
     public String getMemore_id() {
         return memore_id;
