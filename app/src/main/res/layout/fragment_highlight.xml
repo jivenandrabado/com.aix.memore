@@ -12,12 +12,23 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent=".730"
         app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintWidth_percent=".800"
         app:resize_mode="fill" />
+
+    <ImageView
+        android:id="@+id/imageViewHighlight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/playerView"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintTop_toTopOf="@+id/playerView" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

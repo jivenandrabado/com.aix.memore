@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.qr;
 
 import android.app.DownloadManager;
 import android.content.Context;

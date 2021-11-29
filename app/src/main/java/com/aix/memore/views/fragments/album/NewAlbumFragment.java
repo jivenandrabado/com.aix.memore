@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.album;
 
 import android.app.Activity;
 import android.content.ClipData;

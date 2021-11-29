@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.qr;
 
 import android.Manifest;
 import android.app.Activity;
@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -58,6 +61,7 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppPermissionHelper.requestMultiplePermissions(requireActivity(),this);
+        setHasOptionsMenu(true);
 
     }
 
@@ -206,4 +210,26 @@ public class QRScannerFragment extends Fragment implements OnQrCodeScanned, Frag
                 }
             }
     );
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+        // Add the new menu items
+        inflater.inflate(R.menu.menu_qr_scanner, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.userFragment:
+                navController.navigate(R.id.action_QRScannerFragment_to_userFragment);
+                break;
+
+                default:
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

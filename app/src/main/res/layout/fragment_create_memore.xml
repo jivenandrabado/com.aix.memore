@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/whiteSmoke"
-    tools:context=".views.fragments.CreateMemoreFragment">
+    tools:context=".views.fragments.memore.CreateMemoreFragment">
 
 
     <com.mikhaellopez.circularimageview.CircularImageView
@@ -199,19 +199,6 @@
 <!--        android:src="@drawable/ic_baseline_edit_24"-->
 <!--        app:layout_constraintEnd_toEndOf="@+id/imageButtonBday"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/imageButtonBday" />-->
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonAddHighlight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@android:color/transparent"
-        android:drawableStart="@drawable/ic_baseline_photo_24"
-        android:text="Add Video Highlight"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonNext"
