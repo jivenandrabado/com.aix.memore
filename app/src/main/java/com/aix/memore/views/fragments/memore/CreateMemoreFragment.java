@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.memore;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -61,7 +61,7 @@ public class CreateMemoreFragment extends Fragment {
     private MemoreViewModel memoreViewModel;
     private NavController navController;
     private Memore memore;
-    private String first_name, middle_name, last_name, video_highlight, birth_date, death_date, profile_pic;
+    private String first_name, middle_name, last_name, birth_date, death_date, profile_pic;
     private DatePickerDialog datePickerDialog;
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -91,12 +91,10 @@ public class CreateMemoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(getMemoreDetails()) {
-                    navController.navigate(R.id.action_createMemoreFragment_to_QRGeneratorFragment);
+                    navController.navigate(R.id.action_createMemoreFragment_to_uploadHighlightFragment);
                 }
             }
         });
-
-        initVideoChooser();
 
         binding.editTextBday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,11 +158,10 @@ public class CreateMemoreFragment extends Fragment {
         birth_date = String.valueOf(binding.editTextBday.getText());
         death_date = String.valueOf(binding.editTextDeathDate.getText());
 
-        if(!isEmptyFields(first_name, last_name,video_highlight, birth_date,death_date,memore.getAddress())){
+        if(!isEmptyFields(first_name, last_name, birth_date,death_date,memore.getAddress())){
             memore.setBio_first_name(first_name);
             memore.setBio_middle_name(middle_name);
             memore.setBio_last_name(last_name);
-            memore.setVideo_highlight(video_highlight);
             memore.setBio_birth_date(DateHelper.stringToDate(birth_date));
             memore.setBio_profile_pic(profile_pic);
             memore.setDate_created(new Date());
@@ -178,25 +175,6 @@ public class CreateMemoreFragment extends Fragment {
 
     }
 
-    private void initVideoChooser(){
-
-        binding.buttonAddHighlight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                chooseVideo();
-            }
-        });
-
-    }
-
-    private void chooseVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_PICK);
-        chooseVideoActivityResult.launch(intent);
-
-    }
 
     private void initPlacesApiIntent(){
         if (!Places.isInitialized()) {
@@ -210,44 +188,6 @@ public class CreateMemoreFragment extends Fragment {
         placesApiLauncher.launch(intent);
 
     }
-
-    private ActivityResultLauncher<Intent> chooseVideoActivityResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == RESULT_OK){
-                        Intent data = result.getData();
-
-                        ClipData clipData = data.getClipData();
-                        if (clipData != null) {
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                Uri imageUri = clipData.getItemAt(i).getUri();
-                                // your code for multiple image selection
-                                ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri);
-                                video_highlight = String.valueOf(imageUri);
-
-                                //public wall
-//                                galleryViewModel.uploadToFirebaseStorageToPublicWall(highlightViewModel.getScannedValue().getValue(),imageUri);
-                            }
-                        } else {
-                            Uri uri = data.getData();
-                            // your codefor single image selection
-                            ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
-                            video_highlight = String.valueOf(uri);
-
-//                            uploadDialog.show(getChildFragmentManager(),"UPLOAD_DIALOG");
-
-                            //public wall
-//                            galleryViewModel.uploadToFirebaseStorageToPublicWall(highlightViewModel.getScannedValue().getValue(),uri);
-
-
-
-                        }
-                    }
-                }
-            }
-    );
 
     private ActivityResultLauncher<Intent> placesApiLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -280,7 +220,7 @@ public class CreateMemoreFragment extends Fragment {
             }
     );
 
-    private boolean isEmptyFields(String firstName,String lastName,String video_highlight, String birth_date, String death_date, String address){
+    private boolean isEmptyFields(String firstName,String lastName, String birth_date, String death_date, String address){
 
         if (TextUtils.isEmpty(firstName)) {
             Toast.makeText(requireContext(), "Empty first name", Toast.LENGTH_LONG).show();
@@ -288,10 +228,6 @@ public class CreateMemoreFragment extends Fragment {
             return true;
         }if (TextUtils.isEmpty(lastName)) {
             Toast.makeText(requireContext(), "Empty last name", Toast.LENGTH_LONG).show();
-            ErrorLog.WriteDebugLog("empty last name");
-            return true;
-        }if (TextUtils.isEmpty(video_highlight)) {
-            Toast.makeText(requireContext(), "Empty video highlight", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
             return true;
         }if (TextUtils.isEmpty(birth_date)) {

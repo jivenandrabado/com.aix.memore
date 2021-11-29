@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.memore;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
