@@ -29,6 +29,7 @@
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:cropToPadding="true"
+            android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

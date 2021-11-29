@@ -22,6 +22,7 @@ public class Memore {
     public String address_name;
     public GeoPoint latLng;
     public String owner_email;
+    public boolean is_video;
 
     public String getOwner_email() {
         return owner_email;
@@ -142,6 +143,14 @@ public class Memore {
 
     public void setAddress_name(String address_name) {
         this.address_name = address_name;
+    }
+
+    public boolean isIs_video() {
+        return is_video;
+    }
+
+    public void setIs_video(boolean is_video) {
+        this.is_video = is_video;
     }
 
     @Override

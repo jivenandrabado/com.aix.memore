@@ -31,7 +31,6 @@ import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.view_models.UserViewModel;
-import com.aix.memore.views.dialogs.LoginFragment;
 import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.bumptech.glide.Glide;
@@ -132,7 +131,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                 }
             });
 
-            initProgressDialog();
             initPasswordListener();
 
         }catch (Exception e){
@@ -166,15 +164,34 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     public void onHighlightFound(Memore memore) {
 
         if(memore!=null) {
-            initExoPlayer(memore.getVideo_highlight());
-            ErrorLog.WriteDebugLog("On Highlight Found");
-            progressDialogFragment.dismiss();
+            if(memore.is_video) {
+                initProgressDialog();
+                initExoPlayer(memore.getVideo_highlight());
+                ErrorLog.WriteDebugLog("On Highlight Found");
+                progressDialogFragment.dismiss();
+                enableVideoView();
+            }else{
+                enableImageView();
+                Glide.with(requireContext()).load(memore.getVideo_highlight())
+                        .centerInside()
+                        .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHighlight));
+            }
 
         }else{
             progressDialogFragment.dismiss();
             Toast.makeText(requireContext(),"Please try again",Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void enableVideoView() {
+        binding.playerView.setVisibility(View.VISIBLE);
+        binding.imageViewHighlight.setVisibility(View.INVISIBLE);
+    }
+
+    private void enableImageView(){
+        binding.playerView.setVisibility(View.INVISIBLE);
+        binding.imageViewHighlight.setVisibility(View.VISIBLE);
     }
 
     @Override
