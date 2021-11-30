@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.fragments.QRGeneratorFragment">
+    tools:context=".views.fragments.qr.QRGeneratorFragment">
 
     <TextView
         android:id="@+id/textView5"

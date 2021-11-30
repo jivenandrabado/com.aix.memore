@@ -17,6 +17,12 @@ public class DateHelper {
         return spf.format(date);
     }
 
+    public static String formatDate2(Date date){
+        SimpleDateFormat spf=new SimpleDateFormat("MM/dd/yyyy");
+        return spf.format(date);
+    }
+
+
     public static Date stringToDate(String date){
         DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
         Date date1 = null;

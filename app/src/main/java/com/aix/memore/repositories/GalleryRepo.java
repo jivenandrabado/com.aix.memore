@@ -36,6 +36,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -64,6 +65,7 @@ public class GalleryRepo {
     public MutableLiveData<Boolean> isDeleted = new MutableLiveData<>();
     public MutableLiveData<Boolean> isImageDeleted = new MutableLiveData<>();
     public MutableLiveData<String> isQRCodeUploaded = new MutableLiveData<String>();
+    public MutableLiveData<Double> uploadProgress = new MutableLiveData<>();
 
 
 
@@ -291,6 +293,14 @@ public class GalleryRepo {
                         }
                     });
                 }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    ErrorLog.WriteDebugLog("UPLOAD PROGRESS "+progress);
+                    uploadProgress.setValue(progress);
+
+                }
             });
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -385,6 +395,14 @@ public class GalleryRepo {
                             addNewMediaToPublicWall(owner_id, String.valueOf(uri));
                         }
                     });
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    ErrorLog.WriteDebugLog("UPLOAD PROGRESS TO PUBLIC WALL "+progress);
+                    uploadProgress.setValue(progress);
+
                 }
             });
         }catch (Exception e){

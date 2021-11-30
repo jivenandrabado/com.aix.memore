@@ -17,14 +17,18 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/email"
+                android:theme="@style/TextInputLayoutAppearance"
+                app:boxStrokeColor="@color/memore_blue"
+                app:hintTextColor="@color/memore_blue"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="@android:color/transparent"
-                    android:hint="@string/email"
                     android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -36,14 +40,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:passwordToggleEnabled="true"
-                app:layout_constraintTop_toBottomOf="@+id/textInputlayoutEmail">
+                app:layout_constraintTop_toBottomOf="@+id/textInputlayoutEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/password"
+                android:theme="@style/TextInputLayoutAppearance"
+                app:boxStrokeColor="@color/memore_blue"
+                app:hintTextColor="@color/memore_blue"
+
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/regPasswordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/password"
-                    android:backgroundTint="@android:color/transparent"
                     android:inputType="textPassword"
                     />
 
@@ -56,14 +65,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:passwordToggleEnabled="true"
-                app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout">
+                app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/confirm_password"
+                android:theme="@style/TextInputLayoutAppearance"
+                app:boxStrokeColor="@color/memore_blue"
+                app:hintTextColor="@color/memore_blue"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/confirm_password"
-                    android:backgroundTint="@android:color/transparent"
                     android:inputType="textPassword"
                     />
 
@@ -77,7 +90,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="32dp"
-                android:text="@string/sign_up"
+                android:text="Save Memore"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

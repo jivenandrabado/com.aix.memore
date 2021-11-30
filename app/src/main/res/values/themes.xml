@@ -51,4 +51,9 @@
 
     </style>
 
+    <style name="TextInputLayoutAppearance" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="colorControlActivated">@color/memore_blue</item>
+
+    </style>
+
 </resources>

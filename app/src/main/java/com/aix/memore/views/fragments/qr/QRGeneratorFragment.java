@@ -1,9 +1,12 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.qr;
 
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -47,7 +50,8 @@ public class QRGeneratorFragment extends Fragment {
     private MemoreViewModel memoreViewModel;
     private String doc_id;
     private NavController navController;
-
+    private Memore memore;
+    private String name;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,13 +68,15 @@ public class QRGeneratorFragment extends Fragment {
         memoreViewModel.createHighlightId();
         doc_id = String.valueOf(memoreViewModel.getHighlightId().getValue());
 
-        Memore memore = memoreViewModel.getMemoreMutableLiveData().getValue();
+        memore = memoreViewModel.getMemoreMutableLiveData().getValue();
         if (memore != null) {
             memore.setMemore_id(doc_id);
             memoreViewModel.getMemoreMutableLiveData().setValue(memore);
         }
 
-        generateQRcode();
+        name = String.valueOf(memore.getBio_first_name()) + " "+String.valueOf(memore.getBio_last_name());
+
+        generateQRcode(name);
 
         binding.buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,15 +90,35 @@ public class QRGeneratorFragment extends Fragment {
     }
 
 
-    private void generateQRcode(){
+    private void generateQRcode(String name){
         QRGEncoder qrgEncoder = new QRGEncoder(doc_id, null, QRGContents.Type.TEXT, 500);
         Bitmap bitmap;
 
         try {
+            //generate QR code
             bitmap = qrgEncoder.encodeAsBitmap();
-            binding.imageViewQRCode.setImageBitmap(bitmap);
 
-            memoreViewModel.getQrBitmap().setValue(bitmap);
+            Bitmap result = Bitmap.createBitmap(500, 550, Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(result);
+
+            Paint paint = new Paint();
+            paint.setColor(getResources().getColor(R.color.black));
+            paint.setTextSize(55);
+            paint.setAntiAlias(true);
+            paint.setUnderlineText(false);
+            paint.setTextAlign(Paint.Align.CENTER);
+            Rect textBounds = new Rect();
+            paint.getTextBounds(name,0,name.length(),textBounds);
+
+            //draw
+            canvas.drawColor(Color.WHITE);
+            canvas.drawBitmap(bitmap, 0, 0, null);
+            canvas.drawText(name, 200, 500, paint);
+
+            binding.imageViewQRCode.setImageBitmap(result);
+
+            memoreViewModel.getQrBitmap().setValue(result);
 
         } catch (WriterException e) {
             ErrorLog.WriteErrorLog(e);

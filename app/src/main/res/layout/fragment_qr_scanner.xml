@@ -199,6 +199,7 @@
             android:background="@drawable/background_rectangle_rounded"
             android:text="Lifecare"
             android:textAllCaps="false"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/textView3"
             app:layout_constraintStart_toEndOf="@+id/buttonExplore"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />

@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.memore;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -33,6 +33,7 @@ import com.aix.memore.view_models.MemoreViewModel;
 import com.aix.memore.view_models.RegistrationViewModel;
 import com.aix.memore.view_models.UserSharedViewModel;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
+import com.aix.memore.views.dialogs.UploadDialog;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
@@ -48,11 +49,13 @@ public class RegistrationFragment extends Fragment {
     private UserSharedViewModel userSharedViewModel;
     private NavController navController;
     private ProgressDialogFragment progressDialogFragment;
-    private String dialogTag = "REGISTRATION";
+    private String dialogTag = "UPLOAD HIGHLIGHT DIALOG";
     private MemoreViewModel memoreViewModel;
     private Memore memore;
     private Bitmap qrBitmap;
     private HighlightViewModel highlightViewModel;
+    private UploadDialog uploadDialog;
+
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -82,6 +85,8 @@ public class RegistrationFragment extends Fragment {
         userSharedViewModel = new ViewModelProvider(requireActivity()).get(UserSharedViewModel.class);
         userInfo = new UserInfo();
         progressDialogFragment = new ProgressDialogFragment();
+        uploadDialog = new UploadDialog();
+
         highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
         initMemore();
 
@@ -93,19 +98,48 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
-        registrationViewModel.isRegistered().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//        registrationViewModel.isRegistered().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean aBoolean) {
+//                if (progressDialogFragment.getTag() != null && progressDialogFragment.getTag().equals(dialogTag)) {
+//                    progressDialogFragment.dismiss();
+//                    ErrorLog.WriteDebugLog("SAVED MEMORE AND CREATED USER");
+//                }
+//                if(aBoolean){
+//                    toastUtil.toastRegistrationSucces(requireContext());
+//                    highlightViewModel.getScannedValue().setValue(memore.getMemore_id());
+//                    navController.navigate(R.id.action_registrationFragment_to_HighlightFragment2);
+//                    registrationViewModel.isRegistered().setValue(false);
+//
+//                }
+//            }
+//        });
+
+        memoreViewModel.memoreSaved().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (progressDialogFragment.getTag() != null && progressDialogFragment.getTag().equals(dialogTag)) {
-                    progressDialogFragment.dismiss();
+                if (uploadDialog.getTag() != null && uploadDialog.getTag().equals(dialogTag)) {
+                    uploadDialog.dismiss();
                     ErrorLog.WriteDebugLog("SAVED MEMORE AND CREATED USER");
                 }
                 if(aBoolean){
                     toastUtil.toastRegistrationSucces(requireContext());
                     highlightViewModel.getScannedValue().setValue(memore.getMemore_id());
                     navController.navigate(R.id.action_registrationFragment_to_HighlightFragment2);
-                    registrationViewModel.isRegistered().setValue(false);
+                    memoreViewModel.memoreSaved().setValue(false);
 
+                }
+            }
+        });
+
+        memoreViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(!s.isEmpty()){
+                    toastUtil.makeText(requireContext(), s, Toast.LENGTH_LONG);
+                    if(uploadDialog != null){
+                        uploadDialog.dismiss();
+                    }
                 }
             }
         });
@@ -115,17 +149,14 @@ public class RegistrationFragment extends Fragment {
             public void onChanged(String s) {
                 if(!s.isEmpty()){
                     toastUtil.makeText(requireContext(), s, Toast.LENGTH_LONG);
-                    if(progressDialogFragment != null){
-                        progressDialogFragment.dismiss();
+                    if(uploadDialog != null){
+                        uploadDialog.dismiss();
                     }
                 }
             }
         });
 
         fragmentRegistrationBinding.buttonRegister.setOnClickListener(btn -> {
-//            firstName = String.valueOf(fragmentRegistrationBinding.editTextEmail.getText());
-//            middleName = String.valueOf(fragmentRegistrationBinding.middleNameEditText.getText());
-//            lastName = String.valueOf(fragmentRegistrationBinding.lastNameEditText.getText());
             email = String.valueOf(fragmentRegistrationBinding.editTextEmail.getText());
             password = String.valueOf(fragmentRegistrationBinding.regPasswordEditText.getText());
             confirm_password = String.valueOf(fragmentRegistrationBinding.editTextConfirmPassword.getText());
@@ -134,8 +165,13 @@ public class RegistrationFragment extends Fragment {
                 userInfo.setEmail(email);
 
                 if(memore != null) {
-                    registrationViewModel.registerUser(userInfo, password, memore, qrBitmap,requireContext());
-                    progressDialogFragment.show(getChildFragmentManager(), dialogTag);
+                    memore.setOwner_email(email);
+                    memore.setPassword(password);
+
+                    memoreViewModel.uploadHighlightToFirebase(memore,qrBitmap, requireContext());
+                    uploadDialog.show(getChildFragmentManager(),"UPLOAD HIGHLIGHT DIALOG");
+
+//                    progressDialogFragment.show(getChildFragmentManager(), dialogTag);
                 }else{
                     Toast.makeText(requireContext(),"Please try again", Toast.LENGTH_LONG).show();
                 }

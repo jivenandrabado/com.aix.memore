@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.fragments.memore.UploadHighlightFragment">
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Upload a highlight \n to your loved one's memore"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonUploadVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:drawableStart="@drawable/ic_baseline_add_24_white"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Upload Video"
+        app:layout_constraintEnd_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        android:backgroundTint="@color/memore_blue"
+        android:textColor="@color/white"
+
+        />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="or"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonUploadVideo"
+        app:layout_constraintEnd_toEndOf="@+id/textView13"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toTopOf="@+id/buttonUploadVideo" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonUploadPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:drawableStart="@drawable/ic_baseline_add_24_memore_blue"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/memore_blue"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Upload Photo"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonUploadVideo"
+        app:layout_constraintHeight_percent="0.18"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/buttonUploadVideo"
+        app:layout_constraintWidth_percent="0.3" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Preview"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUploadVideo" />
+
+    <ImageView
+        android:id="@+id/imageViewHighlight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toStartOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:resize_mode="fill" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_rectangle_rounded_solid"
+        android:text="Next"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

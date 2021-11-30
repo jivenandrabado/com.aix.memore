@@ -2,6 +2,7 @@ package com.aix.memore.repositories;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -49,6 +50,7 @@ public class FirebaseRegistrationRepo {
                                 ErrorLog.WriteDebugLog("OWNER ID = "+user_id);
                                 saveRegistrationToUsers(userInfo,password, SigninENUM.NONE);
                                 memore.setPassword(password);
+
                                 memoreRepo.createMemore(memore, user_id, qrBitmap, context);
 
                                 isRegistered.setValue(true);
@@ -75,7 +77,7 @@ public class FirebaseRegistrationRepo {
                     if (task.isSuccessful()) {
                         switch (signinENUM){
                             case NONE:
-                                ErrorLog.WriteDebugLog("Logging in to heylo");
+                                ErrorLog.WriteDebugLog("Logging in to memore");
 //                                firebaseLoginRepo.loginUserUsernamePassword(userInfo.getEmail(), password);
                                 break;
                             case GOOGLE:
