@@ -163,8 +163,8 @@ public class QRScannerHelper extends ContextWrapper {
 
                 @Override
                 public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
-                    Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
-                    ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
+//                    Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
+//                    ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
 
 //                if (!enableBarCodeDetection) return;
 
