@@ -342,6 +342,40 @@ public class GalleryRepo {
 
     }
 
+    public void uploadBitmapToVault(String owner_id, Bitmap qrBitmap, Context context) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            qrBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = mediaRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
+
+                            downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
+                            addNewMediaToVault(owner_id, String.valueOf(uri));
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
     public void addNewMedia(String owner_id, String path, String album_id){
         try{
             Gallery gallery = new Gallery();
@@ -374,6 +408,55 @@ public class GalleryRepo {
         }
     }
 
+    public void addNewMediaToVault(String owner_id, String path){
+        try{
+
+            Gallery gallery = new Gallery();
+            gallery.setType(1);
+            gallery.setUpload_date(new Timestamp(new Date()));
+            gallery.setPath(path);
+            gallery.setIs_deleted(false);
+
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .whereEqualTo("title","Vault").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                public_wall_id = document.getId();
+                            }
+
+                            String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                                    .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
+
+                            gallery.setMedia_id(doc_id);
+
+                            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
+                                    .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        ErrorLog.WriteDebugLog("UPLOAD TO VAULT SUCCESS");
+                                        isUploaded.postValue(true);
+                                    }else{
+                                        ErrorLog.WriteErrorLog(task.getException());
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+
+
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
     public void uploadToFirebaseStoragePublicWall(String owner_id, Uri path) {
         try {
             StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());

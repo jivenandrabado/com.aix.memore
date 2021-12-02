@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.aix.memore.models.Album;
 import com.aix.memore.models.Memore;
+import com.aix.memore.models.UserInfo;
+import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.utilities.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,7 +20,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -26,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,10 +43,18 @@ public class MemoreRepo extends GalleryRepo {
     public MutableLiveData<Boolean> memoreSaved = new MutableLiveData<>();
     public MutableLiveData<String> errorMessage = new MutableLiveData<>();
     public MutableLiveData<Double> uploadProgresMemore = new MutableLiveData<>();
+    public MutableLiveData<Memore> existingMemore = new MutableLiveData<>();
+    public MutableLiveData<Boolean> memoreExists = new MutableLiveData<>();
+    private final FirebaseRegistrationRepo firebaseRegistrationRepo;
+    private final MutableLiveData<Boolean> isEmailVerified = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isPasswordReset = new MutableLiveData<>();
 
-    public MemoreRepo() {
+
+    public MemoreRepo(FirebaseRegistrationRepo firebaseRegistrationRepo) {
         db = FirebaseFirestore.getInstance();
+        this.firebaseRegistrationRepo = firebaseRegistrationRepo;
     }
+
 
     public void createMemore(Memore memore, String owner_id, Bitmap qrBitmap, Context context){
         try{
@@ -84,6 +97,9 @@ public class MemoreRepo extends GalleryRepo {
 
                         memoreSaved.setValue(true);
 
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.setEmail(memore.getOwner_email());
+                        firebaseRegistrationRepo.registerUser(memore.getPassword(), userInfo,memore);
 
                     }else{
                         ErrorLog.WriteErrorLog(task.getException());
@@ -284,5 +300,119 @@ public class MemoreRepo extends GalleryRepo {
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
+    }
+
+    public void updateMemoreOwnerId(String owner_id,String memore_id){
+        try{
+            HashMap<String,Object> map = new HashMap();
+            map.put("owner_id", owner_id);
+            db.collection(FirebaseConstants.MEMORE).document(memore_id).update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        ErrorLog.WriteDebugLog("UPDATE MEMORE SUCCESS");
+                        memoreSaved.setValue(true);
+                    }else{
+                        ErrorLog.WriteDebugLog("UPDATE MEMORE FAILED "+task.getException());
+                        errorMessage.setValue(String.valueOf(task.getException()));
+                    }
+
+                }
+            });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public void checkIfMemoreExists(Memore memore) {
+        try {
+            ErrorLog.WriteDebugLog("MEMORE bday "+DateHelper.stringToDate2(String.valueOf(memore.getBio_birth_date())));
+            ErrorLog.WriteDebugLog("MEMORE dday "+DateHelper.stringToDate2(String.valueOf(memore.getBio_birth_date())));
+
+            db.collection(FirebaseConstants.MEMORE).whereEqualTo("bio_first_name", memore.getBio_first_name())
+                    .whereEqualTo("bio_last_name", memore.getBio_last_name())
+                    .whereEqualTo("bio_birth_date", DateHelper.stringToDate2(String.valueOf(memore.getBio_birth_date())))
+                    .whereEqualTo("bio_death_date", DateHelper.stringToDate2(String.valueOf(memore.getBio_death_date())))
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            List<Memore> memore1 = task.getResult().toObjects(Memore.class);
+                            if(memore1.size() > 0){
+                               existingMemore.setValue(memore1.get(0));
+                                memoreExists.setValue(true);
+                                ErrorLog.WriteDebugLog("MEMORE EXISTS");
+                            }
+                        }else{
+                            memoreExists.setValue(false);
+                            ErrorLog.WriteDebugLog("MEMORE DOES NOT EXIST");
+                        }
+                    }else{
+                        ErrorLog.WriteErrorLog(task.getException());
+                    }
+                }
+            });
+        }
+
+        catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public void verifyEmailAddress(String email_address, String memore_id) {
+        try{
+
+            db.collection(FirebaseConstants.MEMORE).document(memore_id).get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful()){
+                                Memore memore = task.getResult().toObject(Memore.class);
+                                if (memore != null && memore.getOwner_email().equals(email_address)) {
+                                    isEmailVerified.setValue(true);
+                                }else{
+                                    isEmailVerified.setValue(false);
+                                }
+                            }else{
+                                ErrorLog.WriteErrorLog(task.getException());
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsEmailVerified(){
+        return isEmailVerified;
+    }
+
+    public void setNewPassword(String password, String memore_id) {
+        try{
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("password", password);
+
+            db.collection(FirebaseConstants.MEMORE).document(memore_id).update(map)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                isPasswordReset.setValue(true);
+                            }else{
+                                isPasswordReset.setValue(false);
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsPasswordReset(){
+        return isPasswordReset;
     }
 }

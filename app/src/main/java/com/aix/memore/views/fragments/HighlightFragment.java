@@ -1,9 +1,11 @@
 package com.aix.memore.views.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,12 +32,24 @@ import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
+import com.aix.memore.view_models.MemoreViewModel;
 import com.aix.memore.view_models.UserViewModel;
 import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
+import com.aix.memore.views.dialogs.ShareDialog;
+import com.aix.memore.views.dialogs.UpdateQRCodeDialog;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import kotlin.collections.CollectionsKt;
 
 public class HighlightFragment extends Fragment implements HighlightInterface {
 
@@ -49,6 +63,13 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private GalleryViewModel galleryViewModel;
     private PasswordDialog passwordDialog;
     private UserViewModel userViewModel;
+    private MemoreViewModel memoreViewModel;
+    private Memore memore;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+    private final String KEY_PREFS = "memore_history";
+    private boolean exists = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +100,16 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             galleryViewModel = new ViewModelProvider(requireActivity()).get(GalleryViewModel.class);
             passwordDialog = new PasswordDialog();
             userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+            memoreViewModel= new ViewModelProvider(requireActivity()).get(MemoreViewModel.class);
+            prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+            editor = prefs.edit();
 
             galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Memore>() {
                 @Override
-                public void onChanged(Memore memore) {
+                public void onChanged(Memore memore1) {
+
+                    memore = memore1;
+                    initSharePrefForHistory();
                     String date = null;
                     String full_name = memore.bio_first_name+ " "+ memore.bio_middle_name+ " "+ memore.bio_last_name;
                     ErrorLog.WriteDebugLog("FULL NAME "+ full_name);
@@ -108,6 +135,8 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                     binding.textViewHighlightDeathDate.setText(date);
                     binding.buttonKnowMore.setText(memore.bio_first_name+"'s Life");
                 }
+
+
             });
 
             highlightViewModel.getScannedValue().observe(requireActivity(),onHighlightFoundObserver);
@@ -132,10 +161,87 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             });
 
             initPasswordListener();
+            initMemoreSaved();
+//            initOldQRHighglightObserver();
+
 
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
+    }
+
+    private void initOldQRHighglightObserver() {
+        highlightViewModel.getOldQRHighlightExists().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean != null){
+                    if(aBoolean){
+                        UpdateQRCodeDialog updateQRCodeDialog = new UpdateQRCodeDialog(highlightInterface);
+                        updateQRCodeDialog.show(getChildFragmentManager(),"UPDATE NEW QR DIALOG");
+                    }else{
+                        Toast.makeText(requireContext(), "Invalid QR Code. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    highlightViewModel.getOldQRHighlightExists().setValue(null);
+                }
+            }
+        });
+    }
+
+
+
+
+    private void initSharePrefForHistory() {
+        if(getArrayList("memore_history") != null) {
+            if (!getArrayList("memore_history").isEmpty()) {
+                List<String> memoreArrayList = getArrayList("memore_history");
+
+                if (!memoreArrayList.contains(memore.toString())) {
+                    memoreArrayList.add(memore.toString());
+                    ErrorLog.WriteDebugLog("Shared Pref does not contain " + memore.getBio_first_name());
+                    saveArrayList(memoreArrayList, "memore_history");
+                }else{
+                    ErrorLog.WriteDebugLog("MEMORE CONTAINS " + memore.getBio_first_name());
+                }
+            }
+
+        }else{
+            ErrorLog.WriteDebugLog("EMPTY SHARED PREF");
+            List<String> memoreArrayList = new ArrayList<>();
+            memoreArrayList.add(memore.toString());
+            saveArrayList(memoreArrayList,"memore_history");
+        }
+    }
+
+
+    public void saveArrayList(List<String> list, String key){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
+    public List<String> getArrayList(String key){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        Type type = new TypeToken<List<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    private void initMemoreSaved() {
+        memoreViewModel.memoreSaved().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    ShareDialog shareDialog = new ShareDialog();
+                    shareDialog.show(getChildFragmentManager(),"SHARE DIALOG");
+                    memoreViewModel.memoreSaved().setValue(false);
+                }
+            }
+        });
     }
 
     private void initPasswordListener() {
@@ -154,6 +260,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private Observer<String> onHighlightFoundObserver = new Observer<String>() {
         @Override
         public void onChanged(String o) {
+            ErrorLog.WriteDebugLog("MEMORE ID "+o);
             highlightViewModel.getHighlight(highlightInterface,o);
             galleryViewModel.addSnapshotListenerForBio(o);
         }
@@ -178,7 +285,11 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             }
 
         }else{
-            progressDialogFragment.dismiss();
+            if(progressDialogFragment != null) {
+                if(progressDialogFragment.isVisible()) {
+                    progressDialogFragment.dismiss();
+                }
+            }
             Toast.makeText(requireContext(),"Please try again",Toast.LENGTH_SHORT).show();
         }
 
@@ -197,6 +308,11 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onCredentialsSubmitted() {
         navController.navigate(R.id.action_HighlightFragment_to_galleryFragment);
+    }
+
+    @Override
+    public void onGenerateNewQRCode() {
+        navController.navigate(R.id.action_HighlightFragment_to_generateNewVersionQRCodeFragment);
     }
 
 
@@ -258,11 +374,11 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         galleryViewModel.detachBioSnapshotListener();
     }
 
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         // Add the new menu items
-        ErrorLog.WriteDebugLog("EDIT MENU");
         inflater.inflate(R.menu.menu_highlight,menu);
 
         super.onCreateOptionsMenu(menu, inflater);

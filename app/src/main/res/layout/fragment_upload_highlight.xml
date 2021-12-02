@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Upload a highlight \n to your loved one's memore"
+        android:text="Upload a highlight \n for your loved one's memore"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"
@@ -78,12 +78,15 @@
 
     <ImageView
         android:id="@+id/imageViewHighlight"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.3"
         app:layout_constraintStart_toStartOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
@@ -101,6 +104,16 @@
         app:layout_constraintStart_toStartOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/textView15"
         app:resize_mode="fill" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewHighlight"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewHighlight"
+        app:layout_constraintStart_toStartOf="@+id/imageViewHighlight"
+        app:layout_constraintTop_toTopOf="@+id/imageViewHighlight" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonNext"

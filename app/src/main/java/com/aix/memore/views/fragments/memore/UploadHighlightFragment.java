@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,7 +31,13 @@ import com.aix.memore.databinding.FragmentUploadHighlightBinding;
 import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.MemoreViewModel;
+import com.aix.memore.views.dialogs.ShareDialog;
+import com.aix.memore.views.dialogs.UploadDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
@@ -38,11 +46,13 @@ public class UploadHighlightFragment extends Fragment {
 
     private FragmentUploadHighlightBinding binding;
     private NavController navController;
-    private String video_highlight;
+    private String video_highlight ="";
     private SimpleExoPlayer simpleExoPlayer;
     private MemoreViewModel memoreViewModel;
     private Memore memore;
     private boolean is_video;
+    private boolean isEdit = false;
+    private UploadDialog uploadDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,26 +65,93 @@ public class UploadHighlightFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-
-        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!video_highlight.isEmpty()) {
-                    memore.setVideo_highlight(video_highlight);
-                    memore.setIs_video(is_video);
-                    navController.navigate(R.id.action_uploadHighlightFragment_to_QRGeneratorFragment);
-                }else{
-                    ErrorLog.WriteDebugLog("Pls select video highlight");
-                    Toast.makeText(requireContext(),"Please upload video or photo.",Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
         initMemore();
         initExoPlayer();
         initVideoChooser();
         initImageChooser();
+        initUploadDialog();
 
+        memoreViewModel.isEdit.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                isEdit = aBoolean;
+
+                if(aBoolean) {
+                    binding.buttonNext.setText("Save");
+                    if (memore.is_video) {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        playVideo(simpleExoPlayer, memore.getVideo_highlight());
+                        enableVideoView();
+                    } else {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        Glide.with(requireContext()).load(memore.getVideo_highlight())
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        binding.progressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                })
+                                .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHighlight));
+
+                        enableImageView();
+                    }
+                }else{
+                    binding.buttonNext.setText("Next");
+                }
+            }
+        });
+        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    if (!video_highlight.isEmpty()) {
+                        memore.setVideo_highlight(video_highlight);
+                        memore.setIs_video(is_video);
+                        if(!isEdit) {
+                            navController.navigate(R.id.action_uploadHighlightFragment_to_QRGeneratorFragment);
+                        }else{
+                            uploadDialog.show(getChildFragmentManager(),"UPLOAD DIALOG EDIT");
+                            memoreViewModel.updateHightlightToFirebase(memore, requireContext());
+                        }
+                    } else {
+                        ErrorLog.WriteDebugLog("Pls select video highlight");
+                        Toast.makeText(requireContext(), "Please upload video or photo.", Toast.LENGTH_LONG).show();
+                    }
+            }
+        });
+
+        memoreViewModel.getMemoreUploadProgress().observe(getViewLifecycleOwner(), new Observer<Double>() {
+            @Override
+            public void onChanged(Double aDouble) {
+                if(aDouble == 100){
+                    if(uploadDialog!=null){
+                        if(uploadDialog.isVisible()){
+                            uploadDialog.dismiss();
+                        }
+                    }
+                }
+            }
+        });
+
+        memoreViewModel.memoreSaved().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    Toast.makeText(requireContext(), "Highlight upload success", Toast.LENGTH_SHORT).show();
+                    memoreViewModel.memoreSaved().setValue(false);
+                    navController.popBackStack(R.id.uploadHighlightFragment,true);
+                }
+            }
+        });
+    }
+
+    private void initUploadDialog() {
+        uploadDialog = new UploadDialog();
     }
 
     private void initImageChooser() {
@@ -111,6 +188,7 @@ public class UploadHighlightFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == RESULT_OK){
+                        binding.progressBar.setVisibility(View.VISIBLE);
                         Intent data = result.getData();
 
                         ClipData clipData = data.getClipData();
@@ -170,6 +248,7 @@ public class UploadHighlightFragment extends Fragment {
 
         if (!player.isPlaying()) {
             player.prepare();
+            binding.progressBar.setVisibility(View.GONE);
             player.play();
         }
 
@@ -214,7 +293,20 @@ public class UploadHighlightFragment extends Fragment {
                             enableImageView();
                             video_highlight = String.valueOf(uri);
                             is_video = false;
+                            binding.progressBar.setVisibility(View.VISIBLE);
                             Glide.with(requireContext()).load(uri)
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            binding.progressBar.setVisibility(View.GONE);
+                                            return false;
+                                        }
+                                    })
                                     .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHighlight));
 
                         }
@@ -226,5 +318,13 @@ public class UploadHighlightFragment extends Fragment {
     private void initMemore(){
         memoreViewModel = new ViewModelProvider(requireActivity()).get(MemoreViewModel.class);
         memore = memoreViewModel.getMemoreMutableLiveData().getValue();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(simpleExoPlayer != null) {
+            simpleExoPlayer.stop();
+        }
     }
 }
