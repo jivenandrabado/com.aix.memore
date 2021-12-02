@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.aix.memore.BuildConfig;
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentHighlightBinding;
 import com.aix.memore.interfaces.HighlightInterface;
@@ -41,7 +42,12 @@ import com.aix.memore.views.dialogs.UpdateQRCodeDialog;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.reflect.TypeToken;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
@@ -144,12 +150,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             binding.buttonShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://firebasestorage.googleapis.com/v0/b/memore-ca204.appspot.com/o/vince%20violation%202.mp4?alt=media&token=702ac0e3-0e8e-41bb-8642-65cc1261ad7c");
-                    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                    sharingIntent.setType("video/mp4");
-                    sharingIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(sharingIntent, "Share Video"));
+                    generateDynamicLink(memore.getMemore_id());
                 }
             });
 
@@ -170,6 +171,50 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         }
     }
 
+    private void generateDynamicLink(String memore_id) {
+
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("https://www.example.com/?highlight="+memore_id))
+                .setDomainUriPrefix("https://memore.page.link")
+                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.aix.memore")
+                        .build())
+                .setSocialMetaTagParameters(
+                        new DynamicLink.SocialMetaTagParameters.Builder()
+                                .setTitle("Example of a Dynamic Link")
+                                .setDescription("This link works whether the app is installed or not!")
+                                .build())
+                .buildShortDynamicLink()
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if (task.isSuccessful()) {
+                            // Short link created
+                            Uri shortLink = task.getResult().getShortLink();
+                            Uri flowchartLink = task.getResult().getPreviewLink();
+                            ErrorLog.WriteDebugLog("MEMORE SHORT LINK "+shortLink);
+                            ErrorLog.WriteDebugLog("FLOW CHART LINK "+flowchartLink);
+
+                            funcShareIntent(shortLink);
+
+                        } else {
+                            // Error
+                            // ...
+                            ErrorLog.WriteDebugLog("ERROR GENERATING DYNAMIC LIN "+ task.getException());
+                            ErrorLog.WriteErrorLog(task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void funcShareIntent(Uri shortLink) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                "Click the to view "+memore.getBio_first_name() +" "+ memore.getBio_last_name()+"'s"+" Memore:" + "\n"+shortLink);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
     private void initOldQRHighglightObserver() {
         highlightViewModel.getOldQRHighlightExists().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -187,8 +232,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
             }
         });
     }
-
-
 
 
     private void initSharePrefForHistory() {
