@@ -33,6 +33,7 @@ import com.aix.memore.view_models.MemoreViewModel;
 import com.aix.memore.view_models.RegistrationViewModel;
 import com.aix.memore.view_models.UserSharedViewModel;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
+import com.aix.memore.views.dialogs.ShareDialog;
 import com.aix.memore.views.dialogs.UploadDialog;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -55,6 +56,7 @@ public class RegistrationFragment extends Fragment {
     private Bitmap qrBitmap;
     private HighlightViewModel highlightViewModel;
     private UploadDialog uploadDialog;
+    private ShareDialog shareDialog;
 
 
     public RegistrationFragment() {
@@ -86,6 +88,7 @@ public class RegistrationFragment extends Fragment {
         userInfo = new UserInfo();
         progressDialogFragment = new ProgressDialogFragment();
         uploadDialog = new UploadDialog();
+        shareDialog = new ShareDialog();
 
         highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
         initMemore();
@@ -126,8 +129,6 @@ public class RegistrationFragment extends Fragment {
                     toastUtil.toastRegistrationSucces(requireContext());
                     highlightViewModel.getScannedValue().setValue(memore.getMemore_id());
                     navController.navigate(R.id.action_registrationFragment_to_HighlightFragment2);
-                    memoreViewModel.memoreSaved().setValue(false);
-
                 }
             }
         });
@@ -170,14 +171,11 @@ public class RegistrationFragment extends Fragment {
 
                     memoreViewModel.uploadHighlightToFirebase(memore,qrBitmap, requireContext());
                     uploadDialog.show(getChildFragmentManager(),"UPLOAD HIGHLIGHT DIALOG");
-
-//                    progressDialogFragment.show(getChildFragmentManager(), dialogTag);
                 }else{
                     Toast.makeText(requireContext(),"Please try again", Toast.LENGTH_LONG).show();
                 }
             }else {
                 ErrorLog.WriteDebugLog("Fields are empty");
-//                toastUtil.makeText(requireContext(),"Fields are empty", Toast.LENGTH_LONG);
             }
 
         });

@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aix.memore.R;
-import com.aix.memore.databinding.FragmentCreateMemoreBinding;
 import com.aix.memore.databinding.FragmentEditMemoreBinding;
 import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.DateHelper;
@@ -63,10 +62,11 @@ public class EditMemoreFragment extends Fragment {
     private MemoreViewModel memoreViewModel;
     private NavController navController;
     private Memore memore;
-    private String first_name, middle_name, last_name, video_highlight, birth_date, death_date, profile_pic;
+    private String first_name, middle_name, last_name, birth_date, death_date, profile_pic, lot_num;
     private DatePickerDialog datePickerDialog;
     private GalleryViewModel galleryViewModel;
     private UploadDialog uploadDialog;
+    private HighlightViewModel highlightViewModel;
     private String dialogTag = "UPLOAD HIGHLIGHT DIALOG";
 
     @Override
@@ -85,10 +85,8 @@ public class EditMemoreFragment extends Fragment {
         navController = Navigation.findNavController(view);
         memore = new Memore();
         uploadDialog = new UploadDialog();
+        highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
 
-
-
-        initVideoChooser();
         initViews();
         initObservers();
 
@@ -129,10 +127,26 @@ public class EditMemoreFragment extends Fragment {
             }
         });
 
-        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
+        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateMemore();
+                updateMemore(true);
+            }
+        });
+
+        binding.buttonUploadHighlight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateMemore(false);
+                memoreViewModel.isEdit.setValue(true);
+                navController.navigate(R.id.action_editMemoreFragment_to_uploadHighlightFragment);
+
+            }
+        });
+        binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_editMemoreFragment_to_HighlightFragment);
             }
         });
     }
@@ -146,7 +160,8 @@ public class EditMemoreFragment extends Fragment {
                     ErrorLog.WriteDebugLog("SAVED MEMORE AND CREATED USER");
                 }
                 if(aBoolean){
-                    navController.popBackStack(R.id.editMemoreFragment,true);
+                    Toast.makeText(requireContext(), "Update success", Toast.LENGTH_SHORT).show();
+                    navController.navigate(R.id.action_editMemoreFragment_to_HighlightFragment);
                     memoreViewModel.memoreSaved().setValue(false);
                 }
             }
@@ -157,8 +172,10 @@ public class EditMemoreFragment extends Fragment {
             public void onChanged(String s) {
                 if(!s.isEmpty()){
                     Toast.makeText(requireContext(), s, Toast.LENGTH_LONG).show();
-                    if(uploadDialog != null){
-                        uploadDialog.dismiss();
+                    if(uploadDialog != null) {
+                        if(uploadDialog.isVisible()) {
+                            uploadDialog.dismiss();
+                        }
                     }
                 }
             }
@@ -167,6 +184,7 @@ public class EditMemoreFragment extends Fragment {
 
     private void initViews() {
 
+        galleryViewModel.addSnapshotListenerForBio(highlightViewModel.getScannedValue().getValue());
         galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Memore>() {
             @Override
             public void onChanged(Memore sMemore) {
@@ -174,6 +192,7 @@ public class EditMemoreFragment extends Fragment {
                 binding.editTextFirstName.setText(sMemore.getBio_first_name());
                 binding.editTextMiddleName.setText(sMemore.getBio_middle_name());
                 binding.editTextLastName.setText(sMemore.getBio_last_name());
+                binding.editTextLotNum.setText(sMemore.getLot_num());
 
                 binding.editTextBday.setText(DateHelper.formatDate2(sMemore.getBio_birth_date()));
                 if(sMemore.getBio_death_date()!=null) {
@@ -183,7 +202,7 @@ public class EditMemoreFragment extends Fragment {
 
                 if(memore.getBio_profile_pic() != null){
                     Glide.with(requireContext()).load(memore.getBio_profile_pic())
-                            .fitCenter()
+                            .circleCrop()
                             .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewProfilePic));
                 }
 
@@ -208,12 +227,13 @@ public class EditMemoreFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    private boolean updateMemore(){
+    private boolean updateMemore(Boolean is_update){
         first_name = String.valueOf(binding.editTextFirstName.getText());
         middle_name = String.valueOf(binding.editTextMiddleName.getText());
         last_name = String.valueOf(binding.editTextLastName.getText());
         birth_date = String.valueOf(binding.editTextBday.getText());
         death_date = String.valueOf(binding.editTextDeathDate.getText());
+        lot_num = String.valueOf(binding.editTextLotNum.getText());
 
         if(!isEmptyFields(first_name, last_name, birth_date,death_date,memore.getAddress())){
             memore.setBio_first_name(first_name);
@@ -221,22 +241,14 @@ public class EditMemoreFragment extends Fragment {
             memore.setBio_last_name(last_name);
             memore.setBio_birth_date(DateHelper.stringToDate(birth_date));
             memore.setDate_created(new Date());
+            memore.setLot_num(lot_num);
+
             if(!death_date.isEmpty()) {
                 memore.setBio_death_date(DateHelper.stringToDate(death_date));
             }
+            memoreViewModel.getMemoreMutableLiveData().setValue(memore);
 
-            if(profile_pic != null){
-                if(!profile_pic.isEmpty()) {
-                    memore.setBio_profile_pic(profile_pic);
-                    memoreViewModel.uploadBioProfilePicToFirebaseStorage(memore);
-                }
-            }
-
-            if(video_highlight!=null) {
-                uploadDialog.show(getChildFragmentManager(),dialogTag);
-                memore.setVideo_highlight(video_highlight);
-                memoreViewModel.updateHightlightToFirebase(memore, requireContext());
-            }else{
+            if(is_update){
                 memoreViewModel.updateMemore(memore);
             }
 
@@ -248,25 +260,6 @@ public class EditMemoreFragment extends Fragment {
 
     }
 
-    private void initVideoChooser(){
-
-        binding.buttonAddHighlight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                chooseVideo();
-            }
-        });
-
-    }
-
-    private void chooseVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_PICK);
-        chooseVideoActivityResult.launch(intent);
-
-    }
 
     private void initPlacesApiIntent(){
         if (!Places.isInitialized()) {
@@ -280,44 +273,6 @@ public class EditMemoreFragment extends Fragment {
         placesApiLauncher.launch(intent);
 
     }
-
-    private ActivityResultLauncher<Intent> chooseVideoActivityResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == RESULT_OK){
-                        Intent data = result.getData();
-
-                        ClipData clipData = data.getClipData();
-                        if (clipData != null) {
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                Uri imageUri = clipData.getItemAt(i).getUri();
-                                // your code for multiple image selection
-                                ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri);
-                                video_highlight = String.valueOf(imageUri);
-
-                                //public wall
-//                                galleryViewModel.uploadToFirebaseStorageToPublicWall(highlightViewModel.getScannedValue().getValue(),imageUri);
-                            }
-                        } else {
-                            Uri uri = data.getData();
-                            // your codefor single image selection
-                            ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
-                            video_highlight = String.valueOf(uri);
-
-//                            uploadDialog.show(getChildFragmentManager(),"UPLOAD_DIALOG");
-
-                            //public wall
-//                            galleryViewModel.uploadToFirebaseStorageToPublicWall(highlightViewModel.getScannedValue().getValue(),uri);
-
-
-
-                        }
-                    }
-                }
-            }
-    );
 
     private ActivityResultLauncher<Intent> placesApiLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -340,6 +295,7 @@ public class EditMemoreFragment extends Fragment {
                         // TODO: Handle the error.
                         Status status = Autocomplete.getStatusFromIntent(result.getData());
                         ErrorLog.WriteDebugLog("Error "+status);
+                        Toast.makeText(requireContext(), "Try again. "+status, Toast.LENGTH_SHORT).show();
                     } else if (resultCode == RESULT_CANCELED) {
                         // The user canceled the operation.
                     }
@@ -404,15 +360,13 @@ public class EditMemoreFragment extends Fragment {
                             ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
                             profile_pic = String.valueOf(uri);
 
+
                             Glide.with(requireContext()).load(uri)
-                                    .fitCenter()
+                                    .circleCrop()
                                     .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewProfilePic));
-
+                            memore.setBio_profile_pic(profile_pic);
+                            memoreViewModel.uploadBioProfilePicToFirebaseStorage(memore);
                         }
-
-
-
-
                     }
                 }
             }

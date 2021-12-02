@@ -50,7 +50,7 @@ public class FirebaseLoginRepo {
     public FirebaseLoginRepo() {
         mAuth = FirebaseAuth.getInstance();
         toastUtil = new ToastUtil();
-        firebaseRegistrationRepo = new FirebaseRegistrationRepo(this);
+        firebaseRegistrationRepo = new FirebaseRegistrationRepo();
     }
 
     public void loginUserUsernamePassword(String email, String password) {

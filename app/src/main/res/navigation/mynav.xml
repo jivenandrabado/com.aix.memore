@@ -21,6 +21,12 @@
         <action
             android:id="@+id/action_QRScannerFragment_to_userFragment"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_QRScanHistoryFragment"
+            app:destination="@id/QRScanHistoryFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_createMemoreFragment2"
+            app:destination="@id/createMemoreFragment" />
     </fragment>
 
     <fragment
@@ -36,6 +42,9 @@
         <action
             android:id="@+id/action_HighlightFragment_to_editMemoreFragment"
             app:destination="@id/editMemoreFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_generateNewVersionQRCodeFragment"
+            app:destination="@id/generateNewVersionQRCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/knowMoreFragment"
@@ -116,6 +125,9 @@
         <action
             android:id="@+id/action_createMemoreFragment_to_uploadHighlightFragment"
             app:destination="@id/uploadHighlightFragment" />
+        <action
+            android:id="@+id/action_createMemoreFragment_to_editMemoreFragment"
+            app:destination="@id/editMemoreFragment" />
     </fragment>
     <fragment
         android:id="@+id/QRGeneratorFragment"
@@ -129,7 +141,16 @@
     <fragment
         android:id="@+id/editMemoreFragment"
         android:name="com.aix.memore.views.fragments.memore.EditMemoreFragment"
-        android:label="Edit Memore" />
+        android:label="Edit Memore" >
+        <action
+            android:id="@+id/action_editMemoreFragment_to_uploadHighlightFragment"
+            app:destination="@id/uploadHighlightFragment" />
+        <action
+            android:id="@+id/action_editMemoreFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment"
+            app:popUpTo="@id/QRScannerFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/userFragment"
         android:name="com.aix.memore.views.fragments.qr.UserFragment"
@@ -166,5 +187,18 @@
             android:id="@+id/action_uploadHighlightFragment_to_QRGeneratorFragment"
             app:destination="@id/QRGeneratorFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/QRScanHistoryFragment"
+        android:name="com.aix.memore.views.fragments.QRScanHistoryFragment"
+        android:label="Recently Viewed Memore"
+        tools:layout="@layout/fragment_q_r_scan_history" >
+        <action
+            android:id="@+id/action_QRScanHistoryFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generateNewVersionQRCodeFragment"
+        android:name="com.aix.memore.views.fragments.qr.GenerateNewVersionQRCodeFragment"
+        android:label="GenerateNewVersionQRCodeFragment" />
 
 </navigation>

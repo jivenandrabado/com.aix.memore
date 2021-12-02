@@ -36,6 +36,7 @@ public class AppConfigRepo {
                         AppConfig appConfig = null;
 //                        if (value != null) {
                             appConfig = value.toObject(AppConfig.class);
+                        if (appConfig != null) {
                             if(appConfig.getForce_update()) {
                                 if (appConfig.getVersion_code() != getAppVersion(context)) {
                                     isForceUpdate.postValue(true);
@@ -45,6 +46,7 @@ public class AppConfigRepo {
                             }else if(!appConfig.getForce_update()){
                                 isForceUpdate.postValue(false);
                             }
+                        }
 //                        }else{
 //                            ErrorLog.WriteDebugLog("ERROR APP CONFIG");
 //                        }

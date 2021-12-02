@@ -1,5 +1,7 @@
 package com.aix.memore.view_models;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
@@ -100,5 +102,9 @@ public class GalleryViewModel extends ViewModel {
 
     public MutableLiveData<Double> uploadProgress(){
         return galleryRepo.uploadProgress;
+    }
+
+    public void uploadBitmapToVault(String owner_id, Bitmap qrBitmap, Context context) {
+        galleryRepo.uploadBitmapToVault(owner_id,qrBitmap,context);
     }
 }

@@ -1,7 +1,6 @@
 package com.aix.memore.models;
 
 import com.google.firebase.firestore.GeoPoint;
-import com.google.type.LatLng;
 
 import java.util.Date;
 
@@ -23,6 +22,7 @@ public class Memore {
     public GeoPoint latLng;
     public String owner_email;
     public boolean is_video;
+    public String lot_num = "";
 
     public String getOwner_email() {
         return owner_email;
@@ -153,22 +153,21 @@ public class Memore {
         this.is_video = is_video;
     }
 
+    public String getLot_num() {
+        return lot_num;
+    }
+
+    public void setLot_num(String lot_no) {
+        this.lot_num = lot_no;
+    }
+
     @Override
     public String toString() {
-        return "Memore{" +
+        return "{" +
                 "bio_first_name='" + bio_first_name + '\'' +
                 ", bio_middle_name='" + bio_middle_name + '\'' +
                 ", bio_last_name='" + bio_last_name + '\'' +
-                ", bio_birth_date=" + bio_birth_date +
-                ", bio_death_date=" + bio_death_date +
-                ", bio_profile_pic='" + bio_profile_pic + '\'' +
                 ", memore_id='" + memore_id + '\'' +
-                ", video_highlight='" + video_highlight + '\'' +
-                ", owner_id='" + owner_id + '\'' +
-                ", password='" + password + '\'' +
-                ", date_created=" + date_created +
-                ", address='" + address + '\'' +
-                ", latLng=" + latLng +
                 '}';
     }
 }

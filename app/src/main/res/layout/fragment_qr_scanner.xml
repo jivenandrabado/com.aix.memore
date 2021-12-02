@@ -160,7 +160,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="90dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/surfaceViewQRscanner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -171,38 +171,37 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
             android:lineSpacingExtra="6dp"
             android:text="@string/align_scanner_in_frame"
             android:textAlignment="center"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLifecare"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/buttonExplore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:background="@drawable/background_circle"
             android:src="@drawable/ic_baseline_search_24"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintBottom_toBottomOf="@+id/buttonLifecare"
+            app:layout_constraintStart_toStartOf="@+id/textView3" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonLifecare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/background_rectangle_rounded"
             android:text="Lifecare"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toEndOf="@+id/buttonExplore"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintStart_toEndOf="@+id/buttonExplore" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

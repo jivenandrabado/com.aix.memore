@@ -1,9 +1,5 @@
 package com.aix.memore.repositories;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -25,18 +21,17 @@ public class FirebaseRegistrationRepo {
 
     private final FirebaseAuth mAuth;
     private final FirebaseFirestore db;
-    private final FirebaseLoginRepo firebaseLoginRepo;
     private final MutableLiveData<Boolean> isRegistered = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private MemoreRepo memoreRepo = new MemoreRepo();
+    private MemoreRepo memoreRepo;
 
-    public FirebaseRegistrationRepo(FirebaseLoginRepo firebaseLoginRepo){
-        this.firebaseLoginRepo = firebaseLoginRepo;
+    public FirebaseRegistrationRepo(){
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        memoreRepo = new MemoreRepo(this);
     }
 
-    public void registerUser(String password, UserInfo userInfo, Memore memore, Bitmap qrBitmap, Context context){
+    public void registerUser(String password, UserInfo userInfo, Memore memore){
         try{
             mAuth.createUserWithEmailAndPassword(userInfo.getEmail(), password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -49,11 +44,9 @@ public class FirebaseRegistrationRepo {
                                 userInfo.setUser_id(user_id);
                                 ErrorLog.WriteDebugLog("OWNER ID = "+user_id);
                                 saveRegistrationToUsers(userInfo,password, SigninENUM.NONE);
-                                memore.setPassword(password);
 
-                                memoreRepo.createMemore(memore, user_id, qrBitmap, context);
+                                memoreRepo.updateMemoreOwnerId(task.getResult().getUser().getUid(),memore.getMemore_id());
 
-                                isRegistered.setValue(true);
 
                             } else {
                                 ErrorLog.WriteDebugLog("registration failed");

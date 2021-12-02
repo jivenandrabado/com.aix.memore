@@ -28,6 +28,7 @@ import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentQRGeneratorBinding;
 import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.ErrorLog;
+import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.view_models.MemoreViewModel;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.zxing.BarcodeFormat;
@@ -36,6 +37,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.encoder.QRCode;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -51,7 +55,8 @@ public class QRGeneratorFragment extends Fragment {
     private String doc_id;
     private NavController navController;
     private Memore memore;
-    private String name;
+    private String full_name, first_name, last_name,birth_date,death_date, qr_code_value;
+    private HighlightViewModel highlightViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,38 +72,54 @@ public class QRGeneratorFragment extends Fragment {
         memoreViewModel = new ViewModelProvider(requireActivity()).get(MemoreViewModel.class);
         memoreViewModel.createHighlightId();
         doc_id = String.valueOf(memoreViewModel.getHighlightId().getValue());
+        highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
 
         memore = memoreViewModel.getMemoreMutableLiveData().getValue();
         if (memore != null) {
             memore.setMemore_id(doc_id);
             memoreViewModel.getMemoreMutableLiveData().setValue(memore);
+//            qr_code_value =  "{" +
+//                    "first_name='" + memore.getBio_first_name() + '\'' +
+//                    ", last_name='" + memore.getBio_last_name() + '\'' +
+//                    ", birth_date='" + memore.getBio_birth_date() + '\'' +
+//                    ", death_date='" + memore.getBio_death_date() + '\'' +
+//                    '}';
+
+            full_name = memore.getBio_first_name() + " "+memore.getBio_last_name();
+
+//            try {
+//                highlightViewModel.scannedJSONObject().setValue(new JSONObject(qr_code_value));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+            generateQRcode(full_name,memore.getMemore_id());
+
+            binding.buttonNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!doc_id.isEmpty()) {
+                        navController.navigate(R.id.action_QRGeneratorFragment_to_registrationFragment);
+                    }
+                }
+            });
+
+        }else {
+            Toast.makeText(requireContext(),"Failed to generate QR Code. Try again", Toast.LENGTH_LONG).show();
         }
 
-        name = String.valueOf(memore.getBio_first_name()) + " "+String.valueOf(memore.getBio_last_name());
-
-        generateQRcode(name);
-
-        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!doc_id.isEmpty()) {
-                    navController.navigate(R.id.action_QRGeneratorFragment_to_registrationFragment);
-                }
-            }
-        });
 
     }
 
-
-    private void generateQRcode(String name){
-        QRGEncoder qrgEncoder = new QRGEncoder(doc_id, null, QRGContents.Type.TEXT, 500);
+    private void generateQRcode(String name, String qr_code_value){
+        QRGEncoder qrgEncoder = new QRGEncoder(qr_code_value, null, QRGContents.Type.TEXT, 400);
         Bitmap bitmap;
 
         try {
             //generate QR code
             bitmap = qrgEncoder.encodeAsBitmap();
 
-            Bitmap result = Bitmap.createBitmap(500, 550, Bitmap.Config.ARGB_8888);
+            Bitmap result = Bitmap.createBitmap(400, 450, Bitmap.Config.ARGB_8888);
 
             Canvas canvas = new Canvas(result);
 
@@ -114,7 +135,7 @@ public class QRGeneratorFragment extends Fragment {
             //draw
             canvas.drawColor(Color.WHITE);
             canvas.drawBitmap(bitmap, 0, 0, null);
-            canvas.drawText(name, 200, 500, paint);
+            canvas.drawText(name, 100, 410, paint);
 
             binding.imageViewQRCode.setImageBitmap(result);
 

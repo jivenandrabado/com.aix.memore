@@ -17,12 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,20 +33,25 @@ import android.widget.Toast;
 
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentCreateMemoreBinding;
+import com.aix.memore.interfaces.CreateMemoreInterface;
 import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
+import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.view_models.MemoreViewModel;
+import com.aix.memore.view_models.UserViewModel;
+import com.aix.memore.views.dialogs.JiveDialog;
+import com.aix.memore.views.dialogs.MemoreExistsDialog;
+import com.aix.memore.views.dialogs.PasswordDialog;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -55,16 +60,17 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class CreateMemoreFragment extends Fragment {
+public class CreateMemoreFragment extends Fragment implements CreateMemoreInterface {
 
     private FragmentCreateMemoreBinding binding;
     private MemoreViewModel memoreViewModel;
     private NavController navController;
     private Memore memore;
-    private String first_name, middle_name, last_name, birth_date, death_date, profile_pic;
+    private String first_name, middle_name, last_name, birth_date, death_date, profile_pic, lot_num, address;
     private DatePickerDialog datePickerDialog;
-    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
-
+    private CreateMemoreInterface createMemoreInterface;
+    private UserViewModel userViewModel;
+    private HighlightViewModel highlightViewModel;
 
 
 
@@ -86,15 +92,21 @@ public class CreateMemoreFragment extends Fragment {
         memoreViewModel = new ViewModelProvider(requireActivity()).get(MemoreViewModel.class);
         navController = Navigation.findNavController(view);
         memore = new Memore();
-
+        createMemoreInterface = this;
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
+        initMemoreExistsObserver();
         binding.buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(getMemoreDetails()) {
-                    navController.navigate(R.id.action_createMemoreFragment_to_uploadHighlightFragment);
+                    // check memore exists
+                    memoreViewModel.checkIfMemoreExists(memore);
+                    memoreViewModel.isEdit.setValue(false);
                 }
             }
         });
+
 
         binding.editTextBday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +147,23 @@ public class CreateMemoreFragment extends Fragment {
 
     }
 
+    private void initMemoreExistsObserver() {
+        memoreViewModel.memoreExists().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean!=null) {
+                    if (aBoolean) {
+                        MemoreExistsDialog memoreExistsDialog = new MemoreExistsDialog(memoreViewModel,createMemoreInterface);
+                        memoreExistsDialog.show(getChildFragmentManager(), "MEMORE EXISTS DIALOG");
+                    } else {
+                        navController.navigate(R.id.action_createMemoreFragment_to_uploadHighlightFragment);
+                    }
+                    memoreViewModel.memoreExists().setValue(null);
+                }
+            }
+        });
+    }
+
     private void initDatePicker(EditText editText) {
         final Calendar cldr = Calendar.getInstance();
         int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -152,11 +181,12 @@ public class CreateMemoreFragment extends Fragment {
     }
 
     private boolean getMemoreDetails(){
-        first_name = String.valueOf(binding.editTextFirstName.getText());
-        middle_name = String.valueOf(binding.editTextMiddleName.getText());
-        last_name = String.valueOf(binding.editTextLastName.getText());
+        first_name = String.valueOf(binding.editTextFirstName.getText()).trim();
+        middle_name = String.valueOf(binding.editTextMiddleName.getText()).trim();
+        last_name = String.valueOf(binding.editTextLastName.getText()).trim();
         birth_date = String.valueOf(binding.editTextBday.getText());
         death_date = String.valueOf(binding.editTextDeathDate.getText());
+        lot_num = String.valueOf(binding.editTextLotNum.getText()).trim();
 
         if(!isEmptyFields(first_name, last_name, birth_date,death_date,memore.getAddress())){
             memore.setBio_first_name(first_name);
@@ -165,7 +195,16 @@ public class CreateMemoreFragment extends Fragment {
             memore.setBio_birth_date(DateHelper.stringToDate(birth_date));
             memore.setBio_profile_pic(profile_pic);
             memore.setDate_created(new Date());
+            memore.setLot_num(lot_num);
 
+            if(!death_date.isEmpty()){
+                memore.setBio_death_date(DateHelper.stringToDate(death_date));
+            }else{
+                // jive
+                JiveDialog jiveDialog = new JiveDialog();
+                jiveDialog.show(getChildFragmentManager(),"JIVE DIALOG");
+                return false;
+            }
             memoreViewModel.getMemoreMutableLiveData().setValue(memore);
             return true;
         }
@@ -276,7 +315,7 @@ public class CreateMemoreFragment extends Fragment {
                             profile_pic = String.valueOf(uri);
 
                             Glide.with(requireContext()).load(uri)
-                                    .fitCenter()
+                                    .circleCrop()
                                     .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewProfilePic));
 
                         }
@@ -289,4 +328,22 @@ public class CreateMemoreFragment extends Fragment {
             }
     );
 
+    @Override
+    public void onMemoreExists(Memore memore) {
+        PasswordDialog passwordDialog = new PasswordDialog();
+        passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG");
+
+        highlightViewModel.getScannedValue().setValue(memore.getMemore_id());
+        userViewModel.isAuthorized().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    passwordDialog.dismiss();
+                    navController.navigate(R.id.action_createMemoreFragment_to_editMemoreFragment);
+                    userViewModel.isAuthorized().setValue(false);
+                }
+            }
+        });
+
+    }
 }
