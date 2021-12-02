@@ -17,10 +17,16 @@ import androidx.core.app.ActivityCompat;
 import com.aix.memore.databinding.FragmentQrScannerBinding;
 import com.aix.memore.interfaces.OnQrCodeScanned;
 import com.aix.memore.utilities.ErrorLog;
+import com.aix.memore.utilities.NetworkUtil;
+import com.aix.memore.view_models.HighlightViewModel;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -34,15 +40,23 @@ public class QRScannerHelper extends ContextWrapper {
     private boolean enableBarCodeDetection = true;
     private String TAG = "QRScannerHelper";
     private Activity activity;
+    private JSONObject scannedObject;
+    private Toast toastNoInternet;
+    private Context context;
+
 
     public QRScannerHelper(Context base) {
         super(base);
+
     }
 
-    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned, boolean permissionGranted) {
+    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned, boolean permissionGranted, HighlightViewModel highlightViewModel) {
         try {
             this.activity = activity;
+            this.context = context;
             this.onQrCodeScanned = onQrCodeScanned;
+            toastNoInternet = Toast.makeText(activity, "No internet connection.", Toast.LENGTH_SHORT);
+
             createBarCodeScanner();
 
             cameraSource = new CameraSource.Builder(context, barcodeDetector)
@@ -97,7 +111,7 @@ public class QRScannerHelper extends ContextWrapper {
                 }
             });
 
-        setUpBarCodeScanner();
+        setUpBarCodeScanner(highlightViewModel);
         } catch (Exception e) {
             ErrorLog.WriteErrorLog(e);
         }
@@ -112,9 +126,15 @@ public class QRScannerHelper extends ContextWrapper {
         if (value) {
             try {
                 Log.d(TAG, "enableBarcodeScanning: ");
+                createBarCodeScanner();
+
+                cameraSource = new CameraSource.Builder(context, barcodeDetector)
+                        .setRequestedPreviewSize(1920, 1080)
+                        .setRequestedFps(60.0F)
+                        .setAutoFocusEnabled(true).build();
+
                 cameraSource.start(holder);
                 hasScannedACode = false;
-                createBarCodeScanner();
             } catch (Exception e) {
                 ErrorLog.WriteErrorLog(e);
             }
@@ -130,56 +150,71 @@ public class QRScannerHelper extends ContextWrapper {
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
 
+
     }
-    private void setUpBarCodeScanner(){
-        ErrorLog.WriteDebugLog("setUpBarCodeScanner: called");
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-                hasScannedACode = false;
-            }
-
-            @Override
-            public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
-                Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
-                ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
-
-                if (!enableBarCodeDetection) return;
-
-                final SparseArray<Barcode> barcodeSparseArray = detections.getDetectedItems();
-                if (barcodeSparseArray.size() != 0) {
-
-                    String scannedValue = barcodeSparseArray.valueAt(0).displayValue;
-                    ErrorLog.WriteDebugLog("receiveDetections: " + scannedValue);
-
-                    barcodeDetector.release();
-
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (onQrCodeScanned != null) {
-                                ErrorLog.WriteDebugLog("Barcode Scanned, stopping camera");
-                                cameraSource.release();
-                                cameraSource.stop();
-                                if (!hasScannedACode) {
-                                    onQrCodeScanned.barcodeScanned(scannedValue);
-                                    hasScannedACode = true;
-                                    enableBarCodeDetection = true;
-                                }
-
-                            } else {
-                                ErrorLog.WriteDebugLog("Error sending scanned value; 'OnQrCodeScanned' is null");
-                            }
-
-
-                        }
-                    });
-
-
+    public void setUpBarCodeScanner(HighlightViewModel highlightViewModel){
+        try {
+            ErrorLog.WriteDebugLog("setUpBarCodeScanner: called");
+            barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+                @Override
+                public void release() {
+                    hasScannedACode = false;
                 }
 
-            }
-        });
+                @Override
+                public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
+                    Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
+                    ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
+
+//                if (!enableBarCodeDetection) return;
+
+                    final SparseArray<Barcode> barcodeSparseArray = detections.getDetectedItems();
+                    if (barcodeSparseArray.size() != 0) {
+
+                        String scannedValue = barcodeSparseArray.valueAt(0).displayValue;
+                        ErrorLog.WriteDebugLog("receiveDetections: " + scannedValue);
+
+                        barcodeDetector.release();
+
+                        //scannedObject = new JSONObject(scannedValue);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (onQrCodeScanned != null) {
+
+                                    if (NetworkUtil.isNetworkAvailable(activity)) {
+                                        ErrorLog.WriteDebugLog("Barcode Scanned, stopping camera");
+//                                        cameraSource.release();
+                                        cameraSource.stop();
+//                                        highlightViewModel.getHighlightFromJSON(scannedObject);
+                                        highlightViewModel.getHighlightFromQR(scannedValue);
+                                    } else {
+                                        setUpBarCodeScanner(highlightViewModel);
+                                        toastNoInternet.cancel();
+                                        toastNoInternet.show();
+                                    }
+
+//                                if (!hasScannedACode) {
+//                                    onQrCodeScanned.barcodeScanned(scannedValue);
+//                                    hasScannedACode = true;
+//                                    enableBarCodeDetection = true;
+//                                }
+
+                                } else {
+                                    ErrorLog.WriteDebugLog("Error sending scanned value; 'OnQrCodeScanned' is null");
+                                }
+
+
+                            }
+                        });
+
+                    }
+
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
 
 
     }
@@ -256,5 +291,10 @@ public class QRScannerHelper extends ContextWrapper {
                 }
             }
         });
+    }
+
+    public void resumeScanning(SurfaceView surfaceView, Context context,boolean permissionGranted,HighlightViewModel highlightViewModel) {
+        enableBarcodeScanning(true);
+        setUpBarCodeScanner(highlightViewModel);
     }
 }

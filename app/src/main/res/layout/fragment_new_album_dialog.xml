@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.fragments.NewAlbumFragment"
+    tools:context=".views.fragments.album.NewAlbumFragment"
     android:padding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,8 +20,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/title"
-            app:boxStrokeWidth="0dp"
-            app:hintTextColor="@color/gray"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -30,10 +32,9 @@
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_rounded_corners"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:maxLines="1"
-                android:textColorHint="@color/memore_blue" />
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,8 +48,10 @@
             android:layout_marginEnd="16dp"
             android:gravity="top"
             android:hint="@string/description"
-            app:boxStrokeWidth="0dp"
-            app:hintTextColor="@color/gray"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTitle">
@@ -58,7 +61,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/background_rounded_corners"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:textAlignment="viewStart" />
@@ -72,7 +74,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/whiteSmoke"
             android:drawableStart="@drawable/ic_baseline_photo_24"
-            android:text="Add photos or videos"
+            android:text="Add photos"
             android:textAllCaps="false"
             android:textColor="@color/gray"
             android:drawablePadding="20dp"

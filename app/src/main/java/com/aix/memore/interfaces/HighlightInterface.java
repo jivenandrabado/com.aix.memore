@@ -1,8 +1,10 @@
 package com.aix.memore.interfaces;
 
-import com.aix.memore.models.Highlight;
+import com.aix.memore.models.Memore;
 
 public interface HighlightInterface {
 
-    void onHighlightFound(Highlight highlight);
+    void onHighlightFound(Memore memore);
+    void onCredentialsSubmitted();
+    void onGenerateNewQRCode();
 }

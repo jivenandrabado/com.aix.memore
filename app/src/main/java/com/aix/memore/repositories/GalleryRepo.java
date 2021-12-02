@@ -1,13 +1,18 @@
 package com.aix.memore.repositories;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.aix.memore.models.Album;
-import com.aix.memore.models.Bio;
+import com.aix.memore.models.Memore;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.utilities.ErrorLog;
@@ -31,9 +36,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,24 +56,27 @@ public class GalleryRepo {
     private MutableLiveData<List<Media>> mediaListLiveData = new MutableLiveData<>();
     private ListenerRegistration mediaSnapshotListener;
     private ListenerRegistration bioSnapshotListener;
-    private MutableLiveData<Bio> bioMutableLiveData = new MutableLiveData<Bio>();
+    private MutableLiveData<Memore> bioMutableLiveData = new MutableLiveData<Memore>();
     private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference storageRef = storage.getReference();
+    private StorageReference storageRef = storage.getReference().child("Memore");
     private MutableLiveData<Boolean> isUploaded = new MutableLiveData<>();
     public String public_wall_id = "";
     public MutableLiveData<Boolean> isDeleted = new MutableLiveData<>();
     public MutableLiveData<Boolean> isImageDeleted = new MutableLiveData<>();
+    public MutableLiveData<String> isQRCodeUploaded = new MutableLiveData<String>();
+    public MutableLiveData<Double> uploadProgress = new MutableLiveData<>();
 
 
 
     public GalleryRepo() {
         this.db = FirebaseFirestore.getInstance();
-        this.collectionReference = db.collection(FirebaseConstants.MEMORE_OWNER);
+        this.collectionReference = db.collection(FirebaseConstants.MEMORE);
     }
 
     public FirestoreRecyclerOptions<Album> recyclerOptions(String owner_id) {
-        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).orderBy("date_created");
+        Query query = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                .orderBy("date_created");
         return new FirestoreRecyclerOptions.Builder<Album>()
                 .setQuery(query, Album.class)
                 .build();
@@ -154,7 +165,7 @@ public class GalleryRepo {
 
         try{
 
-            bioSnapshotListener = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            bioSnapshotListener = db.collection(FirebaseConstants.MEMORE).document(doc_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
@@ -163,7 +174,7 @@ public class GalleryRepo {
                     }
 
                     if (value != null && value.exists()) {
-                        bioMutableLiveData.postValue(value.toObject(Bio.class));
+                        bioMutableLiveData.postValue(value.toObject(Memore.class));
                     }else{
                         ErrorLog.WriteDebugLog("NO VALUE");
                     }
@@ -182,25 +193,57 @@ public class GalleryRepo {
         }
     }
 
-    public MutableLiveData<Bio> getBio(){
+    public MutableLiveData<Memore> getBio(){
         return bioMutableLiveData;
     }
 
     public void createNewAlbum(String doc_id, Album album, List<Uri> imageUriList) {
         try{
-            DocumentReference document = db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            DocumentReference document = db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document();
 
             album.setAlbum_id(document.getId());
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(document.getId()).set(album)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 //public wall
-                                for(int i = 0; i < imageUriList.size() ; i++) {
-                                    uploadToFirebaseStorage(doc_id, imageUriList.get(i),document.getId());
+                                if(imageUriList != null) {
+                                    for (int i = 0; i < imageUriList.size(); i++) {
+                                        uploadToFirebaseStorage(doc_id, imageUriList.get(i), document.getId());
+                                    }
+                                }
+
+                                isAlbumCreated.postValue(true);
+                            }else{
+                                isAlbumCreated.postValue(false);
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
+
+    public void createVault(String doc_id, Album album, Bitmap qrBitmap, Context context) {
+        try{
+            DocumentReference document = db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document();
+
+            album.setAlbum_id(document.getId());
+            db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .document(document.getId()).set(album)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                //public wall
+                                if(qrBitmap != null) {
+                                    //upload qr code bitmap
+                                    uploadBitmapToFirebaseStorage(doc_id,qrBitmap, document.getId(), context);
                                 }
 
                                 isAlbumCreated.postValue(true);
@@ -230,7 +273,7 @@ public class GalleryRepo {
 
     public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id) {
         try {
-            StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
 //            InputStream stream = new FileInputStream(new File(path));
 
             UploadTask uploadTask = mediaRef.putFile(path);
@@ -250,6 +293,82 @@ public class GalleryRepo {
                         }
                     });
                 }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    ErrorLog.WriteDebugLog("UPLOAD PROGRESS "+progress);
+                    uploadProgress.setValue(progress);
+
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
+    public void uploadBitmapToFirebaseStorage(String owner_id, Bitmap qrBitmap, String album_id, Context context) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            qrBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = mediaRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
+
+                            downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
+                            addNewMedia(owner_id, String.valueOf(uri), album_id);
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+
+    }
+
+    public void uploadBitmapToVault(String owner_id, Bitmap qrBitmap, Context context) {
+        try {
+            StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            qrBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = mediaRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
+
+                            downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
+                            addNewMediaToVault(owner_id, String.valueOf(uri));
+                        }
+                    });
+                }
             });
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -265,18 +384,19 @@ public class GalleryRepo {
             gallery.setPath(path);
             gallery.setIs_deleted(false);
 
-            String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(album_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
 
             gallery.setMedia_id(doc_id);
 
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
                     .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
                         ErrorLog.WriteDebugLog("UPLOAD SUCCESS");
                         isUploaded.postValue(true);
+
                     }else{
                         ErrorLog.WriteErrorLog(task.getException());
                     }
@@ -288,6 +408,55 @@ public class GalleryRepo {
         }
     }
 
+    public void addNewMediaToVault(String owner_id, String path){
+        try{
+
+            Gallery gallery = new Gallery();
+            gallery.setType(1);
+            gallery.setUpload_date(new Timestamp(new Date()));
+            gallery.setPath(path);
+            gallery.setIs_deleted(false);
+
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                    .whereEqualTo("title","Vault").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                public_wall_id = document.getId();
+                            }
+
+                            String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                                    .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
+
+                            gallery.setMedia_id(doc_id);
+
+                            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
+                                    .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        ErrorLog.WriteDebugLog("UPLOAD TO VAULT SUCCESS");
+                                        isUploaded.postValue(true);
+                                    }else{
+                                        ErrorLog.WriteErrorLog(task.getException());
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+
+
+
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+        }
+    }
     public void uploadToFirebaseStoragePublicWall(String owner_id, Uri path) {
         try {
             StorageReference mediaRef = storageRef.child(owner_id + "/" + path.getLastPathSegment());
@@ -310,6 +479,14 @@ public class GalleryRepo {
                         }
                     });
                 }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    ErrorLog.WriteDebugLog("UPLOAD PROGRESS TO PUBLIC WALL "+progress);
+                    uploadProgress.setValue(progress);
+
+                }
             });
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -326,7 +503,7 @@ public class GalleryRepo {
             gallery.setPath(path);
             gallery.setIs_deleted(false);
 
-            db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+            db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .whereEqualTo("title","Public Wall").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -338,12 +515,12 @@ public class GalleryRepo {
                                         ErrorLog.WriteDebugLog("Public wall id "+public_wall_id);
                                     }
 
-                                    String doc_id = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                                    String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                                             .document(public_wall_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
 
                                     gallery.setMedia_id(doc_id);
 
-                                    db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
+                                    db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM).document(public_wall_id)
                                             .collection(FirebaseConstants.MEMORE_MEDIA).document(doc_id).set(gallery).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -379,7 +556,7 @@ public class GalleryRepo {
             WriteBatch writeBatch = db.batch();
 
             for (int i=0;i<albumList.size();i++){
-                DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+                DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE).document(owner_id)
                         .collection(FirebaseConstants.MEMORE_ALBUM).document(albumList.get(i).getAlbum_id());
                 writeBatch.delete(documentReference);
             }
@@ -414,7 +591,7 @@ public class GalleryRepo {
         gallery.put("is_deleted", true);
 
         for (int i=0;i<galleryList.size();i++){
-            DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE_OWNER).document(owner_id)
+            DocumentReference documentReference = db.collection(FirebaseConstants.MEMORE).document(owner_id)
                     .collection(FirebaseConstants.MEMORE_ALBUM).document(album_id)
                     .collection(FirebaseConstants.MEMORE_MEDIA)
                     .document(galleryList.get(i).getMedia_id());
@@ -448,4 +625,25 @@ public class GalleryRepo {
         });
 
     }
+
+    private void downloadImageNew(String filename, String downloadUrlOfImage,Context context){
+        try{
+            DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            Uri downloadUri = Uri.parse(downloadUrlOfImage);
+            DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(filename)
+                    .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + filename + ".jpg");
+            dm.enqueue(request);
+            Toast.makeText(context, "Image download started.", Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Toast.makeText(context, "Image download failed.", Toast.LENGTH_SHORT).show();
+            ErrorLog.WriteDebugLog("DOWNLOAD ERROR "+e);
+        }
+    }
+
+
 }

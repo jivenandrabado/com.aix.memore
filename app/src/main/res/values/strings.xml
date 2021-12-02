@@ -22,4 +22,32 @@
     <string name="confirm">Confirm</string>
     <string name="life_care_services_coming_soon">Life Care Services \n Coming Soon!</string>
     <string name="edit">Edit</string>
+
+    //registration
+    <string name="last_name">Last Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="first_name">First Name</string>
+    <string name="sign_up">Sign up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="next">Next</string>
+
+    <string name="places_api_key">AIzaSyAwpadNKq1dNkmRcS9oHxfXwX_xhnBQSKk</string>
+
+    <!--    Login-->
+    <string name="forgotPassword">Forgot password?</string>
+    <string name="orWith">or with</string>
+    <string name="login">Login</string>
+    <string name="loginAsGuest">Login as Guest</string>
+    <string name="createAnAccount">New user? Create an account</string>
+    <string name="signUp">Sign Up</string>
+
+    <!--- Forgot Password -->
+    <string name="enterEmailForgotPassword">Enter your email address below to reset password</string>
+    <string name="resetPassword">Reset Password</string>
+    <string name="logout">Logout</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+
+
 </resources>

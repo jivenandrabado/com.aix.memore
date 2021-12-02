@@ -10,14 +10,28 @@
         android:id="@+id/playerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".730"
         app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighlightDeathDate"
         app:layout_constraintWidth_percent=".800"
         app:resize_mode="fill" />
+
+    <ImageView
+        android:id="@+id/imageViewHighlight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighlightDeathDate" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -45,15 +59,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/background_rectangle_rounded"
         android:elevation="10dp"
         android:textAllCaps="false"
-        android:textColor="@color/memore_blue"
+        android:textColor="@color/gray"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintStart_toEndOf="@+id/buttonShare"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintStart_toEndOf="@+id/buttonShare" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/imageViewHightlightBioProfilePic"
@@ -62,27 +76,31 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_baseline_photo_24"
-        app:civ_border_width="8dp"
+        app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewHighlightName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="14dp"
         android:text="Name"
         android:textColor="@color/memore_blue"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
         app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"
         app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />
 
     <TextView
         android:id="@+id/textViewHighlightDeathDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Birth-Death Date"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
         app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
         app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
 

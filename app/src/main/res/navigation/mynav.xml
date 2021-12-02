@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/QRScannerFragment"
-        android:name="com.aix.memore.views.fragments.QRScannerFragment"
+        android:name="com.aix.memore.views.fragments.qr.QRScannerFragment"
         android:label="Memore">
         <action
             android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
@@ -15,6 +15,18 @@
         <action
             android:id="@+id/action_QRScannerFragment_to_lifeCareFragment"
             app:destination="@id/lifeCareFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_createMemoreFragment"
+            app:destination="@id/createMemoreFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_QRScanHistoryFragment"
+            app:destination="@id/QRScanHistoryFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_createMemoreFragment2"
+            app:destination="@id/createMemoreFragment" />
     </fragment>
 
     <fragment
@@ -27,6 +39,12 @@
         <action
             android:id="@+id/action_HighlightFragment_to_galleryFragment"
             app:destination="@id/knowMoreFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_editMemoreFragment"
+            app:destination="@id/editMemoreFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_generateNewVersionQRCodeFragment"
+            app:destination="@id/generateNewVersionQRCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/knowMoreFragment"
@@ -42,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/newAlbumFragment"
-        android:name="com.aix.memore.views.fragments.NewAlbumFragment"
+        android:name="com.aix.memore.views.fragments.album.NewAlbumFragment"
         android:label="Add New Album"
         tools:layout="@layout/fragment_new_album_dialog">
         <action
@@ -51,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.aix.memore.views.fragments.GalleryFragment"
+        android:name="com.aix.memore.views.fragments.album.GalleryFragment"
         android:label="Gallery">
         <action
             android:id="@+id/action_galleryFragment_to_knowMoreFragment"
@@ -65,7 +83,7 @@
     </fragment>
     <fragment
         android:id="@+id/galleryViewFragment"
-        android:name="com.aix.memore.views.fragments.GalleryViewFragment"
+        android:name="com.aix.memore.views.fragments.gallery.GalleryViewFragment"
         android:label="Gallery"
         tools:layout="@layout/fragment_gallery_view">
         <action
@@ -77,7 +95,7 @@
     </fragment>
     <fragment
         android:id="@+id/galleryMediaFullViewFragment"
-        android:name="com.aix.memore.views.fragments.GalleryMediaFullViewFragment"
+        android:name="com.aix.memore.views.fragments.gallery.GalleryMediaFullViewFragment"
         android:label="Gallery"
         tools:layout="@layout/fragment_gallery_media_full_view">
         <action
@@ -89,5 +107,98 @@
         android:name="com.aix.memore.views.fragments.LifeCareFragment"
         android:label="LifeCare"
         tools:layout="@layout/fragment_life_care" />
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.aix.memore.views.fragments.memore.RegistrationFragment"
+        android:label="Registration" >
+
+        <action
+            android:id="@+id/action_registrationFragment_to_HighlightFragment2"
+            app:destination="@id/HighlightFragment"
+            app:popUpTo="@id/QRScannerFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createMemoreFragment"
+        android:name="com.aix.memore.views.fragments.memore.CreateMemoreFragment"
+        android:label="Create a Memore"
+        tools:layout="@layout/fragment_create_memore" >
+        <action
+            android:id="@+id/action_createMemoreFragment_to_uploadHighlightFragment"
+            app:destination="@id/uploadHighlightFragment" />
+        <action
+            android:id="@+id/action_createMemoreFragment_to_editMemoreFragment"
+            app:destination="@id/editMemoreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/QRGeneratorFragment"
+        android:name="com.aix.memore.views.fragments.qr.QRGeneratorFragment"
+        android:label="QR Code"
+        tools:layout="@layout/fragment_q_r_generator">
+        <action
+            android:id="@+id/action_QRGeneratorFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editMemoreFragment"
+        android:name="com.aix.memore.views.fragments.memore.EditMemoreFragment"
+        android:label="Edit Memore" >
+        <action
+            android:id="@+id/action_editMemoreFragment_to_uploadHighlightFragment"
+            app:destination="@id/uploadHighlightFragment" />
+        <action
+            android:id="@+id/action_editMemoreFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment"
+            app:popUpTo="@id/QRScannerFragment"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.aix.memore.views.fragments.qr.UserFragment"
+        android:label="Get Started"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_userFragment_to_createMemoreFragment"
+            app:destination="@id/createMemoreFragment" />
+        <action
+            android:id="@+id/action_userFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.aix.memore.views.fragments.user.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_createMemoreFragment"
+            app:destination="@id/createMemoreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.aix.memore.views.fragments.user.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment" />
+    <fragment
+        android:id="@+id/uploadHighlightFragment"
+        android:name="com.aix.memore.views.fragments.memore.UploadHighlightFragment"
+        android:label="Upload Highlight"
+        tools:layout="@layout/fragment_upload_highlight">
+        <action
+            android:id="@+id/action_uploadHighlightFragment_to_QRGeneratorFragment"
+            app:destination="@id/QRGeneratorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/QRScanHistoryFragment"
+        android:name="com.aix.memore.views.fragments.QRScanHistoryFragment"
+        android:label="Recently Viewed Memore"
+        tools:layout="@layout/fragment_q_r_scan_history" >
+        <action
+            android:id="@+id/action_QRScanHistoryFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generateNewVersionQRCodeFragment"
+        android:name="com.aix.memore.views.fragments.qr.GenerateNewVersionQRCodeFragment"
+        android:label="GenerateNewVersionQRCodeFragment" />
 
 </navigation>

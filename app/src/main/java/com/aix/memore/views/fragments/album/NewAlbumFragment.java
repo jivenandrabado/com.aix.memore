@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.album;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -110,6 +110,7 @@ public class NewAlbumFragment extends Fragment {
                     album.setDescription( String.valueOf(binding.editTextAlbumDescription.getText()).trim());
                     album.setDate_created(new Date());
                     album.setIs_public(false);
+                    album.setIs_default(false);
                     galleryViewModel.createNewAlbum(doc_id, album, imageUriList);
 
                 }
@@ -138,12 +139,8 @@ public class NewAlbumFragment extends Fragment {
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setAction(Intent.ACTION_PICK);
         chooseImageActivityResult.launch(intent);
-
-
     }
 
     private ActivityResultLauncher<Intent> chooseImageActivityResult = registerForActivityResult(

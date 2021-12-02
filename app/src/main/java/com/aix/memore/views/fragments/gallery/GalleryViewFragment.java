@@ -1,4 +1,4 @@
-package com.aix.memore.views.fragments;
+package com.aix.memore.views.fragments.gallery;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -129,11 +129,11 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
 
         binding.recyclerviewGalleryView.setAdapter(galleryFirebaseAdapter);
         binding.textViewAlbumTitle.setText(galleryViewModel.getSelectedAlbum().getValue().getTitle());
-        if(galleryViewModel.getSelectedAlbum().getValue().getIs_public()) {
-            binding.buttonUpload.setVisibility(View.VISIBLE);
-        }else{
-            binding.buttonUpload.setVisibility(View.GONE);
-        }
+//        if(galleryViewModel.getSelectedAlbum().getValue().getIs_public()) {
+//            binding.buttonUpload.setVisibility(View.VISIBLE);
+//        }else{
+//            binding.buttonUpload.setVisibility(View.GONE);
+//        }
         //temporary fix for recyclerview
         binding.recyclerviewGalleryView.setItemAnimator(null);
     }
@@ -156,13 +156,30 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
     }
 
     private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        chooseImageActivityResult.launch(intent);
+        userViewModel.isAuthorized().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    passwordDialog.dismiss();
+                    ErrorLog.WriteDebugLog("UPLOAD Images");
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_PICK);
+                    chooseImageActivityResult.launch(intent);
+                    userViewModel.isAuthorized().setValue(false);
+                }
+            }
+        });
 
+
+        if(!galleryViewModel.getSelectedAlbum().getValue().getIs_public()) {
+            passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FOR DELETE");
+        }else{
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_PICK);
+            chooseImageActivityResult.launch(intent);
+        }
 
     }
 
