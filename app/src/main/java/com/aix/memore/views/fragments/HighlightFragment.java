@@ -210,7 +210,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Click the to view "+memore.getBio_first_name() +" "+ memore.getBio_last_name()+"'s"+" Memore:" + "\n"+shortLink);
+                "Click the link to view "+memore.getBio_first_name() +" "+ memore.getBio_last_name()+"'s"+" Memore:" + "\n"+shortLink);
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }

@@ -41,18 +41,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        setTheme(R.style.Theme_Memore);
-        setContentView(R.layout.activity_main);
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_baseline_photo_24);
-        initHighlightObserver();
-        initNavigation();
-        initAppConfig();
-        initDynamicLinks();
+        try {
+            setTheme(R.style.Theme_Memore);
+            setContentView(R.layout.activity_main);
+            initHighlightObserver();
+            initNavigation();
+            initAppConfig();
+            initDynamicLinks();
 
 
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+            Toast.makeText(this, ""+e, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
