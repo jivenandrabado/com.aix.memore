@@ -8,8 +8,7 @@
     <SurfaceView
         android:id="@+id/surfaceViewQRscanner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,8 +29,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#25CDCDCD"
-        app:layout_constraintBottom_toTopOf="@id/dummySquare"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +40,7 @@
         android:layout_height="0dp"
         android:background="#25CDCDCD"
         app:layout_constraintBottom_toTopOf="@id/qr_scanner_mask_bottom"
-        app:layout_constraintEnd_toStartOf="@id/dummySquare"
+        app:layout_constraintEnd_toStartOf="@+id/frameLayoutSquare"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frameLayoutTop" />
 
@@ -50,10 +49,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#25CDCDCD"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dummySquare">
+        app:layout_constraintStart_toStartOf="parent">
 
     </FrameLayout>
 
@@ -64,7 +63,7 @@
         android:background="#25CDCDCD"
         app:layout_constraintBottom_toTopOf="@id/qr_scanner_mask_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/dummySquare"
+        app:layout_constraintStart_toEndOf="@+id/frameLayoutSquare"
         app:layout_constraintTop_toBottomOf="@id/frameLayoutTop" />
 
     <FrameLayout
@@ -73,104 +72,28 @@
         android:layout_height="0dp"
         android:layout_margin="8dp"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/qr_scanner_mask_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent=".450"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".3"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayoutTop"
         app:layout_constraintWidth_percent=".735" />
 
 
-<!--    <LinearLayout-->
-<!--        android:gravity="center"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/frameLayoutSquare"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintVertical_bias=".3"-->
-<!--        android:background="@drawable/scan_photo_from_gallery_bg"-->
-<!--        app:layout_constraintWidth_percent=".7"-->
-<!--        android:padding="8dp"-->
-<!--        >-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:srcCompat="@drawable/ic_image_placeholder"-->
-<!--            />-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textColor="@android:color/white"-->
-<!--            android:text="@string/scan_photo_from_gallery"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:layout_marginLeft="8dp"-->
-<!--            android:textSize="16sp"-->
-<!--            />-->
-<!--    </LinearLayout>-->
-
-<!--    <androidx.appcompat.widget.AppCompatButton-->
-<!--        android:id="@+id/buttonManage"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:text="Manage"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:textColor="@color/memore_blue"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" -->
-<!--        android:textAllCaps="false"-->
-<!--        android:drawableStart="@drawable/ic_baseline_menu_24"-->
-<!--        />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/buttonLifeCare"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:text="Lifecare"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:textColor="@color/memore_blue"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:textAllCaps="false"-->
-<!--        />-->
-
-
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottomNav"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="32dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:menu="@menu/home_bottom_nav_menu"-->
-<!--        android:background="@drawable/background_oval"-->
-<!--        android:visibility="gone"-->
-<!--        />-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="90dp"
         android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/surfaceViewQRscanner"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayoutSquare">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:lineSpacingExtra="6dp"
             android:text="@string/align_scanner_in_frame"
@@ -178,7 +101,8 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/buttonLifecare"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/buttonExplore"

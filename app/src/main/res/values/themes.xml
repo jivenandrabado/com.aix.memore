@@ -23,7 +23,9 @@
         <item name="android:textColorPrimary">@color/memore_blue</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
-        <!--        button-->
+<!--        //set font-->
+
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">

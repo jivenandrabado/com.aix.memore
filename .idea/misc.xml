@@ -71,14 +71,20 @@
         <entry key="app/src/main/res/drawable/ic_baseline_medical_services_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.36354166666666665" />
+        <entry key="app/src/main/res/font/tasd.xml" value="0.16927083333333334" />
         <entry key="app/src/main/res/layout/dialog_progressbar.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_create_memore.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_edit_memore.xml" value="0.1390625" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_gallery_view.xml" value="0.34739583333333335" />
-        <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_generate_new_version_q_r_code.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/fragment_highlight.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_jive_dialog.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/fragment_know_more.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/fragment_new_album_dialog.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_password_dialog.xml" value="0.1921875" />
-        <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_q_r_generator.xml" value="0.1390625" />
+        <entry key="app/src/main/res/layout/fragment_qr_scanner.xml" value="0.16" />
         <entry key="app/src/main/res/layout/item_album.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_gallery.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/item_organization_row.xml" value="0.1921875" />

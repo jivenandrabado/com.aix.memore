@@ -23,6 +23,7 @@ import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.AppConfigViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.views.dialogs.AppUpdateDialog;
+import com.aix.memore.views.fragments.qr.QRScannerFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             setTheme(R.style.Theme_Memore);
             setContentView(R.layout.activity_main);
-            initHighlightObserver();
             initNavigation();
             initAppConfig();
             initDynamicLinks();
@@ -57,23 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initHighlightObserver() {
 
-        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
-        highlightViewModel.memoreFound().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean != null) {
-                    if (aBoolean) {
-                        navController.navigate(R.id.HighlightFragment);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
-                    }
-                    highlightViewModel.memoreFound().setValue(null);
-                }
-            }
-        });
-    }
 
     private void initDynamicLinks() {
         FirebaseDynamicLinks.getInstance()
@@ -89,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
                         if(deepLink != null){
                             String deepLinkQueryParameter = deepLink.getQueryParameter("highlight");
+                            initHighlightObserver();
                             highlightViewModel.getHighlightFromQR(deepLinkQueryParameter);
 
-                            ErrorLog.WriteDebugLog("DEEPLINK PARAM "+deepLinkQueryParameter);
                         }
                     }
                 })
@@ -102,6 +86,24 @@ public class MainActivity extends AppCompatActivity {
                         ErrorLog.WriteErrorLog(e);
                     }
                 });
+    }
+
+    private void initHighlightObserver() {
+
+        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
+        highlightViewModel.memoreFound().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean != null) {
+                    if (aBoolean) {
+                        navController.navigate(R.id.HighlightFragment);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Invalid QR Code,2", Toast.LENGTH_SHORT).show();
+                    }
+                    highlightViewModel.memoreFound().setValue(null);
+                }
+            }
+        });
     }
 
 
