@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_HighlightFragment_to_generateNewVersionQRCodeFragment"
             app:destination="@id/generateNewVersionQRCodeFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_uploadHighlightFragment"
+            app:destination="@id/uploadHighlightFragment" />
     </fragment>
     <fragment
         android:id="@+id/knowMoreFragment"

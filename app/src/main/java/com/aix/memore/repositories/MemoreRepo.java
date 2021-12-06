@@ -154,38 +154,42 @@ public class MemoreRepo extends GalleryRepo {
     public void uploadHighlightToFirebaseStorage(Memore memore,Bitmap qrBitmap , Context context) {
         try {
 
-            StorageReference mediaRef = storageRef.child(memore.getMemore_id() + "/video" + System.currentTimeMillis());
+            if(!memore.getVideo_highlight().isEmpty()) {
+                StorageReference mediaRef = storageRef.child(memore.getMemore_id() + "/video" + System.currentTimeMillis());
 
-            UploadTask uploadTask = mediaRef.putFile(Uri.parse(memore.getVideo_highlight()));
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
-                    Toast.makeText(context,"Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
-                    errorMessage.setValue(e.getMessage());
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
+                UploadTask uploadTask = mediaRef.putFile(Uri.parse(memore.getVideo_highlight()));
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
+                        Toast.makeText(context, "Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
+                        errorMessage.setValue(e.getMessage());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        mediaRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
 //                            updateHighlightURL(memore.getMemore_id(), String.valueOf(uri));
-                            memore.setVideo_highlight(String.valueOf(uri));
-                            createMemore(memore,"",qrBitmap,context);
+                                memore.setVideo_highlight(String.valueOf(uri));
+                                createMemore(memore, "", qrBitmap, context);
 
-                        }
-                    });
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    ErrorLog.WriteDebugLog("UPLOAD PROGRESS "+progress);
-                    uploadProgresMemore.setValue(progress);
-                }
-            });
+                            }
+                        });
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                        ErrorLog.WriteDebugLog("UPLOAD PROGRESS " + progress);
+                        uploadProgresMemore.setValue(progress);
+                    }
+                });
+            }else{
+                createMemore(memore, "", qrBitmap, context);
+            }
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }

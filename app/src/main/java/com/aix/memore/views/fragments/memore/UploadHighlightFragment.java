@@ -28,9 +28,11 @@ import android.widget.Toast;
 
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentUploadHighlightBinding;
+import com.aix.memore.interfaces.UploadHighlightInterface;
 import com.aix.memore.models.Memore;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.MemoreViewModel;
+import com.aix.memore.views.dialogs.EmptyHighlightDialog;
 import com.aix.memore.views.dialogs.ShareDialog;
 import com.aix.memore.views.dialogs.UploadDialog;
 import com.bumptech.glide.Glide;
@@ -42,7 +44,7 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 
-public class UploadHighlightFragment extends Fragment {
+public class UploadHighlightFragment extends Fragment implements UploadHighlightInterface {
 
     private FragmentUploadHighlightBinding binding;
     private NavController navController;
@@ -53,6 +55,7 @@ public class UploadHighlightFragment extends Fragment {
     private boolean is_video;
     private boolean isEdit = false;
     private UploadDialog uploadDialog;
+    private EmptyHighlightDialog emptyHighlightDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +68,8 @@ public class UploadHighlightFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+        emptyHighlightDialog = new EmptyHighlightDialog(this);
+
         initMemore();
         initExoPlayer();
         initVideoChooser();
@@ -78,7 +83,7 @@ public class UploadHighlightFragment extends Fragment {
 
                 if(aBoolean) {
                     binding.buttonNext.setText("Save");
-                    if (memore.is_video) {
+                    if (memore.isIs_video()) {
                         binding.progressBar.setVisibility(View.VISIBLE);
                         playVideo(simpleExoPlayer, memore.getVideo_highlight());
                         enableVideoView();
@@ -119,8 +124,9 @@ public class UploadHighlightFragment extends Fragment {
                             memoreViewModel.updateHightlightToFirebase(memore, requireContext());
                         }
                     } else {
-                        ErrorLog.WriteDebugLog("Pls select video highlight");
-                        Toast.makeText(requireContext(), "Please upload video or photo.", Toast.LENGTH_LONG).show();
+                        emptyHighlightDialog.show(getChildFragmentManager(),"EMPTY HIGHLIGHT");
+//                        ErrorLog.WriteDebugLog("Pls select video highlight");
+//                        Toast.makeText(requireContext(), "Please upload video or photo.", Toast.LENGTH_LONG).show();
                     }
             }
         });
@@ -326,5 +332,11 @@ public class UploadHighlightFragment extends Fragment {
         if(simpleExoPlayer != null) {
             simpleExoPlayer.stop();
         }
+    }
+
+    @Override
+    public void onContinueWithoutHighlight() {
+        memore.setVideo_highlight("");
+        navController.navigate(R.id.action_uploadHighlightFragment_to_QRGeneratorFragment);
     }
 }
