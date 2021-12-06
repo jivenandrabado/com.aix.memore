@@ -56,7 +56,6 @@ public class RegistrationFragment extends Fragment {
     private Bitmap qrBitmap;
     private HighlightViewModel highlightViewModel;
     private UploadDialog uploadDialog;
-    private ShareDialog shareDialog;
 
 
     public RegistrationFragment() {
@@ -88,7 +87,6 @@ public class RegistrationFragment extends Fragment {
         userInfo = new UserInfo();
         progressDialogFragment = new ProgressDialogFragment();
         uploadDialog = new UploadDialog();
-        shareDialog = new ShareDialog();
 
         highlightViewModel = new ViewModelProvider(requireActivity()).get(HighlightViewModel.class);
         initMemore();

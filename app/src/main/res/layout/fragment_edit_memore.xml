@@ -7,228 +7,229 @@
     android:background="@color/whiteSmoke"
     tools:context=".views.fragments.memore.CreateMemoreFragment">
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Memore Profile:"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageViewProfilePic"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_baseline_photo_24"
-        app:layout_constraintHeight_percent="0.18"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
-        app:layout_constraintWidth_percent=".3" />
-
-
-    <ImageButton
-        android:id="@+id/imageButtonProfilePic"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_baseline_edit_24"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewProfilePic"
-        app:layout_constraintEnd_toEndOf="@+id/imageViewProfilePic" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="First Name"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewProfilePic"
-        app:layout_constraintTop_toBottomOf="@+id/textView16">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:textColor="@color/gray" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@id/textInputLayout2"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:hint="Middle Name"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextMiddleName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Last Name"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout2">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextLastName"
+        <ImageView
+            android:id="@+id/imageViewProfilePic"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_baseline_photo_24"
+            app:layout_constraintHeight_percent="0.18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent=".3" />
+
+
+        <ImageButton
+            android:id="@+id/imageButtonProfilePic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewProfilePic"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewProfilePic" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="First Name"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewProfilePic"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textColor="@color/gray" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@id/textInputLayout2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:hint="Middle Name"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextMiddleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout3"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Last Name"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout2">
 
-            />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
 
-    </com.google.android.material.textfield.TextInputLayout>
+                />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutBday"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Birth Date"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextBday"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutBday"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:textSize="16sp" />
+            android:hint="Birth Date"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextBday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/imageButtonBday"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginEnd="16dp"-->
-    <!--        android:src="@drawable/ic_baseline_edit_24"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />-->
+        <!--    <ImageButton-->
+        <!--        android:id="@+id/imageButtonBday"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:src="@drawable/ic_baseline_edit_24"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />-->
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutDday"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Death Date"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutBday"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutBday"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutBday">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextDeathDate"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutDday"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:textSize="16sp" />
+            android:hint="Death Date"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutBday"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayoutBday"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutBday">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDeathDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutAddress"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Memorial Address"
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDday"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutDday"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDday">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextAddress"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutAddress"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:textSize="16sp" />
+            android:hint="Memorial Address"
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDday"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayoutDday"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDday">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textSize="16sp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutLotNum"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Memorial Lot No."
-        android:padding="4dp"
-        android:theme="@style/TextInputLayoutAppearance"
-        app:boxStrokeColor="@color/memore_blue"
-        app:hintTextColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress">
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextLotNum"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutLotNum"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:textSize="16sp" />
+            android:hint="Memorial Lot No."
+            android:padding="4dp"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxStrokeColor="@color/memore_blue"
+            app:hintTextColor="@color/memore_blue"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLotNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textSize="16sp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonUploadHighlight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
-        android:text="Upload Highlight"
-        android:textColor="@color/memore_blue"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutLotNum"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLotNum" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonUploadHighlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:text="Upload Highlight"
+            android:textColor="@color/memore_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutLotNum"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLotNum" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <ImageButton-->
     <!--        android:id="@+id/imageButtonDeathDate"-->

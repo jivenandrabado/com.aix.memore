@@ -2,7 +2,7 @@ package com.aix.memore.utilities;
 
 public class FirebaseConstants {
 
-    private static String db_ = "prod_";
+    private static String db_ = "test_";
 
     //User
     public static String MEMORE_USERS = db_+"memore_users";

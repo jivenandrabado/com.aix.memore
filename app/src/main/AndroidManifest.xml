@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name=".views.activities.FirebaseInit"
@@ -20,7 +19,9 @@
         android:theme="@style/splashScreen">
         <activity
             android:name=".views.activities.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation = "portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

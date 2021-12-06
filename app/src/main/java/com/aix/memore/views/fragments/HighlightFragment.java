@@ -73,9 +73,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private Memore memore;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-    private final String KEY_PREFS = "memore_history";
-    private boolean exists = false;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,7 +185,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                     @Override
                     public void onComplete(@NonNull Task<ShortDynamicLink> task) {
                         if (task.isSuccessful()) {
-                            // Short link created
                             Uri shortLink = task.getResult().getShortLink();
                             Uri flowchartLink = task.getResult().getPreviewLink();
                             ErrorLog.WriteDebugLog("MEMORE SHORT LINK "+shortLink);
@@ -197,8 +193,6 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                             funcShareIntent(shortLink);
 
                         } else {
-                            // Error
-                            // ...
                             ErrorLog.WriteDebugLog("ERROR GENERATING DYNAMIC LIN "+ task.getException());
                             ErrorLog.WriteErrorLog(task.getException());
                         }

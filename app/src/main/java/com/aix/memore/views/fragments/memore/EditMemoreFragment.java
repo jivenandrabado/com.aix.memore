@@ -240,7 +240,6 @@ public class EditMemoreFragment extends Fragment {
             memore.setBio_middle_name(middle_name);
             memore.setBio_last_name(last_name);
             memore.setBio_birth_date(DateHelper.stringToDate(birth_date));
-            memore.setDate_created(new Date());
             memore.setLot_num(lot_num);
 
             if(!death_date.isEmpty()) {
