@@ -171,7 +171,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private void generateDynamicLink(String memore_id) {
 
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://www.example.com/?highlight="+memore_id))
+                .setLink(Uri.parse("https://www.memore.ph/?highlight="+memore_id))
                 .setDomainUriPrefix("https://memore.page.link")
                 .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.aix.memore")
                         .build())
