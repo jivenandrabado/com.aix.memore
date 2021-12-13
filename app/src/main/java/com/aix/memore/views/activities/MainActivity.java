@@ -3,6 +3,7 @@ package com.aix.memore.views.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -11,15 +12,23 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import com.aix.memore.R;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.AppConfigViewModel;
+import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.views.dialogs.AppUpdateDialog;
+import com.aix.memore.views.fragments.qr.QRScannerFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 import java.util.Objects;
 
@@ -28,18 +37,73 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private AppConfigViewModel appConfigViewModel;
+    private HighlightViewModel highlightViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_Memore);
-        setContentView(R.layout.activity_main);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_baseline_photo_24);
-        initNavigation();
-        initAppConfig();
+        try {
+            setTheme(R.style.Theme_Memore);
+            setContentView(R.layout.activity_main);
+            initNavigation();
+            initAppConfig();
+            initDynamicLinks();
 
 
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
+            Toast.makeText(this, ""+e, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+
+    private void initDynamicLinks() {
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                        }
+
+                        if(deepLink != null){
+                            String deepLinkQueryParameter = deepLink.getQueryParameter("highlight");
+                            initHighlightObserver();
+                            highlightViewModel.getHighlightFromQR(deepLinkQueryParameter);
+
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        ErrorLog.WriteDebugLog("getDynamicLink:onFailure"+e);
+                        ErrorLog.WriteErrorLog(e);
+                    }
+                });
+    }
+
+    private void initHighlightObserver() {
+
+        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
+        highlightViewModel.memoreFound().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean != null) {
+                    if (aBoolean) {
+                        navController.navigate(R.id.HighlightFragment);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Invalid QR Code,2", Toast.LENGTH_SHORT).show();
+                    }
+                    highlightViewModel.memoreFound().setValue(null);
+                }
+            }
+        });
     }
 
 

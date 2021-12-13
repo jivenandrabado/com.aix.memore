@@ -20,7 +20,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -169,10 +171,43 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
 
 
     private void initRecyclerView() {
-        scanHistoryAdapter = new ScanHistoryAdapter(requireContext(),  getArrayList("memore_history"),this);
-        binding.recyclerViewMemoreHistory.setAdapter(scanHistoryAdapter);
-        binding.recyclerViewMemoreHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.recyclerViewMemoreHistory.setItemAnimator(null);
+        try {
+            List<String> scanHistoryList = getArrayList("memore_history");
+            scanHistoryAdapter = new ScanHistoryAdapter(requireContext(), scanHistoryList, this);
+            scanHistoryAdapter.setHasStableIds(true);
+
+            ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    Toast.makeText(requireContext(), "on Move", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                    int position = viewHolder.getAbsoluteAdapterPosition();
+                    scanHistoryList.remove(position);
+                    saveArrayList(scanHistoryList,"memore_history");
+                    scanHistoryAdapter.notifyItemRemoved(position);
+
+                }
+            };
+
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+            itemTouchHelper.attachToRecyclerView(binding.recyclerViewMemoreHistory);
+
+            binding.recyclerViewMemoreHistory.setAdapter(scanHistoryAdapter);
+            binding.recyclerViewMemoreHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.recyclerViewMemoreHistory.setItemAnimator(null);
+
+
+
+        }catch (Exception e){
+            ErrorLog.WriteDebugLog(e);
+            ErrorLog.WriteErrorLog(e);
+            Toast.makeText(requireContext(),"Oops something went wrong. Try again.",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public List<String> getArrayList(String key){
@@ -194,6 +229,16 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
         }
         return arrayItems;
     }
+
+    public void saveArrayList(List<String> list, String key){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
 
     @Override
     public void onClick(String memore) {

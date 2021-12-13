@@ -50,7 +50,7 @@ public class QRScannerHelper extends ContextWrapper {
 
     }
 
-    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned, boolean permissionGranted, HighlightViewModel highlightViewModel) {
+    public void initQRScannerPreview(Context context, SurfaceView surfaceView, Activity activity, OnQrCodeScanned onQrCodeScanned, HighlightViewModel highlightViewModel) {
         try {
             this.activity = activity;
             this.context = context;
@@ -75,28 +75,21 @@ public class QRScannerHelper extends ContextWrapper {
 
                 @Override
                 public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-                    ErrorLog.WriteDebugLog("Surface View Changed "+ AppPermissionHelper.cameraPermissionGranted(context));
+//                    ErrorLog.WriteDebugLog("Surface View Changed " + AppPermissionHelper.cameraPermissionGranted(context));
 
-                    if (permissionGranted) {
-                        try {
-                            cameraSource.start(surfaceHolder);
-                            ErrorLog.WriteDebugLog("Camera Start");
+                    try {
+                        cameraSource.start(surfaceHolder);
+                        ErrorLog.WriteDebugLog("Camera Start");
 
 
-                        } catch (IOException e) {
-                            ErrorLog.WriteErrorLog(e);
-                        }
-                    } else {
-                        AppPermissionHelper.requestPermission(context);
-                        ErrorLog.WriteDebugLog("Camera permission not granted cannot start");
-
+                    } catch (IOException e) {
+                        ErrorLog.WriteErrorLog(e);
                     }
                 }
 
                 @Override
                 public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-                    if (permissionGranted) {
-                        try {
+                    try {
                             ErrorLog.WriteDebugLog("Surface View Destroyed");
                             cameraSource.release();
                             cameraSource.stop();
@@ -105,9 +98,6 @@ public class QRScannerHelper extends ContextWrapper {
                         } catch (Exception e) {
                             ErrorLog.WriteErrorLog(e);
                         }
-                    } else {
-                        AppPermissionHelper.requestPermission(context);
-                    }
                 }
             });
 
@@ -163,8 +153,8 @@ public class QRScannerHelper extends ContextWrapper {
 
                 @Override
                 public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
-                    Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
-                    ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
+//                    Log.d(TAG, "receiveDetections: Scanning: " + enableBarCodeDetection);
+//                    ErrorLog.WriteDebugLog("receiveDetections: Scanning: " + enableBarCodeDetection);
 
 //                if (!enableBarCodeDetection) return;
 
@@ -293,7 +283,7 @@ public class QRScannerHelper extends ContextWrapper {
         });
     }
 
-    public void resumeScanning(SurfaceView surfaceView, Context context,boolean permissionGranted,HighlightViewModel highlightViewModel) {
+    public void resumeScanning(HighlightViewModel highlightViewModel) {
         enableBarcodeScanning(true);
         setUpBarCodeScanner(highlightViewModel);
     }

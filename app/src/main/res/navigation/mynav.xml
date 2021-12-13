@@ -9,9 +9,7 @@
         android:id="@+id/QRScannerFragment"
         android:name="com.aix.memore.views.fragments.qr.QRScannerFragment"
         android:label="Memore">
-        <action
-            android:id="@+id/action_QRScannerFragment_to_HighlightFragment2"
-            app:destination="@id/HighlightFragment" />
+
         <action
             android:id="@+id/action_QRScannerFragment_to_lifeCareFragment"
             app:destination="@id/lifeCareFragment" />
@@ -27,6 +25,9 @@
         <action
             android:id="@+id/action_QRScannerFragment_to_createMemoreFragment2"
             app:destination="@id/createMemoreFragment" />
+        <action
+            android:id="@+id/action_QRScannerFragment_to_HighlightFragment"
+            app:destination="@id/HighlightFragment" />
     </fragment>
 
     <fragment
@@ -45,6 +46,9 @@
         <action
             android:id="@+id/action_HighlightFragment_to_generateNewVersionQRCodeFragment"
             app:destination="@id/generateNewVersionQRCodeFragment" />
+        <action
+            android:id="@+id/action_HighlightFragment_to_uploadHighlightFragment"
+            app:destination="@id/uploadHighlightFragment" />
     </fragment>
     <fragment
         android:id="@+id/knowMoreFragment"
