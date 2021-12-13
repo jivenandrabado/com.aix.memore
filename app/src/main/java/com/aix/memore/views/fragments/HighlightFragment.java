@@ -39,6 +39,7 @@ import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.aix.memore.views.dialogs.ShareDialog;
 import com.aix.memore.views.dialogs.UpdateQRCodeDialog;
+import com.aix.memore.views.dialogs.UploadHighlightDialog;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -171,7 +172,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     private void generateDynamicLink(String memore_id) {
 
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://www.example.com/?highlight="+memore_id))
+                .setLink(Uri.parse("https://www.memore.ph/?highlight="+memore_id))
                 .setDomainUriPrefix("https://memore.page.link")
                 .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.aix.memore")
                         .build())
@@ -308,17 +309,23 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     public void onHighlightFound(Memore memore) {
 
         if(memore!=null) {
-            if(memore.is_video) {
-                initProgressDialog();
-                initExoPlayer(memore.getVideo_highlight());
-                ErrorLog.WriteDebugLog("On Highlight Found");
-                progressDialogFragment.dismiss();
-                enableVideoView();
+            if(!memore.getVideo_highlight().isEmpty()) {
+                if (memore.is_video) {
+                    initProgressDialog();
+                    initExoPlayer(memore.getVideo_highlight());
+                    ErrorLog.WriteDebugLog("On Highlight Found");
+                    progressDialogFragment.dismiss();
+                    enableVideoView();
+                } else {
+                    enableImageView();
+                    Glide.with(requireContext()).load(memore.getVideo_highlight())
+                            .centerInside()
+                            .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHighlight));
+                }
             }else{
-                enableImageView();
-                Glide.with(requireContext()).load(memore.getVideo_highlight())
-                        .centerInside()
-                        .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewHighlight));
+                UploadHighlightDialog uploadHighlightDialog = new UploadHighlightDialog(this);
+                uploadHighlightDialog.show(getChildFragmentManager(),"UPLOAD HIGHLIGHT DIALOG");
+                ErrorLog.WriteDebugLog("VIDEO HIGHLIGHT EMPTY");
             }
 
         }else{
@@ -350,6 +357,13 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
     @Override
     public void onGenerateNewQRCode() {
         navController.navigate(R.id.action_HighlightFragment_to_generateNewVersionQRCodeFragment);
+    }
+
+    @Override
+    public void onUploadHighlight() {
+        memoreViewModel.getMemoreMutableLiveData().setValue(memore);
+        memoreViewModel.isEdit.setValue(true);
+        navController.navigate(R.id.action_HighlightFragment_to_uploadHighlightFragment);
     }
 
 

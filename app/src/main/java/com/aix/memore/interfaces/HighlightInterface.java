@@ -7,4 +7,5 @@ public interface HighlightInterface {
     void onHighlightFound(Memore memore);
     void onCredentialsSubmitted();
     void onGenerateNewQRCode();
+    void onUploadHighlight();
 }

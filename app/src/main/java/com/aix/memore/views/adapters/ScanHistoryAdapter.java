@@ -49,8 +49,9 @@ public class ScanHistoryAdapter  extends RecyclerView.Adapter<ScanHistoryAdapter
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String memore = mData.get(position);
         try {
+            String memore = mData.get(position);
+
             ErrorLog.WriteDebugLog("TO JSON "+ memore);
             JSONObject jsonObject = new JSONObject(memore);
             String full_name = jsonObject.getString("bio_first_name") + " " + jsonObject.getString("bio_last_name");
@@ -58,6 +59,8 @@ public class ScanHistoryAdapter  extends RecyclerView.Adapter<ScanHistoryAdapter
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }catch (Exception e){
+            ErrorLog.WriteErrorLog(e);
         }
     }
 
@@ -80,7 +83,6 @@ public class ScanHistoryAdapter  extends RecyclerView.Adapter<ScanHistoryAdapter
                     try {
                         JSONObject jsonObject = new JSONObject(mData.get(getAbsoluteAdapterPosition()));
                         qrScanHistoryInterface.onClick(jsonObject.getString("memore_id"));
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

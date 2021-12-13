@@ -131,8 +131,8 @@ public class QRScannerFragment extends Fragment {
                 }
             });
 
-            initQRScanner();
             initHighlightObserver();
+            initQRScanner();
 
         } catch (Exception e) {
             ErrorLog.WriteErrorLog(e);
@@ -141,12 +141,9 @@ public class QRScannerFragment extends Fragment {
 
     }
 
-    private void initQRScanner() {
-        initQRScannerPrev();
-    }
-
-    public void initQRScannerPrev() {
+    public void initQRScanner() {
         try {
+            ErrorLog.WriteDebugLog("INIT QR SCANNER");
             toastNoInternet = Toast.makeText(requireContext(), "No internet connection.", Toast.LENGTH_SHORT);
 
             barcodeDetector = new BarcodeDetector.Builder(requireContext())
@@ -180,7 +177,7 @@ public class QRScannerFragment extends Fragment {
                         }
 
 
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         ErrorLog.WriteErrorLog(e);
                     }
                 }
@@ -189,8 +186,8 @@ public class QRScannerFragment extends Fragment {
                 public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
                     try {
                         ErrorLog.WriteDebugLog("Surface View Destroyed");
-                        cameraSource.release();
                         cameraSource.stop();
+//                        cameraSource.release();
 
 
                     } catch (Exception e) {
@@ -201,30 +198,29 @@ public class QRScannerFragment extends Fragment {
 
             barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override
-                public void release() {
-                }
+                public void release() { }
 
                 @Override
                 public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
 
                     final SparseArray<Barcode> barcodeSparseArray = detections.getDetectedItems();
                     if (barcodeSparseArray.size() != 0) {
+                        barcodeDetector.release();
 
                         String scannedValue = barcodeSparseArray.valueAt(0).displayValue;
                         ErrorLog.WriteDebugLog("receiveDetections: " + scannedValue);
 
-                        barcodeDetector.release();
                         requireActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (NetworkUtil.isNetworkAvailable(requireActivity())) {
                                     ErrorLog.WriteDebugLog("Barcode Scanned, stopping camera");
-//                                        cameraSource.release();
                                     cameraSource.stop();
+                                    cameraSource.release();
                                     highlightViewModel.getHighlightFromQR(scannedValue);
                                 } else {
-                                        toastNoInternet.cancel();
-                                        toastNoInternet.show();
+                                    toastNoInternet.cancel();
+                                    toastNoInternet.show();
                                 }
                             }
                         });
@@ -234,9 +230,11 @@ public class QRScannerFragment extends Fragment {
                 }
             });
 
+
         } catch (Exception e) {
             ErrorLog.WriteErrorLog(e);
         }
+
 
     }
 
@@ -262,12 +260,6 @@ public class QRScannerFragment extends Fragment {
             ErrorLog.WriteErrorLog(e);
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -304,50 +296,15 @@ public class QRScannerFragment extends Fragment {
 
     public void resumeCamera() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                if(cameraSource != null) {
-                    this.cameraSource.start(surfaceHolder);
-                    barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-                        @Override
-                        public void release() {
+            if (cameraSource != null) {
+                if (surfaceHolder != null) {
+                        try {
+                            cameraSource.start(surfaceHolder);
+                            ErrorLog.WriteDebugLog("Camera start again");
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-
-                        @Override
-                        public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
-
-                            final SparseArray<Barcode> barcodeSparseArray = detections.getDetectedItems();
-                            if (barcodeSparseArray.size() != 0) {
-
-                                String scannedValue = barcodeSparseArray.valueAt(0).displayValue;
-                                ErrorLog.WriteDebugLog("receiveDetections: " + scannedValue);
-
-                                barcodeDetector.release();
-                                requireActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (NetworkUtil.isNetworkAvailable(requireActivity())) {
-                                            ErrorLog.WriteDebugLog("Barcode Scanned, stopping camera");
-//                                        cameraSource.release();
-                                            cameraSource.stop();
-                                            highlightViewModel.getHighlightFromQR(scannedValue);
-                                        } else {
-                                            toastNoInternet.cancel();
-                                            toastNoInternet.show();
-                                        }
-                                    }
-                                });
-
-                            }
-
-                        }
-                    });
-                    ErrorLog.WriteDebugLog("Camera start again");
-                }
-            } catch (IOException e) {
-                ErrorLog.WriteDebugLog("Camera stop error");
-
-                ErrorLog.WriteDebugLog(e);
-                e.printStackTrace();
+                    }
             }
         }
     }
@@ -355,15 +312,17 @@ public class QRScannerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if(cameraSource != null){
-            ErrorLog.WriteDebugLog("Camera released");
             cameraSource.release();
             cameraSource.stop();
         }
 
         if(barcodeDetector!=null){
-            ErrorLog.WriteDebugLog("barcode released");
             barcodeDetector.release();
         }
+
+
+
     }
 }

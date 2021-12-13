@@ -85,7 +85,7 @@ public class QRGeneratorFragment extends Fragment {
 //                    ", death_date='" + memore.getBio_death_date() + '\'' +
 //                    '}';
 
-            full_name = memore.getBio_first_name() + " "+memore.getBio_last_name();
+            full_name = memore.getBio_first_name() + "\n "+memore.getBio_last_name();
 
 //            try {
 //                highlightViewModel.scannedJSONObject().setValue(new JSONObject(qr_code_value));
@@ -119,7 +119,7 @@ public class QRGeneratorFragment extends Fragment {
             //generate QR code
             bitmap = qrgEncoder.encodeAsBitmap();
 
-            Bitmap result = Bitmap.createBitmap(400, 450, Bitmap.Config.ARGB_8888);
+            Bitmap result = Bitmap.createBitmap(400, 480, Bitmap.Config.ARGB_8888);
 
             Canvas canvas = new Canvas(result);
 
@@ -135,7 +135,8 @@ public class QRGeneratorFragment extends Fragment {
             //draw
             canvas.drawColor(Color.WHITE);
             canvas.drawBitmap(bitmap, 0, 0, null);
-            canvas.drawText(name, 100, 410, paint);
+            canvas.drawText(memore.getBio_first_name(), 210, 410, paint);
+            canvas.drawText(memore.getBio_last_name(), 210, 460, paint);
 
             binding.imageViewQRCode.setImageBitmap(result);
 
