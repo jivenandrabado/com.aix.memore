@@ -17,7 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentKnowMoreBinding;
-import com.aix.memore.models.Bio;
+import com.aix.memore.models.Memore;
 import com.aix.memore.models.Media;
 import com.aix.memore.utilities.DateHelper;
 import com.aix.memore.utilities.ErrorLog;
@@ -71,15 +71,27 @@ public class KnowMoreFragment extends Fragment {
             });
 
 
-            galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Bio>() {
+            galleryViewModel.getBio().observe(getViewLifecycleOwner(), new Observer<Memore>() {
                 @Override
-                public void onChanged(Bio bio) {
-                    String full_name = bio.bio_first_name + " " + bio.bio_middle_name + " " + bio.bio_last_name;
-                    String death_date = DateHelper.formatDate(bio.bio_birth_date.toDate()) + " - " + DateHelper.formatDate(bio.bio_death_date.toDate());
-                    Glide.with(requireContext()).load(Uri.parse(bio.bio_profile_pic))
-                            .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewBioProfilePic));
+                public void onChanged(Memore memore) {
+                    String full_name = memore.bio_first_name + " " + memore.bio_middle_name + " " + memore.bio_last_name;
+                    String date = null;
+                    if(memore.bio_death_date!=null) {
+                        if (!memore.bio_death_date.toString().isEmpty()) {
+                            date = DateHelper.formatDate(memore.bio_birth_date) + " - " + DateHelper.formatDate(memore.bio_death_date);
+                        }
+                    } else {
+                        date = DateHelper.formatDate(memore.bio_birth_date);
+                    }
+                    if(memore.getBio_profile_pic()!=null) {
+
+                        if (!memore.getBio_profile_pic().isEmpty()) {
+                            Glide.with(requireContext()).load(Uri.parse(memore.bio_profile_pic))
+                                    .error(R.drawable.ic_baseline_photo_24).into((binding.imageViewBioProfilePic));
+                        }
+                    }
                     binding.textViewName.setText(full_name);
-                    binding.textViewDeathDate.setText(death_date);
+                    binding.textViewDeathDate.setText(date);
                 }
             });
 

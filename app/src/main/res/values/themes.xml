@@ -23,7 +23,9 @@
         <item name="android:textColorPrimary">@color/memore_blue</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
-        <!--        button-->
+<!--        //set font-->
+
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -33,6 +35,27 @@
 
     <style name="editTextTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@android:color/darker_gray</item>
+    </style>
+
+    <style name="DatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/gray</item>
+    </style>
+
+    <style name="HelperTextAppearance" parent="Widget.Design.TextInputLayout">
+        <item name="android:textColor">@android:color/holo_green_dark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="colorPrimary">@color/memore_blue</item>
+        <item name="android:textColorHint">@color/memore_blue</item>
+        <item name="colorControlNormal">@color/memore_blue</item>
+        <item name="colorControlActivated">@color/memore_blue</item>
+        <item name="colorControlHighlight">@color/memore_blue</item>
+
+
+    </style>
+
+    <style name="TextInputLayoutAppearance" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="colorControlActivated">@color/memore_blue</item>
+
     </style>
 
 </resources>

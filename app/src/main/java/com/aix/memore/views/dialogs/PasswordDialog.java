@@ -67,14 +67,6 @@ public class PasswordDialog extends DialogFragment {
             }
         });
 
-        userViewModel.isAuthorized().observe(requireActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    dismiss();
-                }
-            }
-        });
 
         userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -83,6 +75,14 @@ public class PasswordDialog extends DialogFragment {
                     Toast.makeText(requireContext(),s,Toast.LENGTH_SHORT).show();
                     userViewModel.getErrorMessage().setValue("");
                 }
+            }
+        });
+
+        binding.textViewFrogotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EmailVerificationDialog emailVerificationDialog = new EmailVerificationDialog();
+                emailVerificationDialog.show(getChildFragmentManager(),"EMAIL VERIFICATION DIALOG");
             }
         });
     }

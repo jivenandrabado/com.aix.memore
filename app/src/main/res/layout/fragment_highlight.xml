@@ -8,16 +8,33 @@
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/playerView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".730"
-        app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintWidth_percent=".800"
         app:resize_mode="fill" />
+
+    <ImageView
+        android:id="@+id/imageViewHighlight"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -30,6 +47,7 @@
         android:id="@+id/buttonShare"
         android:layout_width="60dp"
         android:layout_height="50dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/background_circle"
         android:drawableStart="@drawable/ic_baseline_share_24"
         android:elevation="10dp"
@@ -45,46 +63,62 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/background_rectangle_rounded"
         android:elevation="10dp"
         android:textAllCaps="false"
-        android:textColor="@color/memore_blue"
+        android:textColor="@color/gray"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintStart_toEndOf="@+id/buttonShare"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintStart_toEndOf="@+id/buttonShare" />
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/imageViewHightlightBioProfilePic"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_baseline_photo_24"
-        app:civ_border_width="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewHighlightName"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Name"
-        android:textColor="@color/memore_blue"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"
-        app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />
+        app:layout_constraintEnd_toEndOf="@+id/playerView"
+        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textViewHighlightDeathDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Birth-Death Date"
-        app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imageViewHightlightBioProfilePic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_baseline_photo_24"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewHighlightName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="16dp"
+            android:text="Name"
+            android:textColor="@color/memore_blue"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"
+            app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />
+
+        <TextView
+            android:id="@+id/textViewHighlightDeathDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Birth-Death Date"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--    <androidx.appcompat.widget.AppCompatButton-->
 <!--        android:id="@+id/appCompatButton"-->
@@ -117,6 +151,130 @@
 
 
 
+<!--    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--        xmlns:tools="http://schemas.android.com/tools"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        >-->
 
+<!--        <com.google.android.exoplayer2.ui.PlayerView-->
+<!--            android:id="@+id/playerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHeight_percent=".730"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/imageViewHightlightBioProfilePic"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/imageViewHightlightBioProfilePic"-->
+<!--            app:layout_constraintWidth_percent=".800"-->
+<!--            app:resize_mode="fill" />-->
+
+<!--        <androidx.constraintlayout.widget.Guideline-->
+<!--            android:id="@+id/guideline"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintGuide_percent="0.50"/>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/buttonShare"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:background="@drawable/background_circle"-->
+<!--            android:drawableStart="@drawable/ic_baseline_share_24"-->
+<!--            android:elevation="10dp"-->
+<!--            android:src="@drawable/ic_baseline_share_24"-->
+<!--            android:textAllCaps="false"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/buttonKnowMore"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/playerView"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/buttonKnowMore" />-->
+
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/buttonKnowMore"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="24dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:background="@drawable/background_rectangle_rounded_solid"-->
+<!--            android:elevation="10dp"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/playerView"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/buttonShare"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/playerView" />-->
+
+<!--        <com.mikhaellopez.circularimageview.CircularImageView-->
+<!--            android:id="@+id/imageViewHightlightBioProfilePic"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:src="@drawable/ic_baseline_photo_24"-->
+<!--            app:civ_border_width="8dp"-->
+<!--            app:layout_constraintHeight_percent="0.12"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintWidth_percent="0.24" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewHighlightName"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="Name"-->
+<!--            android:textColor="@color/memore_blue"-->
+<!--            android:textSize="24sp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/imageViewHightlightBioProfilePic"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/imageViewHightlightBioProfilePic" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewHighlightDeathDate"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Birth-Death Date"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/textViewHighlightName"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/textViewHighlightName" />-->
+
+<!--        &lt;!&ndash;    <androidx.appcompat.widget.AppCompatButton&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:id="@+id/appCompatButton"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_marginTop="8dp"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:text="Like"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintStart_toStartOf="@+id/playerView"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/playerView"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:visibility="gone"/>&ndash;&gt;-->
+
+<!--        &lt;!&ndash;    <androidx.appcompat.widget.AppCompatButton&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:id="@+id/appCompatButton2"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:text="heart"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintEnd_toStartOf="@+id/appCompatButton3"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintStart_toEndOf="@+id/appCompatButton"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintTop_toTopOf="@+id/appCompatButton"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:visibility="gone"/>&ndash;&gt;-->
+
+<!--        &lt;!&ndash;    <androidx.appcompat.widget.AppCompatButton&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:id="@+id/appCompatButton3"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:text="Sad"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintEnd_toEndOf="@+id/playerView"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintTop_toTopOf="@+id/appCompatButton2"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:visibility="gone"/>&ndash;&gt;-->
+
+
+
+
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

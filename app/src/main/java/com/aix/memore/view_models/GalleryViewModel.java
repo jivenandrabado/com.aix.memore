@@ -1,19 +1,19 @@
 package com.aix.memore.view_models;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.aix.memore.models.Album;
-import com.aix.memore.models.Bio;
+import com.aix.memore.models.Memore;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.repositories.GalleryRepo;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.net.URI;
 import java.util.List;
 
 public class GalleryViewModel extends ViewModel {
@@ -42,7 +42,7 @@ public class GalleryViewModel extends ViewModel {
         return galleryRepo.getDefaultGalleryMedia();
     }
 
-    public MutableLiveData<Bio> getBio(){
+    public MutableLiveData<Memore> getBio(){
         return galleryRepo.getBio();
     }
 
@@ -82,5 +82,29 @@ public class GalleryViewModel extends ViewModel {
 
     public MutableLiveData<Integer> getSelectedMediaPosition() {
         return selectedMediaPosition;
+    }
+
+    public void deleteAlbums(List<Album> albumList,String owner_id){
+        galleryRepo.deleteAlbums(albumList, owner_id);
+    }
+
+    public MutableLiveData<Boolean> isDeleted(){
+        return galleryRepo.getIsDeleted();
+    }
+
+    public void deleteImage(List<Gallery> galleryList, String owner_id,String album_id) {
+        galleryRepo.deleteImage(galleryList, owner_id, album_id);
+    }
+
+    public MutableLiveData<Boolean> isImageDeleted(){
+        return galleryRepo.getIsImageDeleted();
+    }
+
+    public MutableLiveData<Double> uploadProgress(){
+        return galleryRepo.uploadProgress;
+    }
+
+    public void uploadBitmapToVault(String owner_id, Bitmap qrBitmap, Context context) {
+        galleryRepo.uploadBitmapToVault(owner_id,qrBitmap,context);
     }
 }

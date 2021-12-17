@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".views.activities.FirebaseInit"
@@ -17,11 +19,27 @@
         android:theme="@style/splashScreen">
         <activity
             android:name=".views.activities.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation = "portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="memore.page.link"
+                    android:scheme="https"
+                    />
+                <data
+                    android:host="memore.page.link"
+                    android:scheme="http"
+                    />
             </intent-filter>
         </activity>
     </application>
