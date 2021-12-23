@@ -283,6 +283,7 @@ public class GalleryFragment extends Fragment implements GalleryInterface {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_PICK);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         chooseImageActivityResult.launch(intent);
     }
 

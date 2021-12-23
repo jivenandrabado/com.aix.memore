@@ -165,6 +165,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_PICK);
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     chooseImageActivityResult.launch(intent);
                     userViewModel.isAuthorized().setValue(false);
                 }
@@ -178,6 +179,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_PICK);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             chooseImageActivityResult.launch(intent);
         }
 
