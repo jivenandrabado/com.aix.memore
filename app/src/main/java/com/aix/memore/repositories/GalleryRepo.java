@@ -659,8 +659,8 @@ public class GalleryRepo {
                         mediaList.clear();
                         for (DocumentSnapshot item : value.getDocuments()){
                             mediaList.add(item.toObject(Gallery.class));
-                            galleryList.setValue(mediaList);
                         }
+                        galleryList.setValue(mediaList);
                     }
                 });
     }
