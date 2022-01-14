@@ -29,12 +29,14 @@ import android.view.ViewGroup;
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentGalleryViewBinding;
 import com.aix.memore.interfaces.GalleryViewInterface;
+import com.aix.memore.models.AlbumDetails;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.view_models.GalleryViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.view_models.UserViewModel;
 import com.aix.memore.views.adapters.GalleryFirebaseAdapter;
+import com.aix.memore.views.dialogs.AlbumDetailsDialog;
 import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.ProgressDialogFragment;
 import com.aix.memore.views.dialogs.UploadDialog;
@@ -57,6 +59,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
     private ProgressDialogFragment progressDialogFragment;
     private List<Gallery> galleryList = new ArrayList<>();
     private PasswordDialog passwordDialog;
+    private AlbumDetailsDialog albumDetailsDialog;
 
     public GalleryViewFragment() {
         // Required empty public constructor
@@ -99,6 +102,20 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
         }
+
+        galleryViewModel.getAlbumDetails(owner_id, album_id);
+
+        galleryViewModel.getSelectedGalleryList().observe(getViewLifecycleOwner(), result-> {
+            long byteSize = 0L;
+            AlbumDetails albumDet = new AlbumDetails();
+            for (Gallery galleryItem : result){
+                byteSize += galleryItem.getByteSize() != null ? galleryItem.getByteSize() : 0L;
+            }
+            albumDet.setByteSize(byteSize);
+            albumDet.setFileCount(result.size());
+            ErrorLog.WriteDebugLog("albumDetailsDialog initiated");
+            albumDetailsDialog = new AlbumDetailsDialog(galleryViewModel.getSelectedAlbum().getValue(), albumDet);
+        });
 
     }
 
@@ -153,6 +170,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
         if(galleryFirebaseAdapter!=null) {
             galleryFirebaseAdapter.stopListening();
         }
+        galleryViewModel.detachAlbumDetailsListener();
     }
 
     private void chooseImage() {
@@ -165,6 +183,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_PICK);
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     chooseImageActivityResult.launch(intent);
                     userViewModel.isAuthorized().setValue(false);
                 }
@@ -178,6 +197,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_PICK);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             chooseImageActivityResult.launch(intent);
         }
 
@@ -265,6 +285,11 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
             case R.id.delete:
                 ErrorLog.WriteDebugLog("SHOW PASSWORD DIALOG");
                 passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FOR DELETE");
+                break;
+
+            case R.id.albumDetails:
+                ErrorLog.WriteDebugLog("SHOW DETAILS DIALOG");
+                albumDetailsDialog.show(getChildFragmentManager(), "ALBUM_DETAILS_DIALOG");
                 break;
 
             default:

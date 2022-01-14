@@ -1,5 +1,7 @@
 package com.aix.memore.view_models;
 
+import android.content.SharedPreferences;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -7,6 +9,7 @@ import com.aix.memore.repositories.FirebaseLoginRepo;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class UserSharedViewModel extends ViewModel {
+
 
     private FirebaseLoginRepo firebaseLoginRepo = new FirebaseLoginRepo();
 
@@ -18,4 +21,5 @@ public class UserSharedViewModel extends ViewModel {
     public FirebaseAuth.AuthStateListener initAuthListener(){
        return firebaseLoginRepo.initFirebaseAuthListener();
     }
+
 }
