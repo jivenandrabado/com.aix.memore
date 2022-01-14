@@ -182,10 +182,8 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                     ErrorLog.WriteDebugLog("UPLOAD Images");
                     Intent intent = new Intent();
                     intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_PICK);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setAction(Intent.ACTION_PICK);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     chooseImageActivityResult.launch(intent);
                     userViewModel.isAuthorized().setValue(false);
                 }
@@ -198,10 +196,8 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
         }else{
             Intent intent = new Intent();
             intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_PICK);
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setAction(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             chooseImageActivityResult.launch(intent);
         }
 
@@ -293,6 +289,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
 
             case R.id.albumDetails:
                 ErrorLog.WriteDebugLog("SHOW DETAILS DIALOG");
+                if(albumDetailsDialog != null)
                 albumDetailsDialog.show(getChildFragmentManager(), "ALBUM_DETAILS_DIALOG");
                 break;
 
