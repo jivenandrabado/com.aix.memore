@@ -18,11 +18,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
+import com.aix.memore.BuildConfig;
 import com.aix.memore.R;
 import com.aix.memore.utilities.ErrorLog;
+import com.aix.memore.utilities.InstallationSharedPref;
 import com.aix.memore.view_models.AppConfigViewModel;
 import com.aix.memore.view_models.HighlightViewModel;
 import com.aix.memore.views.dialogs.AppUpdateDialog;
+import com.aix.memore.views.dialogs.WelcomeMessageDialog;
 import com.aix.memore.views.fragments.qr.QRScannerFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private AppConfigViewModel appConfigViewModel;
     private HighlightViewModel highlightViewModel;
+    private InstallationSharedPref installationSharedPref;
+    private WelcomeMessageDialog welcomeMessageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             setTheme(R.style.Theme_Memore);
             setContentView(R.layout.activity_main);
+            installationSharedPref = new InstallationSharedPref(this);
+            welcomeMessageDialog = new WelcomeMessageDialog();
             initNavigation();
             initAppConfig();
             initDynamicLinks();
-
+            initNewInstalledApp();
 
         }catch (Exception e){
             ErrorLog.WriteErrorLog(e);
@@ -57,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void initNewInstalledApp() {
+        if(installationSharedPref.isNewlyInstalled()){
+            installationSharedPref.saveVersion(String.valueOf(BuildConfig.VERSION_CODE));
+            welcomeMessageDialog.show(getSupportFragmentManager(), "WELCOME DIALOG");
+        }
+    }
 
 
     private void initDynamicLinks() {

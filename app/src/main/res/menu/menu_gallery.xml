@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_baseline_menu_24"
         android:title="Delete"/>
 
+
+    <item
+        android:id="@+id/albumDetails"
+        android:title="Details"/>
+
 </menu>
