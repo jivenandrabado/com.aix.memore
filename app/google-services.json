@@ -1,49 +1,33 @@
 {
   "project_info": {
-    "project_number": "551893323175",
-    "project_id": "mshop-45437",
-    "storage_bucket": "mshop-45437.appspot.com"
+    "project_number": "654705842577",
+    "project_id": "lifecare-1ea11",
+    "storage_bucket": "lifecare-1ea11.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551893323175:android:ab96faf26718105fc1fa82",
+        "mobilesdk_app_id": "1:654705842577:android:b29f5686eacc41416c6230",
         "android_client_info": {
           "package_name": "com.aix.memore"
         }
       },
       "oauth_client": [
         {
-          "client_id": "551893323175-kcnc20oifnsgmu2hvosi1ibqt33dab5v.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aix.memore",
-            "certificate_hash": "f1b5ffa7237feefbfadccd9cef8f6ac802c0112f"
-          }
-        },
-        {
-          "client_id": "551893323175-reo9du8dqpau5h33t4ldjo341vo34nbm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aix.memore",
-            "certificate_hash": "719303c474d6487b80bd132423cc21f9ffe8467f"
-          }
-        },
-        {
-          "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+          "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDONVz89JbNkTuy6f30Tu26z0Sf2zMExV8"
+          "current_key": "AIzaSyCfJ0BrBrp_t0i5Emk8KP9W4nEIZ5US7gE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+              "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -52,35 +36,35 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551893323175:android:dbfc4af71662f0aac1fa82",
+        "mobilesdk_app_id": "1:654705842577:android:37d5270c6d55deb06c6230",
         "android_client_info": {
           "package_name": "com.aix.mpagents"
         }
       },
       "oauth_client": [
         {
-          "client_id": "551893323175-3vptb3cbfq00mp875put91kldofbc59s.apps.googleusercontent.com",
+          "client_id": "654705842577-5hdppa6l19ig27lehmg2lg1i9orqneuk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.aix.mpagents",
-            "certificate_hash": "719303c474d6487b80bd132423cc21f9ffe8467f"
+            "certificate_hash": "5e9d1459f4f17afc869e4aef9e98d9d6e5918247"
           }
         },
         {
-          "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+          "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDONVz89JbNkTuy6f30Tu26z0Sf2zMExV8"
+          "current_key": "AIzaSyCfJ0BrBrp_t0i5Emk8KP9W4nEIZ5US7gE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+              "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -89,35 +73,35 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551893323175:android:278aeaea148616cac1fa82",
+        "mobilesdk_app_id": "1:654705842577:android:74468cd16583dd0d6c6230",
         "android_client_info": {
           "package_name": "com.aix.mpartners"
         }
       },
       "oauth_client": [
         {
-          "client_id": "551893323175-icnj22f282ndb0pilrosdscqoei0mvlo.apps.googleusercontent.com",
+          "client_id": "654705842577-62v6iqnbi8d6dm5ijce52fqgif4moi6i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.aix.mpartners",
-            "certificate_hash": "719303c474d6487b80bd132423cc21f9ffe8467f"
+            "certificate_hash": "5e9d1459f4f17afc869e4aef9e98d9d6e5918247"
           }
         },
         {
-          "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+          "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDONVz89JbNkTuy6f30Tu26z0Sf2zMExV8"
+          "current_key": "AIzaSyCfJ0BrBrp_t0i5Emk8KP9W4nEIZ5US7gE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+              "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -126,43 +110,27 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:551893323175:android:cad6d9fff19fa223c1fa82",
+        "mobilesdk_app_id": "1:654705842577:android:5cb6c1f75dfcdd5a6c6230",
         "android_client_info": {
           "package_name": "com.aix.mshop"
         }
       },
       "oauth_client": [
         {
-          "client_id": "551893323175-cab4654e4puuhdq08kqi6da1kbdlt2mt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aix.mshop",
-            "certificate_hash": "f1b5ffa7237feefbfadccd9cef8f6ac802c0112f"
-          }
-        },
-        {
-          "client_id": "551893323175-r59b50cnghdhp0mc32bfiv0as77sj6qe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aix.mshop",
-            "certificate_hash": "cd392d52da758daf08b6a13e2c0d78f23e34c08a"
-          }
-        },
-        {
-          "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+          "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDONVz89JbNkTuy6f30Tu26z0Sf2zMExV8"
+          "current_key": "AIzaSyCfJ0BrBrp_t0i5Emk8KP9W4nEIZ5US7gE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "551893323175-0nrplobganheahbtn7rrn78c2d5fcu27.apps.googleusercontent.com",
+              "client_id": "654705842577-47r890mtlda3hcj7r874rlruj5nr5ao5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

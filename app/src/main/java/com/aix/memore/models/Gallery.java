@@ -15,6 +15,15 @@ public class Gallery {
     public Timestamp upload_date;
     public String media_id;
     public Boolean is_deleted;
+    public Long byteSize;
+
+    public Long getByteSize() {
+        return byteSize;
+    }
+
+    public void setByteSize(Long byteSize) {
+        this.byteSize = byteSize;
+    }
 
     public String getPath() {
         return path;

@@ -77,7 +77,7 @@ public class GalleryViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Gallery>> getSelectedGalleryList() {
-        return galleryList;
+        return galleryRepo.getGalleryList();
     }
 
     public MutableLiveData<Integer> getSelectedMediaPosition() {
@@ -106,5 +106,13 @@ public class GalleryViewModel extends ViewModel {
 
     public void uploadBitmapToVault(String owner_id, Bitmap qrBitmap, Context context) {
         galleryRepo.uploadBitmapToVault(owner_id,qrBitmap,context);
+    }
+
+    public void getAlbumDetails(String owner_id,String doc_id) {
+        galleryRepo.attachAlbumDetailsListener(owner_id, doc_id);
+    }
+
+    public void detachAlbumDetailsListener() {
+        galleryRepo.detachAlbumDetailsListener();
     }
 }
