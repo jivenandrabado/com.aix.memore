@@ -17,6 +17,7 @@ import com.aix.memore.models.Gallery;
 import com.aix.memore.models.Media;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.utilities.FirebaseConstants;
+import com.aix.memore.utilities.GlobalFunctions;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,6 +57,8 @@ public class GalleryRepo {
     private MutableLiveData<List<Media>> mediaListLiveData = new MutableLiveData<>();
     private ListenerRegistration mediaSnapshotListener;
     private ListenerRegistration bioSnapshotListener;
+    private ListenerRegistration albumMediaSnapshotListener;
+    private MutableLiveData<List<Gallery>> galleryList = new MutableLiveData<>();
     private MutableLiveData<Memore> bioMutableLiveData = new MutableLiveData<Memore>();
     private MutableLiveData<Boolean> isAlbumCreated = new MutableLiveData<>();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -289,7 +292,7 @@ public class GalleryRepo {
                         @Override
                         public void onSuccess(Uri uri) {
                             ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
-                            addNewMedia(owner_id, String.valueOf(uri), album_id);
+                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount());
                         }
                     });
                 }
@@ -331,7 +334,7 @@ public class GalleryRepo {
                             ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
 
                             downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
-                            addNewMedia(owner_id, String.valueOf(uri), album_id);
+                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount());
                         }
                     });
                 }
@@ -376,13 +379,14 @@ public class GalleryRepo {
 
     }
 
-    public void addNewMedia(String owner_id, String path, String album_id){
+    public void addNewMedia(String owner_id, String path, String album_id, long byteSize){
         try{
             Gallery gallery = new Gallery();
             gallery.setType(1);
             gallery.setUpload_date(new Timestamp(new Date()));
             gallery.setPath(path);
             gallery.setIs_deleted(false);
+            gallery.setByteSize(byteSize);
 
             String doc_id = db.collection(FirebaseConstants.MEMORE).document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document(album_id).collection(FirebaseConstants.MEMORE_MEDIA).document().getId();
@@ -646,4 +650,26 @@ public class GalleryRepo {
     }
 
 
+    public void attachAlbumDetailsListener(String owner_id,String doc_id) {
+        List<Gallery> mediaList = new ArrayList<>();
+        albumMediaSnapshotListener = collectionReference.document(owner_id).collection(FirebaseConstants.MEMORE_ALBUM)
+                .document(doc_id).collection(FirebaseConstants.MEMORE_MEDIA).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        mediaList.clear();
+                        for (DocumentSnapshot item : value.getDocuments()){
+                            mediaList.add(item.toObject(Gallery.class));
+                            galleryList.setValue(mediaList);
+                        }
+                    }
+                });
+    }
+
+    public MutableLiveData<List<Gallery>> getGalleryList() {
+        return galleryList;
+    }
+
+    public void detachAlbumDetailsListener() {
+        albumMediaSnapshotListener.remove();
+    }
 }
