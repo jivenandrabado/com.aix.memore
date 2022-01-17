@@ -181,7 +181,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                     passwordDialog.dismiss();
                     ErrorLog.WriteDebugLog("UPLOAD Images");
                     Intent intent = new Intent();
-                    intent.setType("image/*");
+                    intent.setType("image/* video/*");
                     intent.setAction(Intent.ACTION_PICK);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     chooseImageActivityResult.launch(intent);
@@ -195,7 +195,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
             passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FOR DELETE");
         }else{
             Intent intent = new Intent();
-            intent.setType("image/*");
+            intent.setType("image/* video/*");
             intent.setAction(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             chooseImageActivityResult.launch(intent);
