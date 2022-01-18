@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -236,7 +235,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
     );
 
     @Override
-    public void onImageClick(List<Gallery> galleryList, int position) {
+    public void onMediaClicked(List<Gallery> galleryList, int position) {
         navController.navigate(R.id.action_galleryViewFragment_to_galleryMediaFullViewFragment);
         galleryViewModel.getSelectedGalleryList().setValue(galleryList);
         galleryViewModel.getSelectedMediaPosition().setValue(position);
@@ -244,10 +243,16 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
     }
 
     @Override
-    public void onImageDelete(List<Gallery> galleryList) {
+    public void onMediaSelected(List<Gallery> galleryList) {
         ErrorLog.WriteDebugLog("ON IMAGE DELETE");
         this.galleryList = galleryList;
+    }
 
+    @Override
+    public void setOpenSelector(boolean isSelected) {
+        isDelete = isSelected;
+        galleryFirebaseAdapter.setDelete(isDelete);
+        requireActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -269,20 +274,19 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
         switch (item.getItemId()){
 
             case R.id.deleteImage:
-                isDelete = true;
-                galleryFirebaseAdapter.setDelete(isDelete);
-                requireActivity().invalidateOptionsMenu();
+                setOpenSelector(true);
                 break;
 
             case R.id.cancel:
-                isDelete = false;
-                galleryFirebaseAdapter.setDelete(isDelete);
-                requireActivity().invalidateOptionsMenu();
+                setOpenSelector(false);
                 break;
 
             case R.id.delete:
                 ErrorLog.WriteDebugLog("SHOW PASSWORD DIALOG");
                 passwordDialog.show(getChildFragmentManager(),"PASSWORD DIALOG FOR DELETE");
+                break;
+
+            case R.id.move:
                 break;
 
             case R.id.albumDetails:
@@ -324,8 +328,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                             ErrorLog.WriteDebugLog("ALBUMS DELETED");
                             //change options menu
                             galleryFirebaseAdapter.updateOptions(galleryViewModel.getGalleryViewRecyclerOptions(owner_id, album_id));
-                            isDelete = false;
-                            galleryFirebaseAdapter.setDelete(isDelete);
+                            setOpenSelector(false);
                             requireActivity().invalidateOptionsMenu();
                         }
                     }

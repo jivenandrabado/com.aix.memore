@@ -7,21 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.aix.memore.R;
-import com.aix.memore.databinding.ItemAlbumBinding;
 import com.aix.memore.databinding.ItemGalleryBinding;
-import com.aix.memore.interfaces.GalleryInterface;
 import com.aix.memore.interfaces.GalleryViewInterface;
-import com.aix.memore.models.Album;
 import com.aix.memore.models.Gallery;
 import com.aix.memore.utilities.ErrorLog;
 import com.bumptech.glide.Glide;
@@ -29,7 +23,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -77,18 +70,22 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
                     holder.binding.checkboxSelector.toggle();
                 }
             });
-
-
+            holder.binding.imageView.setOnLongClickListener(null);
         }else{
             holder.binding.checkboxSelector.setVisibility(View.INVISIBLE);
             holder.binding.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        galleryViewInterface.onImageClick(galleryList,holder.getAbsoluteAdapterPosition());
+                        galleryViewInterface.onMediaClicked(galleryList,holder.getAbsoluteAdapterPosition());
                 }
+            });
+            holder.binding.imageView.setOnLongClickListener(v -> {
+                galleryViewInterface.setOpenSelector(true);
+                return false;
             });
         }
 
+        holder.binding.checkboxSelector.setChecked(false);
         holder.binding.checkboxSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -99,7 +96,7 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
                 }else{
                     galleryListDelete.remove(gallery);
                 }
-                galleryViewInterface.onImageDelete(galleryListDelete);
+                galleryViewInterface.onMediaSelected(galleryListDelete);
             }
         });
     }

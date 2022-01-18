@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface GalleryViewInterface {
 
-    void onImageClick(List<Gallery> galleryList, int position);
-    void onImageDelete(List<Gallery> gallery);
+    void onMediaClicked(List<Gallery> galleryList, int position);
+    void onMediaSelected(List<Gallery> gallery);
+    void setOpenSelector(boolean isSelected);
 }
