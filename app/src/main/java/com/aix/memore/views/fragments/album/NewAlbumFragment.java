@@ -33,9 +33,11 @@ import com.aix.memore.view_models.UserViewModel;
 import com.aix.memore.views.dialogs.PasswordDialog;
 import com.aix.memore.views.dialogs.UploadDialog;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class NewAlbumFragment extends Fragment {
 
@@ -46,7 +48,7 @@ public class NewAlbumFragment extends Fragment {
      private String doc_id;
      private PasswordDialog passwordDialog;
      private NavController navController;
-     private List<Uri> imageUriList = new ArrayList<>();
+     private List<Map.Entry<Uri,Integer>> imageUriList = new ArrayList<>();
      private UploadDialog uploadDialog;
 
     @Override
@@ -157,7 +159,8 @@ public class NewAlbumFragment extends Fragment {
                                 Uri imageUri = clipData.getItemAt(i).getUri();
                                 // your code for multiple image selection
                                 ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri);
-                                imageUriList.add(imageUri);
+                                int mediaType = requireActivity().getContentResolver().getType(imageUri).contains("image") ? 1 : 0;
+                                imageUriList.add(new AbstractMap.SimpleImmutableEntry<Uri,Integer>(imageUri,mediaType));
 
                             }
                         } else {
@@ -166,7 +169,8 @@ public class NewAlbumFragment extends Fragment {
                             ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
 
 //                            uploadDialog.show(getChildFragmentManager(),"UPLOAD_DIALOG");
-                            imageUriList.add(uri);
+                            int mediaType = requireActivity().getContentResolver().getType(uri).contains("image") ? 1 : 0;
+                            imageUriList.add(new AbstractMap.SimpleImmutableEntry<Uri,Integer>(uri,mediaType));
 
                         }
                     }

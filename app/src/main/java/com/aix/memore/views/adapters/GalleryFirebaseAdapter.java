@@ -62,7 +62,7 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
         holder.binding.setPosition(position);
         holder.gallery = gallery;
 
-        initGlideWithImage(gallery.getPath(),holder.binding.imageView,holder.binding.progressBarGallery);
+        initGlideWithImage(gallery.getPath(),holder.binding, gallery.getType());
 
         //filter for gallery view
         if(!gallery.getIs_deleted()){
@@ -130,13 +130,14 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
     }
 
 
-    private void initGlideWithImage(String gallery_path, ImageView imageView, ProgressBar progressBar){
+    private void initGlideWithImage(String gallery_path, ItemGalleryBinding binding, int mediaType){
+
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
         circularProgressDrawable.setStrokeWidth(5f);
         circularProgressDrawable.setCenterRadius(30f);
         circularProgressDrawable.start();
 
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progressBarGallery.setVisibility(View.VISIBLE);
         Glide.with(context).load(Uri.parse(gallery_path))
 //                .apply(new RequestOptions().override(500, 400))
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -150,11 +151,12 @@ public class GalleryFirebaseAdapter extends FirestoreRecyclerAdapter<Gallery, Ga
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        progressBar.setVisibility(View.GONE);
+                        binding.progressBarGallery.setVisibility(View.GONE);
+                        binding.imageViewVideoIndicator.setVisibility(mediaType == 0 ? View.VISIBLE : View.GONE);
                         return false;
                     }
                 })
-                .error(R.drawable.ic_baseline_photo_24).into(imageView);
+                .error(R.drawable.ic_baseline_photo_24).into(binding.imageView);
     }
 
     public void setDelete(Boolean isDelete){

@@ -216,21 +216,19 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
                             for (int i = 0; i < clipData.getItemCount(); i++) {
                                 Uri imageUri = clipData.getItemAt(i).getUri();
                                 // your code for multiple image selection
-                                ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri);
-
+                                ErrorLog.WriteDebugLog("DATA RECEIVED "+imageUri + " - " + requireActivity().getContentResolver().getType(imageUri));
+                                int mediaType = requireActivity().getContentResolver().getType(imageUri).contains("image") ? 1 : 0;
                                 galleryViewModel.uploadToFirebaseStorage(highlightViewModel.getScannedValue().getValue(),imageUri,
-                                        galleryViewModel.getSelectedAlbum().getValue().getAlbum_id());
-
+                                        galleryViewModel.getSelectedAlbum().getValue().getAlbum_id(),mediaType);
                             }
                         } else {
                             Uri uri = data.getData();
                             // your codefor single image selection
-                            ErrorLog.WriteDebugLog("DATA RECEIVED "+uri);
-
+                            ErrorLog.WriteDebugLog("DATA RECEIVED "+uri + " - " + requireActivity().getContentResolver().getType(uri));
+                            int mediaType = requireActivity().getContentResolver().getType(uri).contains("image") ? 1 : 0;
                             uploadDialog.show(getChildFragmentManager(),"UPLOAD_DIALOG");
                             galleryViewModel.uploadToFirebaseStorage(highlightViewModel.getScannedValue().getValue(),uri,
-                                    galleryViewModel.getSelectedAlbum().getValue().getAlbum_id());
-
+                                    galleryViewModel.getSelectedAlbum().getValue().getAlbum_id(),mediaType);
                         }
                     }
                 }

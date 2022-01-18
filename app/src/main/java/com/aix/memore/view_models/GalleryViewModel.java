@@ -15,6 +15,7 @@ import com.aix.memore.repositories.GalleryRepo;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.List;
+import java.util.Map;
 
 public class GalleryViewModel extends ViewModel {
     private GalleryRepo galleryRepo = new GalleryRepo();
@@ -50,7 +51,7 @@ public class GalleryViewModel extends ViewModel {
         galleryRepo.addSnapshotListenerForBio(doc_id);
     }
 
-    public void createNewAlbum(String doc_id, Album album, List<Uri> imageUriList){
+    public void createNewAlbum(String doc_id, Album album, List<Map.Entry<Uri, Integer>> imageUriList){
         galleryRepo.createNewAlbum(doc_id, album, imageUriList);
     }
 
@@ -64,8 +65,8 @@ public class GalleryViewModel extends ViewModel {
         return galleryRepo.galleryViewRecyclerOptions(owner_id, album_id);
     }
 
-    public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id){
-        galleryRepo.uploadToFirebaseStorage(owner_id, path,album_id);
+    public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id, int mediaType){
+        galleryRepo.uploadToFirebaseStorage(owner_id, path,album_id,mediaType);
     }
 
     public void uploadToFirebaseStorageToPublicWall(String owner_id, Uri path){

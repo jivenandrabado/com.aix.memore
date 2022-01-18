@@ -200,7 +200,7 @@ public class GalleryRepo {
         return bioMutableLiveData;
     }
 
-    public void createNewAlbum(String doc_id, Album album, List<Uri> imageUriList) {
+    public void createNewAlbum(String doc_id, Album album, List<Map.Entry<Uri,Integer>> imageUriList) {
         try{
             DocumentReference document = db.collection(FirebaseConstants.MEMORE).document(doc_id).collection(FirebaseConstants.MEMORE_ALBUM)
                     .document();
@@ -215,7 +215,7 @@ public class GalleryRepo {
                                 //public wall
                                 if(imageUriList != null) {
                                     for (int i = 0; i < imageUriList.size(); i++) {
-                                        uploadToFirebaseStorage(doc_id, imageUriList.get(i), document.getId());
+                                        uploadToFirebaseStorage(doc_id, imageUriList.get(i).getKey(), document.getId(), imageUriList.get(i).getValue());
                                     }
                                 }
 
@@ -246,7 +246,7 @@ public class GalleryRepo {
                                 //public wall
                                 if(qrBitmap != null) {
                                     //upload qr code bitmap
-                                    uploadBitmapToFirebaseStorage(doc_id,qrBitmap, document.getId(), context);
+                                    uploadBitmapToFirebaseStorage(doc_id,qrBitmap, document.getId(), context, 1);
                                 }
 
                                 isAlbumCreated.postValue(true);
@@ -274,8 +274,9 @@ public class GalleryRepo {
                 .build();
     }
 
-    public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id) {
+    public void uploadToFirebaseStorage(String owner_id, Uri path, String album_id, int mediaType) {
         try {
+
             StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
 //            InputStream stream = new FileInputStream(new File(path));
 
@@ -292,7 +293,7 @@ public class GalleryRepo {
                         @Override
                         public void onSuccess(Uri uri) {
                             ErrorLog.WriteDebugLog("SUCCESS UPLOAD " + uri);
-                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount());
+                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount(), mediaType);
                         }
                     });
                 }
@@ -311,7 +312,7 @@ public class GalleryRepo {
 
     }
 
-    public void uploadBitmapToFirebaseStorage(String owner_id, Bitmap qrBitmap, String album_id, Context context) {
+    public void uploadBitmapToFirebaseStorage(String owner_id, Bitmap qrBitmap, String album_id, Context context, int mediaType) {
         try {
             StorageReference mediaRef = storageRef.child(owner_id + "/image" + System.currentTimeMillis());
 
@@ -334,7 +335,7 @@ public class GalleryRepo {
                             ErrorLog.WriteDebugLog("SUCCESS QR CODE UPLOAD " + uri);
 
                             downloadImageNew("image"+System.currentTimeMillis(), String.valueOf(uri),context);
-                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount());
+                            addNewMedia(owner_id, String.valueOf(uri), album_id, taskSnapshot.getTotalByteCount(), mediaType);
                         }
                     });
                 }
@@ -379,10 +380,10 @@ public class GalleryRepo {
 
     }
 
-    public void addNewMedia(String owner_id, String path, String album_id, long byteSize){
+    public void addNewMedia(String owner_id, String path, String album_id, long byteSize, int mediaType){
         try{
             Gallery gallery = new Gallery();
-            gallery.setType(1);
+            gallery.setType(mediaType);
             gallery.setUpload_date(new Timestamp(new Date()));
             gallery.setPath(path);
             gallery.setIs_deleted(false);
