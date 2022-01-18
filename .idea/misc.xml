@@ -65,8 +65,10 @@
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/dialog_album_details.xml" value="0.33" />
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/dialog_welcome_message.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/fragment_app_update_dialog.xml" value="0.11354166666666667" />
+        <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/fragment_gallery.xml" value="0.13958333333333334" />
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/fragment_gallery_view.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/fragment_new_album_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/layout/fragment_qr_scanner.xml" value="0.25" />
         <entry key="..\:/Users/dipaa/AndroidStudioProjects/AIX/com.aix.memore/app/src/main/res/menu/menu_gallery.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/drawable-v24/background_rounded_corner.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/drawable/background_circle.xml" value="0.36354166666666665" />
