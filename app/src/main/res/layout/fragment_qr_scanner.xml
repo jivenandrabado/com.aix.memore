@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <SurfaceView
         android:id="@+id/surfaceViewQRscanner"
@@ -11,75 +11,30 @@
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        />
     <FrameLayout
         android:id="@+id/frameLayoutSquare"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent=".450"
-        app:layout_constraintWidth_percent=".735"
         android:background="@drawable/border_qr_scanner"
         app:layout_constraintBottom_toBottomOf="@id/dummySquare"
         app:layout_constraintEnd_toEndOf="@id/dummySquare"
+        app:layout_constraintHeight_percent=".450"
         app:layout_constraintStart_toStartOf="@id/dummySquare"
-        app:layout_constraintTop_toTopOf="@+id/dummySquare" />
+        app:layout_constraintTop_toTopOf="@+id/dummySquare"
+        app:layout_constraintWidth_percent=".735" />
 
-    <FrameLayout
-        android:id="@+id/frameLayoutTop"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/frameLayoutLeft"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toTopOf="@id/qr_scanner_mask_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/frameLayoutSquare"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frameLayoutTop" />
-
-    <FrameLayout
-        android:id="@+id/qr_scanner_mask_bottom"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintHeight_percent="0.16"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/qr_scanner_mask_right"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toTopOf="@id/qr_scanner_mask_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameLayoutSquare"
-        app:layout_constraintTop_toBottomOf="@id/frameLayoutTop" />
 
     <FrameLayout
         android:id="@+id/dummySquare"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toTopOf="@+id/qr_scanner_mask_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".450"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayoutTop"
-        app:layout_constraintWidth_percent=".735" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -87,6 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -95,13 +52,12 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginVertical="32dp"
             android:lineSpacingExtra="6dp"
             android:text="@string/align_scanner_in_frame"
             android:textAlignment="center"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonLifecare"
+            app:layout_constraintBottom_toTopOf="@+id/buttonExplore"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -110,27 +66,43 @@
             android:id="@+id/buttonExplore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/background_circle"
             android:src="@drawable/ic_baseline_search_24"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonLifecare"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView3" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <TextView
             android:id="@+id/buttonLifecare"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/background_rectangle_rounded"
+            android:gravity="center"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_search_24"
             android:text="Lifecare"
-            android:textAllCaps="false"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toEndOf="@+id/buttonExplore" />
+            app:layout_constraintStart_toEndOf="@+id/buttonExplore"
+            app:layout_constraintTop_toTopOf="@+id/buttonExplore" />
+
+        <!--        <Button-->
+        <!--            android:id="@+id/buttonLifecare"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:text="Lifecare"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/textView3"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/buttonExplore" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
