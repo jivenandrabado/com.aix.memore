@@ -8,32 +8,27 @@
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/playerView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="20dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintWidth_percent=".800"
         app:resize_mode="fill" />
 
     <ImageView
         android:id="@+id/imageViewHighlight"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="20dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/buttonKnowMore"
-        app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintStart_toStartOf="@+id/playerView"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -45,41 +40,43 @@
 
     <ImageButton
         android:id="@+id/buttonShare"
-        android:layout_width="60dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/background_circle"
         android:drawableStart="@drawable/ic_baseline_share_24"
         android:elevation="10dp"
         android:src="@drawable/ic_baseline_share_24"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonKnowMore"
-        app:layout_constraintStart_toStartOf="@+id/playerView"
-        app:layout_constraintTop_toTopOf="@+id/buttonKnowMore" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintStart_toStartOf="@+id/playerView" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <TextView
         android:id="@+id/buttonKnowMore"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/background_rectangle_rounded"
-        android:elevation="10dp"
-        android:textAllCaps="false"
         android:textColor="@color/gray"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonShare"
         app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintStart_toEndOf="@+id/buttonShare" />
+        app:layout_constraintStart_toEndOf="@+id/buttonShare"
+        app:layout_constraintTop_toTopOf="@+id/buttonShare"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/playerView"
-        app:layout_constraintStart_toStartOf="@+id/playerView"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.mikhaellopez.circularimageview.CircularImageView

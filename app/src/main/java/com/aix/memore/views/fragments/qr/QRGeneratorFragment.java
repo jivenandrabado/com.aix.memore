@@ -105,7 +105,7 @@ public class QRGeneratorFragment extends Fragment {
             });
 
         }else {
-            Toast.makeText(requireContext(),"Failed to generate QR Code. Try again", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(),"Failed to generate QR Code. Try again", Toast.LENGTH_LONG).show();
         }
 
 

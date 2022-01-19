@@ -262,19 +262,19 @@ public class CreateMemoreFragment extends Fragment implements CreateMemoreInterf
     private boolean isEmptyFields(String firstName,String lastName, String birth_date, String death_date, String address){
 
         if (TextUtils.isEmpty(firstName)) {
-            Toast.makeText(requireContext(), "Empty first name", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty first name", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty first name");
             return true;
         }if (TextUtils.isEmpty(lastName)) {
-            Toast.makeText(requireContext(), "Empty last name", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty last name", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
             return true;
         }if (TextUtils.isEmpty(birth_date)) {
-            Toast.makeText(requireContext(), "Empty Birth Date", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty Birth Date", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
             return true;
         }if (TextUtils.isEmpty(address)) {
-            Toast.makeText(requireContext(), "Empty Address", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty Address", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty address");
             return true;
         }else{

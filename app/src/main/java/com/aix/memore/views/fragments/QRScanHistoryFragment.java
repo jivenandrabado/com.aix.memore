@@ -95,8 +95,8 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_PICK);
-        chooseImageActivityResult.launch(intent);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        chooseImageActivityResult.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
     private ActivityResultLauncher<Intent> chooseImageActivityResult = registerForActivityResult(
@@ -143,7 +143,7 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
                                     highlightViewModel.getHighlightFromQR(result1.getText());
                                 } catch (NotFoundException e) {
                                     ErrorLog.WriteDebugLog("DECODER EXCEPTION " + e);
-                                    Toast.makeText(requireContext(), "Image does not contain QR Code. Try again.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireActivity().getApplicationContext(), "Image does not contain QR Code. Try again.", Toast.LENGTH_SHORT).show();
 
                                 }
 //                                catch (JSONException e) {
@@ -180,7 +180,7 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
 
                 @Override
                 public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    Toast.makeText(requireContext(), "on Move", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity().getApplicationContext(), "on Move", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -206,7 +206,7 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
         }catch (Exception e){
             ErrorLog.WriteDebugLog(e);
             ErrorLog.WriteErrorLog(e);
-            Toast.makeText(requireContext(),"Oops something went wrong. Try again.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity().getApplicationContext(),"Oops something went wrong. Try again.",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -259,7 +259,7 @@ public class QRScanHistoryFragment extends Fragment implements QRScanHistoryInte
                         if (aBoolean) {
                             navController.navigate(R.id.action_QRScanHistoryFragment_to_HighlightFragment);
                         } else {
-                            Toast.makeText(requireContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity().getApplicationContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
                         }
                         highlightViewModel.memoreFound().setValue(null);
                     }

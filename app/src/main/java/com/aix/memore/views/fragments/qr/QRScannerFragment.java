@@ -103,7 +103,7 @@ public class QRScannerFragment extends Fragment {
     public void initQRScanner() {
         try {
             ErrorLog.WriteDebugLog("INIT QR SCANNER");
-            toastNoInternet = Toast.makeText(requireContext(), "No internet connection.", Toast.LENGTH_SHORT);
+            toastNoInternet = Toast.makeText(requireActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT);
 
             barcodeDetector = new BarcodeDetector.Builder(requireContext())
                     .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -206,7 +206,7 @@ public class QRScannerFragment extends Fragment {
                         if (aBoolean) {
                             navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment);
                         } else {
-                            Toast.makeText(requireContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity().getApplicationContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
                             resumeCamera();
                         }
                         highlightViewModel.memoreFound().setValue(null);
@@ -245,7 +245,7 @@ public class QRScannerFragment extends Fragment {
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Toast.makeText(requireContext(), "Permissions granted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity().getApplicationContext(), "Permissions granted.", Toast.LENGTH_SHORT).show();
                     resumeCamera();
                 } else {
                     ErrorLog.WriteDebugLog("REQUEST PERMISSION NOT GRANTED");

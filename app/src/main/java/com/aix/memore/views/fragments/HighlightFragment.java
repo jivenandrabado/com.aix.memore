@@ -219,7 +219,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                         UpdateQRCodeDialog updateQRCodeDialog = new UpdateQRCodeDialog(highlightInterface);
                         updateQRCodeDialog.show(getChildFragmentManager(),"UPDATE NEW QR DIALOG");
                     }else{
-                        Toast.makeText(requireContext(), "Invalid QR Code. Try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Invalid QR Code. Try again.", Toast.LENGTH_SHORT).show();
                     }
 
                     highlightViewModel.getOldQRHighlightExists().setValue(null);
@@ -334,7 +334,7 @@ public class HighlightFragment extends Fragment implements HighlightInterface {
                     progressDialogFragment.dismiss();
                 }
             }
-            Toast.makeText(requireContext(),"Please try again",Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity().getApplicationContext(),"Please try again",Toast.LENGTH_SHORT).show();
         }
 
     }
