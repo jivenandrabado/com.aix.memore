@@ -71,7 +71,7 @@ public class EmailVerificationDialog extends DialogFragment {
                         newPasswordDialog.show(getChildFragmentManager(),"NEW PASSWORD DIALOG");
                     } else {
                         ErrorLog.WriteDebugLog("EMAIL NOT VERIFIED");
-                        Toast.makeText(requireContext(), "Email does not match. Try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Email does not match. Try again.", Toast.LENGTH_SHORT).show();
                     }
                     memoreViewModel.isEmailVerified().setValue(null);
 
@@ -85,7 +85,7 @@ public class EmailVerificationDialog extends DialogFragment {
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean!=null) {
                     if (aBoolean) {
-                        Toast.makeText(requireContext(), "Password reset success!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Password reset success!", Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
                     memoreViewModel.isPasswordReset().setValue(null);

@@ -170,7 +170,7 @@ public class RegistrationFragment extends Fragment {
                     memoreViewModel.uploadHighlightToFirebase(memore,qrBitmap, requireContext());
                     uploadDialog.show(getChildFragmentManager(),"UPLOAD HIGHLIGHT DIALOG");
                 }else{
-                    Toast.makeText(requireContext(),"Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity().getApplicationContext(),"Please try again", Toast.LENGTH_LONG).show();
                 }
             }else {
                 ErrorLog.WriteDebugLog("Fields are empty");
