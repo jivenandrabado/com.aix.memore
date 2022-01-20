@@ -160,7 +160,7 @@ public class EditMemoreFragment extends Fragment {
                     ErrorLog.WriteDebugLog("SAVED MEMORE AND CREATED USER");
                 }
                 if(aBoolean){
-                    Toast.makeText(requireContext(), "Update success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext().getApplicationContext(), "Update success", Toast.LENGTH_SHORT).show();
                     navController.navigate(R.id.action_editMemoreFragment_to_HighlightFragment);
                     memoreViewModel.memoreSaved().setValue(false);
                 }
@@ -171,7 +171,7 @@ public class EditMemoreFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 if(!s.isEmpty()){
-                    Toast.makeText(requireContext(), s, Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity().getApplicationContext(), s, Toast.LENGTH_LONG).show();
                     if(uploadDialog != null) {
                         if(uploadDialog.isVisible()) {
                             uploadDialog.dismiss();
@@ -294,7 +294,7 @@ public class EditMemoreFragment extends Fragment {
                         // TODO: Handle the error.
                         Status status = Autocomplete.getStatusFromIntent(result.getData());
                         ErrorLog.WriteDebugLog("Error "+status);
-                        Toast.makeText(requireContext(), "Try again. "+status, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Try again. "+status, Toast.LENGTH_SHORT).show();
                     } else if (resultCode == RESULT_CANCELED) {
                         // The user canceled the operation.
                     }
@@ -308,19 +308,19 @@ public class EditMemoreFragment extends Fragment {
     private boolean isEmptyFields(String firstName,String lastName, String birth_date, String death_date, String address){
 
         if (TextUtils.isEmpty(firstName)) {
-            Toast.makeText(requireContext(), "Empty first name", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty first name", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty first name");
             return true;
         }if (TextUtils.isEmpty(lastName)) {
-            Toast.makeText(requireContext(), "Empty last name", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty last name", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
             return true;
         }if (TextUtils.isEmpty(birth_date)) {
-            Toast.makeText(requireContext(), "Empty Birth Date", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty Birth Date", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty last name");
             return true;
         }if (TextUtils.isEmpty(address)) {
-            Toast.makeText(requireContext(), "Empty Address", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty Address", Toast.LENGTH_LONG).show();
             ErrorLog.WriteDebugLog("empty address");
             return true;
         }else{

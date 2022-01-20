@@ -72,7 +72,7 @@ public class PasswordDialog extends DialogFragment {
             @Override
             public void onChanged(String s) {
                 if(!s.equals("")){
-                    Toast.makeText(requireContext(),s,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity().getApplicationContext(),s,Toast.LENGTH_SHORT).show();
                     userViewModel.getErrorMessage().setValue("");
                 }
             }

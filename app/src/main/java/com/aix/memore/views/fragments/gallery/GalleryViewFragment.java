@@ -289,6 +289,7 @@ public class GalleryViewFragment extends Fragment implements GalleryViewInterfac
 
             case R.id.albumDetails:
                 ErrorLog.WriteDebugLog("SHOW DETAILS DIALOG");
+                if(albumDetailsDialog != null)
                 albumDetailsDialog.show(getChildFragmentManager(), "ALBUM_DETAILS_DIALOG");
                 break;
 

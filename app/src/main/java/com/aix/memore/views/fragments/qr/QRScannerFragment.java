@@ -1,42 +1,24 @@
 package com.aix.memore.views.fragments.qr;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Camera;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -44,10 +26,6 @@ import androidx.navigation.Navigation;
 
 import com.aix.memore.R;
 import com.aix.memore.databinding.FragmentQrScannerBinding;
-import com.aix.memore.helpers.AppPermissionHelper;
-import com.aix.memore.helpers.QRScannerHelper;
-import com.aix.memore.interfaces.FragmentPermissionInterface;
-import com.aix.memore.interfaces.OnQrCodeScanned;
 import com.aix.memore.utilities.ErrorLog;
 import com.aix.memore.utilities.NetworkUtil;
 import com.aix.memore.view_models.HighlightViewModel;
@@ -55,26 +33,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
 public class QRScannerFragment extends Fragment {
@@ -144,7 +103,7 @@ public class QRScannerFragment extends Fragment {
     public void initQRScanner() {
         try {
             ErrorLog.WriteDebugLog("INIT QR SCANNER");
-            toastNoInternet = Toast.makeText(requireContext(), "No internet connection.", Toast.LENGTH_SHORT);
+            toastNoInternet = Toast.makeText(requireActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT);
 
             barcodeDetector = new BarcodeDetector.Builder(requireContext())
                     .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -247,7 +206,7 @@ public class QRScannerFragment extends Fragment {
                         if (aBoolean) {
                             navController.navigate(R.id.action_QRScannerFragment_to_HighlightFragment);
                         } else {
-                            Toast.makeText(requireContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity().getApplicationContext(), "Invalid QR Code,", Toast.LENGTH_SHORT).show();
                             resumeCamera();
                         }
                         highlightViewModel.memoreFound().setValue(null);
@@ -286,7 +245,7 @@ public class QRScannerFragment extends Fragment {
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Toast.makeText(requireContext(), "Permissions granted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity().getApplicationContext(), "Permissions granted.", Toast.LENGTH_SHORT).show();
                     resumeCamera();
                 } else {
                     ErrorLog.WriteDebugLog("REQUEST PERMISSION NOT GRANTED");

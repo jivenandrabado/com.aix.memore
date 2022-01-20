@@ -66,7 +66,7 @@ public class NewPasswordDialog extends DialogFragment {
                         dismiss();
                     } else {
                         ErrorLog.WriteDebugLog("Password reset failed");
-                        Toast.makeText(requireContext(), "Password reset failed. Try again later.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Password reset failed. Try again later.", Toast.LENGTH_SHORT).show();
                     }
                     memoreViewModel.isPasswordReset().setValue(null);
                 }
@@ -80,16 +80,16 @@ public class NewPasswordDialog extends DialogFragment {
 
         int passwordLength = 6;
         if (TextUtils.isEmpty(password)){
-            Toast.makeText(requireContext(), "Empty password", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Empty password", Toast.LENGTH_LONG).show();
             return true;
         }else if ( password.length() < passwordLength){
-            Toast.makeText(requireContext(), "Password must be atleast 6 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Password must be atleast 6 characters", Toast.LENGTH_LONG).show();
             return true;
         }else if (confirmPassword.isEmpty()){
-            Toast.makeText(requireContext(), "Confirm Password Empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Confirm Password Empty", Toast.LENGTH_LONG).show();
             return true;
         }else if(!confirmPassword.equals(password)){
-            Toast.makeText(requireContext(), "Password does not match", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
             return true;
         }
 

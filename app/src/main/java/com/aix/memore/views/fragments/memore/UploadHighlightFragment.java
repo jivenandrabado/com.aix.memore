@@ -148,7 +148,7 @@ public class UploadHighlightFragment extends Fragment implements UploadHighlight
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    Toast.makeText(requireContext(), "Highlight upload success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity().getApplicationContext(), "Highlight upload success", Toast.LENGTH_SHORT).show();
                     memoreViewModel.memoreSaved().setValue(false);
                     navController.popBackStack(R.id.uploadHighlightFragment,true);
                 }

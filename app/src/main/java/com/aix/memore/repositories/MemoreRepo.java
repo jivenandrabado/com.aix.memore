@@ -162,7 +162,7 @@ public class MemoreRepo extends GalleryRepo {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
-                        Toast.makeText(context, "Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context.getApplicationContext(), "Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
                         errorMessage.setValue(e.getMessage());
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -206,7 +206,7 @@ public class MemoreRepo extends GalleryRepo {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     ErrorLog.WriteDebugLog("FAILED TO UPLOAD " + e);
-                    Toast.makeText(context,"Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context.getApplicationContext(),"Failed to upload highlight. Please check your internet connection", Toast.LENGTH_LONG).show();
                     errorMessage.setValue(e.getMessage());
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

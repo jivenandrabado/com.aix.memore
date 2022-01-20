@@ -642,9 +642,9 @@ public class GalleryRepo {
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + filename + ".jpg");
             dm.enqueue(request);
-            Toast.makeText(context, "Image download started.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), "Image download started.", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
-            Toast.makeText(context, "Image download failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), "Image download failed.", Toast.LENGTH_SHORT).show();
             ErrorLog.WriteDebugLog("DOWNLOAD ERROR "+e);
         }
     }
@@ -659,8 +659,8 @@ public class GalleryRepo {
                         mediaList.clear();
                         for (DocumentSnapshot item : value.getDocuments()){
                             mediaList.add(item.toObject(Gallery.class));
-                            galleryList.setValue(mediaList);
                         }
+                        galleryList.setValue(mediaList);
                     }
                 });
     }

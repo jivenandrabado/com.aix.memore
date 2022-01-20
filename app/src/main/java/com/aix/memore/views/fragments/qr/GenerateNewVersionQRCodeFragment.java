@@ -55,7 +55,7 @@ public class GenerateNewVersionQRCodeFragment extends Fragment {
             full_name = memore.getBio_first_name() + " "+memore.getBio_last_name();
             generateQRcode(full_name,qr_value);
         }else{
-            Toast.makeText(requireContext(), "Failed to generate QR Code. Try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "Failed to generate QR Code. Try again", Toast.LENGTH_SHORT).show();
         }
 
         binding.buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -66,10 +66,10 @@ public class GenerateNewVersionQRCodeFragment extends Fragment {
                         if(result!=null) {
                             galleryViewModel.uploadBitmapToVault(memore.getMemore_id(), result, requireContext());
                         }else{
-                            Toast.makeText(requireContext(), "Failed to save QR Code. Try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity().getApplicationContext(), "Failed to save QR Code. Try again", Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Toast.makeText(requireContext(), "Failed to save QR Code. Try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity().getApplicationContext(), "Failed to save QR Code. Try again", Toast.LENGTH_SHORT).show();
                     }
 
             }
